@@ -1,6 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.services.BidListService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,8 @@ import javax.validation.Valid;
 @Controller
 public class BidListController {
     // TODO: Inject Bid service
+    @Autowired
+    private BidListService bidListService;
 
     @RequestMapping("/bidList/list")
     public String home(Model model)
@@ -25,6 +29,7 @@ public class BidListController {
 
     @GetMapping("/bidList/add")
     public String addBidForm(BidList bid) {
+
         return "bidList/add";
     }
 
