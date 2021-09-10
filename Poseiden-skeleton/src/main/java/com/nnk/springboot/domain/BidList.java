@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Getter
 @Builder
 @NoArgsConstructor
-@Table(name = "BidList")
+@Table(name = "bidlist")
 public class BidList {
 
     @Id
@@ -47,8 +47,7 @@ public class BidList {
     private String sourceListId;
     private String side;
 
-    public BidList(String account_test, String type_test, double v) {
-    }
+
 
 // TODO: Map columns in data table BIDLIST with corresponding java fields
 }
