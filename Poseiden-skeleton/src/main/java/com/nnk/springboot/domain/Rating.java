@@ -25,8 +25,12 @@ public class Rating {
 
     private Integer orderNumber;
 
-
-
+    public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
+        this.moodysRating = moodysRating;
+        this.sandPRating = sandPRating;
+        this.fitchRating = fitchRating;
+        this.orderNumber = orderNumber;
+    }
 
 // TODO: Map columns in data table RATING with corresponding java fields
 }

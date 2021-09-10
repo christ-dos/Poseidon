@@ -31,6 +31,11 @@ public class CurvePoint {
 
     private  Timestamp creationDate;
 
+    public CurvePoint(Integer curveId, Double term, Double value) {
+        this.curveId = curveId;
+        this.term = term;
+        this.value = value;
+    }
 
 // TODO: Map columns in data table CURVEPOINT with corresponding java fields
 }
