@@ -1,14 +1,14 @@
 package com.nnk.springboot.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "rating")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
 public class Rating {

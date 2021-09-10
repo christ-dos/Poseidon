@@ -1,7 +1,6 @@
 package com.nnk.springboot.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -12,6 +11,9 @@ import java.sql.Timestamp;
 @Table(name = "trade")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Trade {
 
     @Id

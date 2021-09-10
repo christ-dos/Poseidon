@@ -1,8 +1,6 @@
 package com.nnk.springboot.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -11,6 +9,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "curvepoint")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 public class CurvePoint {
