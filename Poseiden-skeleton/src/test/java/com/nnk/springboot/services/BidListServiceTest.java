@@ -48,7 +48,8 @@ public class BidListServiceTest {
     public void getBidListsTest_whenListOfBidContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
         List<BidList> bidLists = new ArrayList<>(
-                Arrays.asList(bidListTest = BidList.builder().account("Account Test").bidQuantity(10d).type("Type Test").build(),
+                Arrays.asList(
+                        BidList.builder().account("Account Test").bidQuantity(10d).type("Type Test").build(),
                         BidList.builder().account("Account Test1").bidQuantity(20d).type("Type Test1").build(),
                         BidList.builder().account("Account Test2").bidQuantity(30d).type("Type Test2").build()));
         when(bidListRepositoryMock.findAll()).thenReturn(bidLists);

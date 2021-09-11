@@ -57,7 +57,7 @@ public class BidListService implements IBidListService {
         BidList bidList = bidListRepository.getById(bidListId);
         if (bidList == null) {
             log.error("Service: BidList NOT FOUND with ID: " + bidListId);
-            throw new BidListNotFoundException("BidList not found with ID: " + bidListId);
+            throw new BidListNotFoundException("BidList not found");
         }
         log.info("Service: BidList found with ID: " + bidListId);
         return bidList;
