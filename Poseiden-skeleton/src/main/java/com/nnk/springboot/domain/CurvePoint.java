@@ -3,6 +3,7 @@ package com.nnk.springboot.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 
@@ -20,6 +21,7 @@ public class CurvePoint {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NotNull
     @Column(name = "Curveid")
     private  Integer curveId;
 
