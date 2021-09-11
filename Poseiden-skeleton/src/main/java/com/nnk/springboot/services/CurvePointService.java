@@ -1,9 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.BidListAlreadyExistException;
-import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
@@ -22,12 +19,12 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class CurvePointService {
+public class CurvePointService implements ICurvePointService {
 
     /**
      * An instance Of {@link CurvePointRepository}
      */
-    private CurvePointRepository curvePointRepository;
+    private final CurvePointRepository curvePointRepository;
 
     /**
      * Constructor
@@ -44,6 +41,7 @@ public class CurvePointService {
      *
      * @return A list of {@link CurvePoint}
      */
+    @Override
     public List<CurvePoint> getCurvePoints() {
         log.info("Service: displaying CurvePoints");
         return curvePointRepository.findAll();
@@ -55,6 +53,7 @@ public class CurvePointService {
      * @param id An Integer containing the id of the curvePoint
      * @return An instance of {@link CurvePoint}
      */
+    @Override
     public CurvePoint getCurvePointById(Integer id) {
         CurvePoint curvePoint = curvePointRepository.getById(id);
         if (curvePoint == null) {
@@ -71,9 +70,10 @@ public class CurvePointService {
      * @param curvePoint An instance {@link CurvePoint}
      * @return The {@link CurvePoint} saved
      */
+    @Override
     public CurvePoint addCurvePoint(CurvePoint curvePoint) {
         CurvePoint curvePointToAdd = curvePointRepository.getById(curvePoint.getId());
-        if(curvePointToAdd != null){
+        if (curvePointToAdd != null) {
             log.error("Service: CurvePoint already exist!");
             throw new CurvePointAlreadyExistException("The CurvePoint that you try to add already exist");
         }
@@ -82,6 +82,34 @@ public class CurvePointService {
         return curvePointRepository.save(curvePoint);
     }
 
+    /**
+     * Method which update a {@link CurvePoint}
+     *
+     * @param curvePoint An instance {@link CurvePoint}
+     * @return the {@link CurvePoint} updated
+     */
+    @Override
+    public CurvePoint updateCurvePoint(CurvePoint curvePoint) {
+        CurvePoint curvePointToUpdate = curvePointRepository.getById(curvePoint.getId());
 
+        curvePointToUpdate.setCurveId(curvePoint.getCurveId());
+        curvePointToUpdate.setTerm(curvePoint.getTerm());
+        curvePointToUpdate.setValue(curvePoint.getValue());
+
+        return curvePointRepository.save(curvePointToUpdate);
+    }
+
+    /**
+     * Method that delete a {@link CurvePoint }
+     * @param curvePoint An instance Of {@link CurvePoint}
+     * @return A String containing "CurvePoint  deleted"
+     */
+    @Override
+    public String deleteCurvePoint(CurvePoint curvePoint) {
+        curvePointRepository.delete(curvePoint);
+        log.info("Service: BidList deleted with ID: " + curvePoint.getId());
+
+        return "CurvePoint deleted";
+    }
 
 }

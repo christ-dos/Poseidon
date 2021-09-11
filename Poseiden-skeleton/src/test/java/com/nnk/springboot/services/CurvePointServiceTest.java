@@ -1,8 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.BidListAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
@@ -103,5 +101,37 @@ public class CurvePointServiceTest {
         //THEN
         verify(curvePointRepositoryMock, times(0)).save(isA(CurvePoint.class));
         assertThrows(CurvePointAlreadyExistException.class, () -> curvePointServiceTest.addCurvePoint(curvePointTest));
+    }
+
+    @Test
+    public void updateCurvePointTest_whenCurvePointExist_thenReturnCurvePointUpdated() {
+        //GIVEN
+        CurvePoint curvePointTestUpdated = CurvePoint.builder()
+                .id(1)
+                .curveId(20)
+                .term(20d)
+                .value(30d)
+                .build();
+
+        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(curvePointTest);
+        when(curvePointRepositoryMock.save(isA(CurvePoint.class))).thenReturn(curvePointTestUpdated);
+        CurvePoint curvePointUpdated = curvePointServiceTest.updateCurvePoint(curvePointTestUpdated);
+        //THEN
+        verify(curvePointRepositoryMock, times(1)).save(isA(CurvePoint.class));
+        assertEquals(20, curvePointUpdated.getCurveId());
+        assertEquals(20d, curvePointUpdated.getTerm());
+        assertEquals(30d, curvePointUpdated.getValue());
+
+    }
+
+    @Test
+    public void deleteCurvePointTest_whenCurvePointExist_ThenReturnMessageCurvePointDeleted() {
+        //GIVEN
+        //WHEN
+        String messageResult = curvePointServiceTest.deleteCurvePoint(curvePointTest);
+        //THEN
+        verify(curvePointRepositoryMock, times(1)).delete(isA(CurvePoint.class));
+        assertEquals("CurvePoint deleted", messageResult);
+
     }
 }

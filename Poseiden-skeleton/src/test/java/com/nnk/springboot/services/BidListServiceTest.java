@@ -121,6 +121,7 @@ public class BidListServiceTest {
                 .revisionDate(Timestamp.from(Instant.now()))
                 .build();
         LocalDateTime dateRevisionIsAfter = LocalDateTime.of(2021, 9, 10, 14, 00);
+
         when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
         when(bidListRepositoryMock.save(isA(BidList.class))).thenReturn(bidListTestUpdated);
         //WHEN
@@ -140,7 +141,6 @@ public class BidListServiceTest {
         //THEN
         verify(bidListRepositoryMock,times(1)).delete(isA(BidList.class));
         assertEquals("BidList deleted", messageResult);
-
     }
 
 }
