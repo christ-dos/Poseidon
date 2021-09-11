@@ -43,6 +43,7 @@ public class BidListService implements IBidListService {
     @Override
     public List<BidList> getBidLists() {
         log.info("Service: displaying BidLists");
+
         return bidListRepository.findAll();
     }
 
@@ -60,6 +61,7 @@ public class BidListService implements IBidListService {
             throw new BidListNotFoundException("BidList not found");
         }
         log.info("Service: BidList found with ID: " + bidListId);
+
         return bidList;
     }
 
@@ -78,6 +80,7 @@ public class BidListService implements IBidListService {
         }
         bidList.setCreationDate(Timestamp.from(Instant.now()));
         log.info("Service: BidList saved");
+
         return bidListRepository.save(bidList);
     }
 
@@ -95,7 +98,7 @@ public class BidListService implements IBidListService {
         bidListToUpdate.setType(bidList.getType());
         bidListToUpdate.setBidQuantity(bidList.getBidQuantity());
         bidListToUpdate.setRevisionDate(Timestamp.from(Instant.now()));
-        log.info("Service: BidList Updated with ID: " + bidList.getBidListId());
+        log.info("Service: BidList updated with ID: " + bidList.getBidListId());
 
         return bidListRepository.save(bidListToUpdate);
     }

@@ -59,7 +59,6 @@ public class BidListServiceTest {
         verify(bidListRepositoryMock, times(1)).findAll();
         assertEquals(bidLists, bidListsResult);
         assertTrue(bidListsResult.size() > 0);
-
     }
 
     @Test
@@ -73,7 +72,6 @@ public class BidListServiceTest {
         assertNotNull(bidListResult);
         assertEquals("Account Test", bidListResult.getAccount());
         assertEquals(10d, bidListResult.getBidQuantity());
-
     }
 
     @Test
