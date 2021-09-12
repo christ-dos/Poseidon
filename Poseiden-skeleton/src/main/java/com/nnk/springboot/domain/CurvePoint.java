@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name = "curvepoint")
+@Table(name = "curve_point")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,19 +18,20 @@ public class CurvePoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
-    @Column(name = "Curveid")
+    @Column(name = "curve_id")
     private  Integer curveId;
 
+    @Column(name = "as_of_date")
     private Timestamp asOfDate;
 
     private  Double term;
 
     private  Double value;
 
+    @Column(name = "creation_date")
     private  Timestamp creationDate;
 
     public CurvePoint(Integer curveId, Double term, Double value) {
@@ -38,6 +39,4 @@ public class CurvePoint {
         this.term = term;
         this.value = value;
     }
-
-// TODO: Map columns in data table CURVEPOINT with corresponding java fields
 }

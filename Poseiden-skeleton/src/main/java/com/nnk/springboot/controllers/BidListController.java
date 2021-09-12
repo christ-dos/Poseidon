@@ -40,8 +40,9 @@ public class BidListController {
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidList bid, BindingResult result, Model model) {
         if (!result.hasErrors()) {
+            bidListService.addBidList(bid);
             log.info("Controller: redirection to bidList list");
-            return "redirect:/bidlist/list";
+            return "redirect:/bidList/list";
         }
         log.error("Controller: Has error in form");
         return "bidList/add";

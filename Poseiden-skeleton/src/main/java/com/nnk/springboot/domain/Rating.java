@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "rating")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -14,15 +13,18 @@ import javax.persistence.*;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "moodys_rating")
     private String moodysRating;
 
+    @Column(name = "sand_p_rating")
     private String sandPRating;
 
+    @Column(name = "fitch_rating")
     private String fitchRating;
 
+    @Column(name = "order_number")
     private Integer orderNumber;
 
     public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
@@ -31,6 +33,4 @@ public class Rating {
         this.fitchRating = fitchRating;
         this.orderNumber = orderNumber;
     }
-
-// TODO: Map columns in data table RATING with corresponding java fields
 }

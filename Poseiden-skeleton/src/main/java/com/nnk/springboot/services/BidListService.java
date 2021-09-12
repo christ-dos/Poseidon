@@ -73,11 +73,11 @@ public class BidListService implements IBidListService {
      */
     @Override
     public BidList addBidList(BidList bidList) {
-        BidList bidListToAdd = bidListRepository.getById(bidList.getBidListId());
-        if(bidListToAdd != null){
-            log.error("Service: BidList already exist!");
-            throw new BidListAlreadyExistException("The BidList that you try to add already exist");
-        }
+//        BidList bidListToAdd = bidListRepository.getById(bidList.getBidListId());
+//        if(bidListToAdd != null){
+//            log.error("Service: BidList already exist!");
+//            throw new BidListAlreadyExistException("The BidList that you try to add already exist");
+//        }
         bidList.setCreationDate(Timestamp.from(Instant.now()));
         log.info("Service: BidList saved");
 
