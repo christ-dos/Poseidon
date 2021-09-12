@@ -64,11 +64,11 @@ public class BidListServiceTest {
     @Test
     public void getBidListByIdTest_whenBidListExist_thenReturnBidList() {
         //GIVEN
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
+        when(bidListRepositoryMock.getById(anyInt())).thenReturn(bidListTest);
         //WHEN
         BidList bidListResult = bidListServiceTest.getBidListById(bidListTest.getBidListId());
         //THEN
-        verify(bidListRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(bidListRepositoryMock, times(1)).getById(anyInt());
         assertNotNull(bidListResult);
         assertEquals("Account Test", bidListResult.getAccount());
         assertEquals(10d, bidListResult.getBidQuantity());
@@ -99,16 +99,6 @@ public class BidListServiceTest {
     }
 
     @Test
-    public void addBidListTest_whenBidListAlreadyExistInDb_thenThrowBidListAlreadyExistException() {
-        //GIVEN
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
-        //WHEN
-        //THEN
-        verify(bidListRepositoryMock, times(0)).save(isA(BidList.class));
-        assertThrows(BidListAlreadyExistException.class, () -> bidListServiceTest.addBidList(bidListTest));
-    }
-
-    @Test
     public void updateBidListTest_whenBidListExist_thenReturnBidListUpdated() {
         //GIVEN
         BidList bidListTestUpdated = BidList.builder()
@@ -132,13 +122,22 @@ public class BidListServiceTest {
     }
 
     @Test
+    public void updateBidListTest_whenBidListNotExist_thenThrowBidListNotFoundException() {
+        //GIVEN
+        when(bidListRepositoryMock.getById(anyInt())).thenReturn(null);
+        //WHEN
+        //THEN
+        verify(bidListRepositoryMock, times(0)).save(isA(BidList.class));
+        assertThrows(BidListNotFoundException.class, () -> bidListServiceTest.updateBidList(bidListTest));
+    }
+
+    @Test
     public void deleteBidListTest_whenBidListExist_ThenReturnMessageBideListDeleted() {
         //GIVEN
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
         //WHEN
         String messageResult = bidListServiceTest.deleteBidList(bidListTest.getBidListId());
         //THEN
-        verify(bidListRepositoryMock,times(1)).delete(isA(BidList.class));
+        verify(bidListRepositoryMock,times(1)).deleteById(isA(Integer.class));
         assertEquals("BidList deleted", messageResult);
     }
 

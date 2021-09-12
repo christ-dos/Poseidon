@@ -91,7 +91,10 @@ public class CurvePointService implements ICurvePointService {
     @Override
     public CurvePoint updateCurvePoint(CurvePoint curvePoint) {
         CurvePoint curvePointToUpdate = curvePointRepository.getById(curvePoint.getId());
-
+        if (curvePointToUpdate == null) {
+            log.error("Service: CurvePoint NOT FOUND with ID: " + curvePoint.getId());
+            throw new CurvePointNotFoundException("CurvePoint not found");
+        }
         curvePointToUpdate.setCurveId(curvePoint.getCurveId());
         curvePointToUpdate.setTerm(curvePoint.getTerm());
         curvePointToUpdate.setValue(curvePoint.getValue());
@@ -106,8 +109,7 @@ public class CurvePointService implements ICurvePointService {
      */
     @Override
     public String deleteCurvePoint(Integer id) {
-        CurvePoint curvePointToDelete = curvePointRepository.getById(id);
-        curvePointRepository.delete(curvePointToDelete);
+        curvePointRepository.deleteById(id);
         log.info("Service: BidList deleted with ID: " + id);
 
         return "CurvePoint deleted";

@@ -1,6 +1,8 @@
 package com.nnk.springboot.services;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
@@ -125,13 +127,22 @@ public class CurvePointServiceTest {
     }
 
     @Test
+    public void updateCurvePointTest_whenCurvePointNotExist_thenThrowCurvePointNotFoundException() {
+        //GIVEN
+        when(curvePointRepositoryMock.getById(anyInt())).thenReturn(null);
+        //WHEN
+        //THEN
+        verify(curvePointRepositoryMock, times(0)).save(isA(CurvePoint.class));
+        assertThrows(CurvePointNotFoundException.class, () -> curvePointServiceTest.updateCurvePoint(curvePointTest));
+    }
+
+    @Test
     public void deleteCurvePointTest_whenCurvePointExist_ThenReturnMessageCurvePointDeleted() {
         //GIVEN
-        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(curvePointTest);
         //WHEN
         String messageResult = curvePointServiceTest.deleteCurvePoint(curvePointTest.getId());
         //THEN
-        verify(curvePointRepositoryMock, times(1)).delete(isA(CurvePoint.class));
+        verify(curvePointRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("CurvePoint deleted", messageResult);
 
     }

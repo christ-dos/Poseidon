@@ -135,13 +135,22 @@ public class RatingServiceTest {
     }
 
     @Test
+    public void updateRatingTest_whenRatingNotExist_thenThrowRatingNotFoundException() {
+        //GIVEN
+        when(ratingRepositoryMock.getById(anyInt())).thenReturn(null);
+        //WHEN
+        //THEN
+        verify(ratingRepositoryMock, times(0)).save(isA(Rating.class));
+        assertThrows(RatingNotFoundException.class, () -> ratingServiceTest.updateRating(ratingTest));
+    }
+
+    @Test
     public void deleteRatingTest_whenRatingExist_ThenReturnMessageRatingDeleted() {
         //GIVEN
-        when(ratingRepositoryMock.getById(isA(Integer.class))).thenReturn(ratingTest);
         //WHEN
         String messageResult = ratingServiceTest.deleteRating(ratingTest.getId());
         //THEN
-        verify(ratingRepositoryMock,times(1)).delete(isA(Rating.class));
+        verify(ratingRepositoryMock,times(1)).deleteById(anyInt());
         assertEquals("Rating deleted", messageResult);
     }
 

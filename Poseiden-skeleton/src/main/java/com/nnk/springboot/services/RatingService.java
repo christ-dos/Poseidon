@@ -91,7 +91,10 @@ public class RatingService implements IRatingService {
     @Override
     public Rating updateRating(Rating rating) {
         Rating ratingToUpdate = ratingRepository.getById(rating.getId());
-
+        if (ratingToUpdate == null) {
+            log.error("Service: Rating NOT FOUND with ID: " + rating.getId());
+            throw new RatingNotFoundException("Rating not found");
+        }
         ratingToUpdate.setMoodysRating(rating.getMoodysRating());
         ratingToUpdate.setSandPRating(rating.getSandPRating());
         ratingToUpdate.setFitchRating(rating.getFitchRating());
@@ -108,8 +111,7 @@ public class RatingService implements IRatingService {
      */
     @Override
     public String deleteRating(Integer id) {
-        Rating ratingToDelete = ratingRepository.getById(id);
-        ratingRepository.delete(ratingToDelete);
+        ratingRepository.deleteById(id);
         log.info("Service: Rating deleted iwth ID:" + id);
 
         return "Rating deleted";
