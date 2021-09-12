@@ -101,13 +101,14 @@ public class CurvePointService implements ICurvePointService {
 
     /**
      * Method that delete a {@link CurvePoint }
-     * @param curvePoint An instance Of {@link CurvePoint}
+     * @param id An Integer containing the id if the curvePoint
      * @return A String containing "CurvePoint  deleted"
      */
     @Override
-    public String deleteCurvePoint(CurvePoint curvePoint) {
-        curvePointRepository.delete(curvePoint);
-        log.info("Service: BidList deleted with ID: " + curvePoint.getId());
+    public String deleteCurvePoint(Integer id) {
+        CurvePoint curvePointToDelete = curvePointRepository.getById(id);
+        curvePointRepository.delete(curvePointToDelete);
+        log.info("Service: BidList deleted with ID: " + id);
 
         return "CurvePoint deleted";
     }

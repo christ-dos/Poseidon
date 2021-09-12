@@ -13,5 +13,5 @@ public interface IRatingService {
 
     Rating updateRating(Rating rating);
 
-    String deleteRating(Rating rating);
+    String deleteRating(Integer id);
 }

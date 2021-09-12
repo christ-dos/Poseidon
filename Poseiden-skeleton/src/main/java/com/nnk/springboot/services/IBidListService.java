@@ -13,5 +13,5 @@ public interface IBidListService {
 
     BidList updateBidList(BidList bidList);
 
-    String deleteBidList(BidList bidList);
+    String deleteBidList(Integer bidListId);
 }

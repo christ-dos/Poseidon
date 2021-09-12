@@ -100,10 +100,17 @@ public class RatingService implements IRatingService {
         return ratingRepository.save(ratingToUpdate);
     }
 
+    /**
+     * Method that delete a {@link Rating}
+     *
+     * @param id An integer containing the id
+     * @return A String containing "Rating deleted"
+     */
     @Override
-    public String deleteRating(Rating rating) {
-        ratingRepository.delete(rating);
-        log.info("Service: Rating deleted iwth ID:" + rating.getId());
+    public String deleteRating(Integer id) {
+        Rating ratingToDelete = ratingRepository.getById(id);
+        ratingRepository.delete(ratingToDelete);
+        log.info("Service: Rating deleted iwth ID:" + id);
 
         return "Rating deleted";
     }

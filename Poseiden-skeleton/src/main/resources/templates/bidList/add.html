@@ -1,25 +1,34 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+    <meta charset="utf-8"/>
+    <title>Home</title>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
 
-	<div class="row">
-		<h2>Add New Bid</h2>
-	</div>
+    <div class="row">
+        <h2>Add New Bid</h2>
+    </div>
 
-	<div class="row">
-		<form action="#" th:action="@{/bidList/validate}" th:object="${bidList}" method="post" class="form-horizontal" style="width: 100%">
-			<!--
-			TODO: Create a form to input the values of Bid, there are 2 buttons: Save data and Cancel to the list Bid
-			 -->
-		</form>
-	</div>
+    <div class="row">
+        <form action="#" th:action="@{/bidList/validate}" th:object="${bidList}" method="post" class="form-horizontal"
+              style="width: 100%">
+            <div class="form-group">
+                <label for="account" class="col-sm-2 control-label">Account</label>
+                <div class="col-sm-10">
+                    <input type="text" th:field="*{account}" id="account" placeholder="Account" class="col-4">
+                    <p class="text-danger" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></p>
+                </div>
+            </div>
+
+                <!--
+                TODO: Create a form to input the values of Bid, there are 2 buttons: Save data and Cancel to the list Bid
+                 -->
+        </form>
+    </div>
 
 </div>
 </body>

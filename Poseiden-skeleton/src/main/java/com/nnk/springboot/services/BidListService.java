@@ -105,13 +105,14 @@ public class BidListService implements IBidListService {
 
     /**
      * Method that delete a {@link BidList}
-     * @param bidList An instance Of {@link BidList}
+     * @param bidListId An integer containing the id
      * @return A String containing "BidList deleted"
      */
     @Override
-    public String deleteBidList(BidList bidList) {
-        bidListRepository.delete(bidList);
-        log.info("Service: BidList deleted with ID: " + bidList.getBidListId());
+    public String deleteBidList(Integer bidListId) {
+        BidList bidListToDelete = bidListRepository.getById(bidListId);
+        bidListRepository.delete(bidListToDelete);
+        log.info("Service: BidList deleted with ID: " + bidListId);
 
         return "BidList deleted";
     }

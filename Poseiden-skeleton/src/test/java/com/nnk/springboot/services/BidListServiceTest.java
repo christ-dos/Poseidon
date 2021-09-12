@@ -134,8 +134,9 @@ public class BidListServiceTest {
     @Test
     public void deleteBidListTest_whenBidListExist_ThenReturnMessageBideListDeleted() {
         //GIVEN
+        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
         //WHEN
-        String messageResult = bidListServiceTest.deleteBidList(bidListTest);
+        String messageResult = bidListServiceTest.deleteBidList(bidListTest.getBidListId());
         //THEN
         verify(bidListRepositoryMock,times(1)).delete(isA(BidList.class));
         assertEquals("BidList deleted", messageResult);

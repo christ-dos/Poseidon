@@ -13,5 +13,5 @@ public interface ICurvePointService {
 
     CurvePoint updateCurvePoint(CurvePoint curvePoint);
 
-    String deleteCurvePoint(CurvePoint curvePoint);
+    String deleteCurvePoint(Integer id);
 }

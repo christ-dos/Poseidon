@@ -127,8 +127,9 @@ public class CurvePointServiceTest {
     @Test
     public void deleteCurvePointTest_whenCurvePointExist_ThenReturnMessageCurvePointDeleted() {
         //GIVEN
+        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(curvePointTest);
         //WHEN
-        String messageResult = curvePointServiceTest.deleteCurvePoint(curvePointTest);
+        String messageResult = curvePointServiceTest.deleteCurvePoint(curvePointTest.getId());
         //THEN
         verify(curvePointRepositoryMock, times(1)).delete(isA(CurvePoint.class));
         assertEquals("CurvePoint deleted", messageResult);
