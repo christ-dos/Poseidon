@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,32 +29,36 @@ public class BidListController {
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(BidList bid) {
+    public String addBidForm(@ModelAttribute("bidList") BidList bidList) {
         log.info("Controller: request to add a BidList");
         return "bidList/add";
     }
 
+
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        if (!result.hasErrors()) {
-            bidListService.addBidList(bid);
-            log.info("Controller: redirection to bidList list");
-            return "redirect:/bidList/list";
+    public String validate(@Valid BidList bidList, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            log.error("Controller: Has error in form");
+
+            return "bidList/add";
         }
-        log.error("Controller: Has error in form");
-        return "bidList/add";
+        bidListService.addBidList(bidList);
+        log.info("Controller: redirection to bidList list");
+        return "redirect:/bidList/list";
+
         // TODO: check data valid and save to db, after saving return bid list
     }
 
     @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, BindingResult result, Model model) {
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         BidList bidList = null;
         try {
             bidList = bidListService.getBidListById(id);
         } catch (BidListNotFoundException ex) {
-            result.rejectValue("id", ex.getMessage());
+            model.addAttribute("BidListNotFound",ex.getMessage());
+//            result.rejectValue("bidListId", ex.getMessage());
         }
-        model.addAttribute("bidlist", bidList);
+        model.addAttribute("bidList", bidList);
         return "bidList/update";
         // TODO: get Bid by Id and to model then show to the form
     }
@@ -66,8 +67,9 @@ public class BidListController {
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                             BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "bidlis/update";
+            return "bidList/update";
         }
+        bidList.setBidListId(id);
         bidListService.updateBidList(bidList);
         model.addAttribute("bidLists", bidListService.getBidLists());
         return "redirect:/bidList/list";
