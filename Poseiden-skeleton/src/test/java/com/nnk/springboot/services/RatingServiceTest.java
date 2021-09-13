@@ -43,7 +43,8 @@ public class RatingServiceTest {
     public void getRatingsTest_whenListOfRatingContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
         List<Rating> ratings = new ArrayList<>(
-                Arrays.asList(Rating.builder().moodysRating("Moodys Rating").sandPRating("Sand PRating").fitchRating("Fitch Rating").orderNumber(10).build(),
+                Arrays.asList(
+                        Rating.builder().moodysRating("Moodys Rating").sandPRating("Sand PRating").fitchRating("Fitch Rating").orderNumber(10).build(),
                         Rating.builder().moodysRating("Moodys Rating1").sandPRating("Sand PRating1").fitchRating("Fitch Rating1").orderNumber(20).build(),
                         Rating.builder().moodysRating("Moodys Rating2").sandPRating("Sand PRating2").fitchRating("Fitch Rating2").orderNumber(30).build()));
         when(ratingRepositoryMock.findAll()).thenReturn(ratings);
