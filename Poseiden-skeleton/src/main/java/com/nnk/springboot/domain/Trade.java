@@ -25,7 +25,7 @@ public class Trade {
     @NotBlank(message = "Account is mandatory")
     private String account;
 
-    @NotBlank(message = "Account is mandatory")
+    @NotBlank(message = "Type is mandatory")
     private String type;
 
     @NotNull(message = "must not be null")
