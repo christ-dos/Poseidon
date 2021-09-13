@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -73,10 +72,6 @@ public class CurvePointService implements ICurvePointService {
     @Override
     public CurvePoint addCurvePoint(CurvePoint curvePoint) {
         CurvePoint curvePointToAdd = curvePointRepository.getById(curvePoint.getId());
-        if (curvePointToAdd != null) {
-            log.error("Service: CurvePoint already exist!");
-            throw new CurvePointAlreadyExistException("The CurvePoint that you try to add already exist");
-        }
         curvePoint.setCreationDate(Timestamp.from(Instant.now()));
         log.info("Service: CurvePoint saved");
         return curvePointRepository.save(curvePoint);
@@ -91,7 +86,10 @@ public class CurvePointService implements ICurvePointService {
     @Override
     public CurvePoint updateCurvePoint(CurvePoint curvePoint) {
         CurvePoint curvePointToUpdate = curvePointRepository.getById(curvePoint.getId());
-
+        if (curvePointToUpdate == null) {
+            log.error("Service: CurvePoint NOT FOUND with ID: " + curvePoint.getId());
+            throw new CurvePointNotFoundException("CurvePoint not found");
+        }
         curvePointToUpdate.setCurveId(curvePoint.getCurveId());
         curvePointToUpdate.setTerm(curvePoint.getTerm());
         curvePointToUpdate.setValue(curvePoint.getValue());
@@ -101,13 +99,13 @@ public class CurvePointService implements ICurvePointService {
 
     /**
      * Method that delete a {@link CurvePoint }
-     * @param curvePoint An instance Of {@link CurvePoint}
+     * @param id An Integer containing the id if the curvePoint
      * @return A String containing "CurvePoint  deleted"
      */
     @Override
-    public String deleteCurvePoint(CurvePoint curvePoint) {
-        curvePointRepository.delete(curvePoint);
-        log.info("Service: BidList deleted with ID: " + curvePoint.getId());
+    public String deleteCurvePoint(Integer id) {
+        curvePointRepository.deleteById(id);
+        log.info("Service: BidList deleted with ID: " + id);
 
         return "CurvePoint deleted";
     }

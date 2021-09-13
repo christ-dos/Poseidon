@@ -91,7 +91,10 @@ public class RatingService implements IRatingService {
     @Override
     public Rating updateRating(Rating rating) {
         Rating ratingToUpdate = ratingRepository.getById(rating.getId());
-
+        if (ratingToUpdate == null) {
+            log.error("Service: Rating NOT FOUND with ID: " + rating.getId());
+            throw new RatingNotFoundException("Rating not found");
+        }
         ratingToUpdate.setMoodysRating(rating.getMoodysRating());
         ratingToUpdate.setSandPRating(rating.getSandPRating());
         ratingToUpdate.setFitchRating(rating.getFitchRating());
@@ -100,10 +103,16 @@ public class RatingService implements IRatingService {
         return ratingRepository.save(ratingToUpdate);
     }
 
+    /**
+     * Method that delete a {@link Rating}
+     *
+     * @param id An integer containing the id
+     * @return A String containing "Rating deleted"
+     */
     @Override
-    public String deleteRating(Rating rating) {
-        ratingRepository.delete(rating);
-        log.info("Service: Rating deleted iwth ID:" + rating.getId());
+    public String deleteRating(Integer id) {
+        ratingRepository.deleteById(id);
+        log.info("Service: Rating deleted iwth ID:" + id);
 
         return "Rating deleted";
     }

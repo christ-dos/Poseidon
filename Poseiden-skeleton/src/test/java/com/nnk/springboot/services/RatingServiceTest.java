@@ -1,9 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.exceptions.BidListAlreadyExistException;
-import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.exceptions.RatingAlreadyExistException;
 import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
@@ -13,9 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -135,12 +129,22 @@ public class RatingServiceTest {
     }
 
     @Test
+    public void updateRatingTest_whenRatingNotExist_thenThrowRatingNotFoundException() {
+        //GIVEN
+        when(ratingRepositoryMock.getById(anyInt())).thenReturn(null);
+        //WHEN
+        //THEN
+        verify(ratingRepositoryMock, times(0)).save(isA(Rating.class));
+        assertThrows(RatingNotFoundException.class, () -> ratingServiceTest.updateRating(ratingTest));
+    }
+
+    @Test
     public void deleteRatingTest_whenRatingExist_ThenReturnMessageRatingDeleted() {
         //GIVEN
         //WHEN
-        String messageResult = ratingServiceTest.deleteRating(ratingTest);
+        String messageResult = ratingServiceTest.deleteRating(ratingTest.getId());
         //THEN
-        verify(ratingRepositoryMock,times(1)).delete(isA(Rating.class));
+        verify(ratingRepositoryMock,times(1)).deleteById(anyInt());
         assertEquals("Rating deleted", messageResult);
     }
 

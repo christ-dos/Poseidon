@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,15 +92,6 @@ public class CurvePointServiceTest {
         assertNotNull(curvePointResult.getCreationDate());
     }
 
-    @Test
-    public void addCurvePointTest_whenCurvePointAlreadyExistInDb_thenThrowCurvePointAlreadyExistException() {
-        //GIVEN
-        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(curvePointTest);
-        //WHEN
-        //THEN
-        verify(curvePointRepositoryMock, times(0)).save(isA(CurvePoint.class));
-        assertThrows(CurvePointAlreadyExistException.class, () -> curvePointServiceTest.addCurvePoint(curvePointTest));
-    }
 
     @Test
     public void updateCurvePointTest_whenCurvePointExist_thenReturnCurvePointUpdated() {
@@ -125,12 +115,22 @@ public class CurvePointServiceTest {
     }
 
     @Test
+    public void updateCurvePointTest_whenCurvePointNotExist_thenThrowCurvePointNotFoundException() {
+        //GIVEN
+        when(curvePointRepositoryMock.getById(anyInt())).thenReturn(null);
+        //WHEN
+        //THEN
+        verify(curvePointRepositoryMock, times(0)).save(isA(CurvePoint.class));
+        assertThrows(CurvePointNotFoundException.class, () -> curvePointServiceTest.updateCurvePoint(curvePointTest));
+    }
+
+    @Test
     public void deleteCurvePointTest_whenCurvePointExist_ThenReturnMessageCurvePointDeleted() {
         //GIVEN
         //WHEN
-        String messageResult = curvePointServiceTest.deleteCurvePoint(curvePointTest);
+        String messageResult = curvePointServiceTest.deleteCurvePoint(curvePointTest.getId());
         //THEN
-        verify(curvePointRepositoryMock, times(1)).delete(isA(CurvePoint.class));
+        verify(curvePointRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("CurvePoint deleted", messageResult);
 
     }
