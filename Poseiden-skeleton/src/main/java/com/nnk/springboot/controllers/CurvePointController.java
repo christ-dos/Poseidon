@@ -25,7 +25,6 @@ public class CurvePointController {
     public String home(Model model) {
         model.addAttribute("curvePoints", curvePointService.getCurvePoints());
         log.info("Controller: displaying List of CurvePoint");
-        // TODO: find all Curve Point, add to model
         return "curvePoint/list";
     }
 
@@ -39,12 +38,10 @@ public class CurvePointController {
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
         if (result.hasErrors()) {
             log.error("Controller: Has error in form");
-
             return "curvePoint/add";
         }
         curvePointService.addCurvePoint(curvePoint);
         log.info("Controller: redirection to curve point list");
-
         return "redirect:/curvePoint/list";
     }
 

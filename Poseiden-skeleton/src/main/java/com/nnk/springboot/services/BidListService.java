@@ -74,7 +74,6 @@ public class BidListService implements IBidListService {
     public BidList addBidList(BidList bidList) {
         bidList.setCreationDate(Timestamp.from(Instant.now()));
         log.info("Service: BidList saved");
-
         return bidListRepository.save(bidList);
     }
 

@@ -71,7 +71,6 @@ public class CurvePointService implements ICurvePointService {
      */
     @Override
     public CurvePoint addCurvePoint(CurvePoint curvePoint) {
-        CurvePoint curvePointToAdd = curvePointRepository.getById(curvePoint.getId());
         curvePoint.setCreationDate(Timestamp.from(Instant.now()));
         log.info("Service: CurvePoint saved");
         return curvePointRepository.save(curvePoint);
