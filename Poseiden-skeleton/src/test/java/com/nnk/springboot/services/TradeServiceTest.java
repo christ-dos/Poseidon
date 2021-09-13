@@ -130,8 +130,9 @@ public class TradeServiceTest {
     @Test
     public void deleteTradeTest_whenTradeExist_ThenReturnMessageTradeDeleted() {
         //GIVEN
+        Integer id = 1;
         //WHEN
-        String messageResult = tradeServiceTest.deleteTrade(tradeTest.getTradeId());
+        String messageResult = tradeServiceTest.deleteTrade(id);
         //THEN
         verify(tradeRepositoryMock,times(1)).deleteById(anyInt());
         assertEquals("Trade deleted", messageResult);
