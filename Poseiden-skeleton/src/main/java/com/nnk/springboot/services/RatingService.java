@@ -91,6 +91,7 @@ public class RatingService implements IRatingService {
         ratingToUpdate.setMoodysRating(rating.getMoodysRating());
         ratingToUpdate.setSandPRating(rating.getSandPRating());
         ratingToUpdate.setFitchRating(rating.getFitchRating());
+        ratingToUpdate.setOrderNumber(rating.getOrderNumber());
         log.info("Service: Rating updated with ID: " + rating.getId());
 
         return ratingRepository.save(ratingToUpdate);
