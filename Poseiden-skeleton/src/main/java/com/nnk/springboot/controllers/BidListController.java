@@ -40,7 +40,6 @@ public class BidListController {
     public String validate(@Valid BidList bidList, BindingResult result, Model model) {
         if (result.hasErrors()) {
             log.error("Controller: Has error in form");
-
             return "bidList/add";
         }
         bidListService.addBidList(bidList);
