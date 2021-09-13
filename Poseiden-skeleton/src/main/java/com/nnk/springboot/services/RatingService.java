@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.exceptions.RatingAlreadyExistException;
 import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -72,13 +71,7 @@ public class RatingService implements IRatingService {
      */
     @Override
     public Rating addRating(Rating rating) {
-        Rating ratingToAdd = ratingRepository.getById(rating.getId());
-        if (ratingToAdd != null) {
-            log.error("Service: Rating already exist!");
-            throw new RatingAlreadyExistException("The Rating that you try to add already exist");
-        }
         log.info("Service: rating saved");
-
         return ratingRepository.save(rating);
     }
 
