@@ -20,7 +20,7 @@ public class CurvePoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
+    @NotNull(message = "must not be null")
     @Column(name = "curve_id")
     private  Integer curveId;
 

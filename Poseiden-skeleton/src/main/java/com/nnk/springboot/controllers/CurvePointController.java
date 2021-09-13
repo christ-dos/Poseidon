@@ -25,7 +25,6 @@ public class CurvePointController {
     public String home(Model model) {
         model.addAttribute("curvePoints", curvePointService.getCurvePoints());
         log.info("Controller: displaying List of CurvePoint");
-        // TODO: find all Curve Point, add to model
         return "curvePoint/list";
     }
 
