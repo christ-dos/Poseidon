@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
@@ -16,7 +19,6 @@ import javax.validation.Valid;
 @Controller
 @Slf4j
 public class BidListController {
-    // TODO: Inject Bid service
     @Autowired
     private IBidListService bidListService;
 
@@ -25,11 +27,10 @@ public class BidListController {
         model.addAttribute("bidLists", bidListService.getBidLists());
         log.info("Controller: displaying List of BidList");
         return "bidList/list";
-        // TODO: call service find all bids to show to the view
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(@ModelAttribute("bidList") BidList bidList) {
+    public String addBidForm(BidList bidList) {
         log.info("Controller: request to add a BidList");
         return "bidList/add";
     }
@@ -45,20 +46,19 @@ public class BidListController {
         bidListService.addBidList(bidList);
         log.info("Controller: redirection to bidList list");
         return "redirect:/bidList/list";
-
-        // TODO: check data valid and save to db, after saving return bid list
     }
 
     @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+    public String showUpdateForm(@PathVariable("id") Integer id,
+                                 Model model) {
         BidList bidList = null;
         try {
             bidList = bidListService.getBidListById(id);
         } catch (BidListNotFoundException ex) {
-            model.addAttribute("BidListNotFound",ex.getMessage());
 //            result.rejectValue("bidListId", ex.getMessage());
         }
         model.addAttribute("bidList", bidList);
+        log.info("Controller: BidList found with id: " + id);
         return "bidList/update";
         // TODO: get Bid by Id and to model then show to the form
     }
@@ -72,8 +72,8 @@ public class BidListController {
         bidList.setBidListId(id);
         bidListService.updateBidList(bidList);
         model.addAttribute("bidLists", bidListService.getBidLists());
+        log.info("Controller: BidList updated with: " + id);
         return "redirect:/bidList/list";
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
 
     }
 
@@ -83,6 +83,5 @@ public class BidListController {
         model.addAttribute("bidLists", bidListService.getBidLists());
         log.info("Controller: BidList deleted");
         return "redirect:/bidList/list";
-        // TODO: Find Bid by Id and delete the bid, return to Bid list
     }
 }

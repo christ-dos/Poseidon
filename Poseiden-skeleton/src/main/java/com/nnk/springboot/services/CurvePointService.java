@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -73,10 +72,6 @@ public class CurvePointService implements ICurvePointService {
     @Override
     public CurvePoint addCurvePoint(CurvePoint curvePoint) {
         CurvePoint curvePointToAdd = curvePointRepository.getById(curvePoint.getId());
-        if (curvePointToAdd != null) {
-            log.error("Service: CurvePoint already exist!");
-            throw new CurvePointAlreadyExistException("The CurvePoint that you try to add already exist");
-        }
         curvePoint.setCreationDate(Timestamp.from(Instant.now()));
         log.info("Service: CurvePoint saved");
         return curvePointRepository.save(curvePoint);

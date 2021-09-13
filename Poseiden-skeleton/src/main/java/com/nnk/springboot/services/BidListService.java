@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.exceptions.BidListAlreadyExistException;
 import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.repositories.BidListRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +55,7 @@ public class BidListService implements IBidListService {
     @Override
     public BidList getBidListById(Integer bidListId) {
         BidList bidList = bidListRepository.getById(bidListId);
-        if (bidList == null) {
+        if (bidList.getBidListId() == null) {
             log.error("Service: BidList NOT FOUND with ID: " + bidListId);
             throw new BidListNotFoundException("BidList not found");
         }

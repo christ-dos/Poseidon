@@ -1,9 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.BidListNotFoundException;
-import com.nnk.springboot.exceptions.CurvePointAlreadyExistException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -95,15 +92,6 @@ public class CurvePointServiceTest {
         assertNotNull(curvePointResult.getCreationDate());
     }
 
-    @Test
-    public void addCurvePointTest_whenCurvePointAlreadyExistInDb_thenThrowCurvePointAlreadyExistException() {
-        //GIVEN
-        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(curvePointTest);
-        //WHEN
-        //THEN
-        verify(curvePointRepositoryMock, times(0)).save(isA(CurvePoint.class));
-        assertThrows(CurvePointAlreadyExistException.class, () -> curvePointServiceTest.addCurvePoint(curvePointTest));
-    }
 
     @Test
     public void updateCurvePointTest_whenCurvePointExist_thenReturnCurvePointUpdated() {

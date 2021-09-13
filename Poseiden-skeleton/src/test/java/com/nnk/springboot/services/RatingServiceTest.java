@@ -1,9 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.exceptions.BidListAlreadyExistException;
-import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.exceptions.RatingAlreadyExistException;
 import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
@@ -13,9 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
