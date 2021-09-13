@@ -131,8 +131,9 @@ public class RatingServiceTest {
     @Test
     public void deleteRatingTest_whenRatingExist_ThenReturnMessageRatingDeleted() {
         //GIVEN
+        Integer id = 1;
         //WHEN
-        String messageResult = ratingServiceTest.deleteRating(ratingTest.getId());
+        String messageResult = ratingServiceTest.deleteRating(id);
         //THEN
         verify(ratingRepositoryMock,times(1)).deleteById(anyInt());
         assertEquals("Rating deleted", messageResult);

@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class TradeService {
+public class TradeService implements ITradeService {
     /**
      * An instance Of {@link TradeRepository}
      */
@@ -37,9 +37,9 @@ public class TradeService {
      *
      * @return A list of {@link Trade}
      */
+    @Override
     public List<Trade> getTrades() {
         log.info("Service: displaying Trades");
-
         return tradeRepository.findAll();
     }
 
@@ -49,6 +49,7 @@ public class TradeService {
      * @param tradeId An Integer containing the id of the Trade
      * @return An instance of {@link Trade}
      */
+    @Override
     public Trade getTradeById(Integer tradeId) {
         Trade trade = tradeRepository.getById(tradeId);
         if (trade == null) {
@@ -66,6 +67,7 @@ public class TradeService {
      * @param trade An instance {@link Trade}
      * @return The {@link Trade} saved
      */
+    @Override
     public Trade addTrade(Trade trade) {
         log.info("Service: trade saved");
         return tradeRepository.save(trade);
@@ -77,6 +79,7 @@ public class TradeService {
      * @param trade An instance {@link Trade}
      * @return the {@link Trade} updated
      */
+    @Override
     public Trade updateTrade(Trade trade) {
         Trade tradeToUpdate = tradeRepository.getById(trade.getTradeId());
         if (tradeToUpdate == null) {
@@ -97,6 +100,7 @@ public class TradeService {
      * @param tradeId An integer containing the id
      * @return A String containing "Trade deleted"
      */
+    @Override
     public String deleteTrade(Integer tradeId) {
         tradeRepository.deleteById(tradeId);
         log.info("Service: Rating deleted with ID:" + tradeId);
