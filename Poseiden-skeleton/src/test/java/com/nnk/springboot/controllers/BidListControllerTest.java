@@ -79,7 +79,7 @@ public class BidListControllerTest {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postValidate_whenFieldsAccountAndTypeHasError_thenRedirectToViewAdd() throws Exception {
+    public void postValidate_whenFieldsAccountAndTypeHasError_thenReturnToViewAdd() throws Exception {
         //GIVEN
         //WHEN
         //THEN
@@ -149,9 +149,9 @@ public class BidListControllerTest {
                         .param("type", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/update"))
+                .andExpect(model().errorCount(2))
                 .andExpect(model().attributeHasFieldErrorCode("bidList", "account", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("bidList", "type", "NotBlank"))
-                .andExpect(model().errorCount(2))
                 .andDo(print());
     }
 

@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.exceptions.RatingAlreadyExistException;
 import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,16 +92,6 @@ public class RatingServiceTest {
         assertEquals("Sand PRating", ratingResult.getSandPRating());
         assertEquals("Fitch Rating", ratingResult.getFitchRating());
         assertEquals(10, ratingResult.getOrderNumber());
-    }
-
-    @Test
-    public void addRatingTest_whenRatingAlreadyExistInDb_thenThrowRatingAlreadyExistException() {
-        //GIVEN
-        when(ratingRepositoryMock.getById(isA(Integer.class))).thenReturn(ratingTest);
-        //WHEN
-        //THEN
-        verify(ratingRepositoryMock, times(0)).save(isA(Rating.class));
-        assertThrows(RatingAlreadyExistException.class, () -> ratingServiceTest.addRating(ratingTest));
     }
 
     @Test

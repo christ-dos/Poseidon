@@ -55,7 +55,7 @@ public class BidListService implements IBidListService {
     @Override
     public BidList getBidListById(Integer bidListId) {
         BidList bidList = bidListRepository.getById(bidListId);
-        if (bidList.getBidListId() == null) {
+        if (bidList == null) {
             log.error("Service: BidList NOT FOUND with ID: " + bidListId);
             throw new BidListNotFoundException("BidList not found");
         }

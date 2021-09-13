@@ -3,6 +3,8 @@ package com.nnk.springboot.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -15,15 +17,19 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Account is mandatory")
     @Column(name = "moodys_rating")
     private String moodysRating;
 
+    @NotBlank(message = "Account is mandatory")
     @Column(name = "sand_p_rating")
     private String sandPRating;
 
+    @NotBlank(message = "Account is mandatory")
     @Column(name = "fitch_rating")
     private String fitchRating;
 
+    @NotNull(message = "must not be null")
     @Column(name = "order_number")
     private Integer orderNumber;
 
