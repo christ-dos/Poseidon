@@ -17,15 +17,15 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank(message = "Account is mandatory")
+    @NotBlank(message = "MoodysRating is mandatory")
     @Column(name = "moodys_rating")
     private String moodysRating;
 
-    @NotBlank(message = "Account is mandatory")
+    @NotBlank(message = "SandPRating is mandatory")
     @Column(name = "sand_p_rating")
     private String sandPRating;
 
-    @NotBlank(message = "Account is mandatory")
+    @NotBlank(message = "FitchRating is mandatory")
     @Column(name = "fitch_rating")
     private String fitchRating;
 

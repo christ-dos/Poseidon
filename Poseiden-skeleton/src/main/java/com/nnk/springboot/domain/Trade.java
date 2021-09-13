@@ -3,6 +3,8 @@ package com.nnk.springboot.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -20,10 +22,13 @@ public class Trade {
     @Column(name = "trade_id", nullable = false)
     private Integer tradeId;
 
+    @NotBlank(message = "Account is mandatory")
     private String account;
 
+    @NotBlank(message = "Account is mandatory")
     private String type;
 
+    @NotNull(message = "must not be null")
     private Double buyQuantity;
 
     @Column(name = "sell_quantity")
