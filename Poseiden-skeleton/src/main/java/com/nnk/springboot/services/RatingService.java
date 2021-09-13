@@ -26,7 +26,7 @@ public class RatingService implements IRatingService {
     /**
      * Constructor
      *
-     * @param ratingRepository An instanec of {@link RatingRepository}
+     * @param ratingRepository An instance of {@link RatingRepository}
      */
     @Autowired
     public RatingService(RatingRepository ratingRepository) {
@@ -106,7 +106,7 @@ public class RatingService implements IRatingService {
     @Override
     public String deleteRating(Integer id) {
         ratingRepository.deleteById(id);
-        log.info("Service: Rating deleted iwth ID:" + id);
+        log.info("Service: Rating deleted with ID:" + id);
 
         return "Rating deleted";
     }
