@@ -32,6 +32,10 @@ CREATE TABLE bid_list
     PRIMARY KEY (bid_list_id)
 );
 
+INSERT INTO bid_list(account, type, bid_quantity)
+VALUES ('Account', 'Type', 10.0),
+       ('Account2', 'Type2', 15.0);
+
 CREATE TABLE Trade
 (
     trade_id     tinyint(4)  NOT NULL AUTO_INCREMENT,
