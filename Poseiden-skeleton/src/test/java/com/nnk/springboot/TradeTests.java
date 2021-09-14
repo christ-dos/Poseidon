@@ -21,8 +21,11 @@ public class TradeTests {
 
 	@Test
 	public void tradeTest() {
-		Trade trade = new Trade("Trade Account", "Type");
-
+		Trade trade = Trade.builder()
+				.account("Trade Account")
+				.type("Type")
+				.buyQuantity(10d)
+				.build();
 		// Save
 		trade = tradeRepository.save(trade);
 		Assert.assertNotNull(trade.getTradeId());

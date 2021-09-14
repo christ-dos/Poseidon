@@ -77,9 +77,4 @@ public class BidList {
 
     private String side;
 
-    public BidList( String account, String type, Double bidQuantity) {
-        this.account = account;
-        this.type = type;
-        this.bidQuantity = bidQuantity;
-    }
 }
