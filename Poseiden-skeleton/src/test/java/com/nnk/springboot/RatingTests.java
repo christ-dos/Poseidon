@@ -21,8 +21,12 @@ public class RatingTests {
 
 	@Test
 	public void ratingTest() {
-		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
-
+		Rating rating = Rating.builder()
+				.moodysRating("Moodys Rating")
+				.sandPRating("Sand PRating")
+				.fitchRating("Fitch Rating")
+				.orderNumber(10).
+				build();
 		// Save
 		rating = ratingRepository.save(rating);
 		Assert.assertNotNull(rating.getId());

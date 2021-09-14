@@ -1,8 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.TradeRepository;
-import com.nnk.springboot.services.TradeService;
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +14,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,41 +23,41 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TradeController.class)
+@WebMvcTest(UserController.class)
 @AutoConfigureMockMvc
-public class TradeControllerTest {
+public class UserControllerTest {
     /**
      * An instance of {@link MockMvc} that permit simulate a request HTTP
      */
     @Autowired
-    private MockMvc mockMvcTrade;
+    private MockMvc mockMvcUser;
 
     @MockBean
-    private TradeService tradeServiceMock;
+    private UserService userServiceMock;
 
     @MockBean
-    private TradeRepository tradeRepositoryMock;
+    private UserRepository userRepositoryMock;
 
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(get("/trade/list"))
+        mockMvcUser.perform(get("/user/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("trade/list"))
-                .andExpect(model().attributeExists("trades"))
+                .andExpect(view().name("user/list"))
+                .andExpect(model().attributeExists("users"))
                 .andDo(print());
     }
 
     @Test
-    public void getAddTradeFormTest() throws Exception {
+    public void getAddUserFormTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(get("/trade/add"))
+        mockMvcUser.perform(get("/user/add"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("trade/add"))
+                .andExpect(view().name("user/add"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
@@ -65,38 +68,40 @@ public class TradeControllerTest {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(post("/trade/validate")
+        mockMvcUser.perform(post("/user/validate")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account", "Account")
-                        .param("type", "Type")
-                        .param("buyQuantity", String.valueOf(10.0)))
+                        .param("username", "Username")
+                        .param("password", "Password")
+                        .param("fullname", "Fullname")
+                        .param("role", "Role"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/trade/list"))
-                .andExpect(redirectedUrl("/trade/list"))
+                .andExpect(view().name("redirect:/user/list"))
+                .andExpect(redirectedUrl("/user/list"))
                 .andExpect(model().attributeHasNoErrors())
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postValidate_whenFieldsHasErrors_thenRedirectToViewAdd() throws Exception {
+    public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(post("/trade/validate")
+        mockMvcUser.perform(post("/user/validate")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account", "")
-                        .param("type", "")
-                        .param("buyQuantity", ""))
+                        .param("username", "")
+                        .param("password", "")
+                        .param("fullname", "")
+                        .param("role", ""))
                 .andExpect(status().isOk())
-                .andExpect(view().name("trade/add"))
+                .andExpect(view().name("user/add"))
                 .andExpect(model().attributeHasErrors())
-                .andExpect(model().errorCount(3))
+                .andExpect(model().errorCount(4))
                 .andExpect(model().attributeDoesNotExist())
-                .andExpect(model().attributeHasFieldErrorCode("trade", "account", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("trade", "type", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("trade", "buyQuantity", "NotNull"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
     }
 
@@ -104,76 +109,82 @@ public class TradeControllerTest {
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
-        Trade trade = Trade.builder()
-                .tradeId(1)
-                .account("Account")
-                .type("Type")
-                .buyQuantity(10.0)
-                .build();
-        when(tradeRepositoryMock.getById(anyInt())).thenReturn(trade);
-        when(tradeServiceMock.getTradeById(anyInt())).thenReturn(trade);
+       User user = User.builder()
+               .fullname("Fullname")
+               .username("Username")
+               .password("Password")
+               .role("Role")
+               .build();
+        when(userRepositoryMock.findById(anyInt())).thenReturn(Optional.of(user));
+        when(userServiceMock.getUserById(anyInt())).thenReturn(Optional.of(user));
         //WHEN
         //THEN
-        mockMvcTrade.perform(get("/trade/update/1")
+        mockMvcUser.perform(get("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("trade/update"))
+                .andExpect(view().name("user/update"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postUpdateTradeTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
+    public void postUpdateUserTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(MockMvcRequestBuilders.post("/trade/update/1")
+        mockMvcUser.perform(MockMvcRequestBuilders.post("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account","Account")
-                        .param("type","Type")
-                        .param("buyQuantity","10.0"))
+                        .param("username", "Username")
+                        .param("password", "Password")
+                        .param("fullname", "Fullname")
+                        .param("role", "Role"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/trade/list"))
-                .andExpect(view().name("redirect:/trade/list"))
+                .andExpect(redirectedUrl("/user/list"))
+                .andExpect(view().name("redirect:/user/list"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
-
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postUpdateTradeTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
+    public void postUpdateUserTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(MockMvcRequestBuilders.post("/trade/update/1")
+        mockMvcUser.perform(MockMvcRequestBuilders.post("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account","")
-                        .param("type","")
-                        .param("buyQuantity",""))
+                        .param("username", "")
+                        .param("password", "")
+                        .param("fullname", "")
+                        .param("role", ""))
                 .andExpect(status().isOk())
-                .andExpect(view().name("trade/update"))
-                .andExpect(model().errorCount(3))
-                .andExpect(model().attributeHasFieldErrorCode("trade", "account", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("trade", "type", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("trade", "buyQuantity", "NotNull"))
+                .andExpect(view().name("user/update"))
+                .andExpect(model().errorCount(4))
+                .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
     }
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void deleteTradeTest() throws Exception {
+    public void deleteUserTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(MockMvcRequestBuilders.get("/trade/delete/1")
+        mockMvcUser.perform(MockMvcRequestBuilders.get("/user/delete/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/trade/list"))
-                .andExpect(view().name("redirect:/trade/list"))
+                .andExpect(redirectedUrl("/user/list"))
+                .andExpect(view().name("redirect:/user² /list"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
+
+
+
+
 
 }
