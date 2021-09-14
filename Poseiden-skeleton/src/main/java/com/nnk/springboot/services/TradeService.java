@@ -69,7 +69,7 @@ public class TradeService implements ITradeService {
      */
     @Override
     public Trade addTrade(Trade trade) {
-        log.info("Service: trade saved");
+        log.info("Service: Trade saved");
         return tradeRepository.save(trade);
     }
 
@@ -103,7 +103,7 @@ public class TradeService implements ITradeService {
     @Override
     public String deleteTrade(Integer tradeId) {
         tradeRepository.deleteById(tradeId);
-        log.info("Service: Rating deleted with ID:" + tradeId);
+        log.info("Service: Trade deleted with ID:" + tradeId);
 
         return "Trade deleted";
     }
