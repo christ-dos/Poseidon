@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 @Service
 @Slf4j
-public class UserService {
+public class UserService implements IUserService {
 
     /**
      * An instance Of {@link UserRepository}
@@ -41,6 +41,7 @@ public class UserService {
      *
      * @return A list of {@link User}
      */
+    @Override
     public List<User> getUsers() {
         log.info("Service: displaying Users");
         return userRepository.findAll();
@@ -52,8 +53,9 @@ public class UserService {
      * @param id An Integer containing the id of the User
      * @return An instance of {@link User}
      */
-    public Optional getUserById(Integer id) {
-        Optional user = userRepository.findById(id);
+    @Override
+    public Optional<User> getUserById(Integer id) {
+        Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             log.error("Service: User NOT FOUND with ID: " + id);
             throw new UserNotFoundException("User not found");
@@ -69,6 +71,7 @@ public class UserService {
      * @param user An instance {@link User}
      * @return The {@link User} saved
      */
+    @Override
     public User addUser(User user) {
         log.info("Service: User saved");
         user.setPassword(encryptedPassword(user.getPassword()));
@@ -81,6 +84,7 @@ public class UserService {
      * @param user An instance {@link User}
      * @return the {@link User} updated
      */
+    @Override
     public User updateUser(User user) {
         User userToUpdate = userRepository.getById(user.getId());
         if (userToUpdate == null) {
@@ -102,6 +106,7 @@ public class UserService {
      * @param id An integer containing the id
      * @return A String containing "User deleted"
      */
+    @Override
     public String deleteUser(Integer id) {
         userRepository.deleteById(id);
         log.info("Service: User deleted with ID:" + id);
