@@ -1,5 +1,6 @@
 package com.nnk.springboot.IT;
 
+import com.nnk.springboot.domain.CurvePoint;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +15,28 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Sql(value = {"/dataTest.sql"},executionPhase = BEFORE_TEST_METHOD)
-public class BidListTestIT {
+public class CurvePointTestIT {
 
     /**
      * An instance of {@link MockMvc} that permit simulate a request HTTP
      */
     @Autowired
-    private MockMvc mockMvcBidList;
+    private MockMvc mockMvcCurvePoint;
 
     /**
      * An instance of {@link WebApplicationContext}
@@ -44,7 +49,7 @@ public class BidListTestIT {
      */
     @Before
     public void setup() {
-        mockMvcBidList = MockMvcBuilders
+        mockMvcCurvePoint = MockMvcBuilders
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
@@ -55,10 +60,10 @@ public class BidListTestIT {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/list"))
+        mockMvcCurvePoint.perform(get("/curvePoint/list"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/list"))
-                .andExpect(model().attributeExists("bidLists"))
+                .andExpect(view().name("curvePoint/list"))
+                .andExpect(model().attributeExists("curvePoints"))
                 .andDo(print());
     }
 
@@ -67,9 +72,9 @@ public class BidListTestIT {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/add"))
+        mockMvcCurvePoint.perform(get("/curvePoint/add"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/add"))
+                .andExpect(view().name("curvePoint/add"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
@@ -79,97 +84,93 @@ public class BidListTestIT {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(post("/bidList/validate")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-//                        .param("username" , "admin")
-//                        .param("role", "ADMIN")
-//                        .param("password","3f7d314e-60f7-4843-804d-785b72c4e8fe" )
-                        .param("account", "Account1")
-                        .param("type", "Type1")
-                        .param("bidQuantity", String.valueOf(20.0)))
+        mockMvcCurvePoint.perform(post("/curvePoint/validate").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("curveId", String.valueOf(12))
+                        .param("term", String.valueOf(14.0))
+                        .param("value", String.valueOf(10.)))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/bidList/list"))
-                .andExpect(redirectedUrl("/bidList/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
+                .andExpect(redirectedUrl("/curvePoint/list"))
                 .andExpect(model().attributeHasNoErrors())
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
     @Test
-    public void postValidate_whenFieldsAccountAndTypeHasError_thenReturnToViewAdd() throws Exception {
+    public void postValidate_whenFieldsCurveIdIsNull_thenRedirectToViewAdd() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(post("/bidList/validate").with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account", "")
-                        .param("type", "")
-                        .param("bidQuantity" , String.valueOf(10.0)))
+        mockMvcCurvePoint.perform(post("/curvePoint/validate").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("curveId", ""))
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/add"))
+                .andExpect(view().name("curvePoint/add"))
                 .andExpect(model().attributeHasErrors())
-                .andExpect(model().errorCount(2))
-                .andExpect(model().attributeHasFieldErrorCode("bidList", "account", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("bidList", "type", "NotBlank"))
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint", "curveId", "NotNull"))
                 .andDo(print());
     }
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/update/1")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        mockMvcCurvePoint.perform(get("/curvePoint/update/1").with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/update"))
+                .andExpect(view().name("curvePoint/update"))
+                .andExpect(model().attributeDoesNotExist())
+                .andDo(print());
+    }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void postUpdateCurvePointTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
+        //GIVEN
+        CurvePoint curvePoint = CurvePoint.builder()
+                .id(1)
+                .curveId(12)
+                .term(14.0)
+                .value(10.0)
+                .build();
+        //WHEN
+        //THEN
+        mockMvcCurvePoint.perform(MockMvcRequestBuilders.post("/curvePoint/update/1").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("curveId", String.valueOf(32))
+                        .param("term", String.valueOf(34.0))
+                        .param("value", String.valueOf(30.0)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/curvePoint/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
     @Test
-    public void postUpdateBidTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
+    public void postUpdateCurvePointTest_whenFieldCurvePointIdIsNull_thenReturnViewUpdate() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(MockMvcRequestBuilders.post("/bidList/update/1")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account", "AccountUpdated")
-                        .param("type", "TypeUpdated")
-                        .param("bidQuantity", String.valueOf(20d)))
-
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/bidList/list"))
-                .andExpect(view().name("redirect:/bidList/list"))
-                .andExpect(model().attributeDoesNotExist())
-                .andDo(print());
-    }
-
-    @Test
-    public void postUpdateBidTest_whenFieldsHasErrors_thenReturnViewUpdate() throws Exception {
-        //GIVEN
-        //WHEN
-        //THEN
-        mockMvcBidList.perform(MockMvcRequestBuilders.post("/bidList/update/1").with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("account", "")
-                        .param("type", ""))
+        mockMvcCurvePoint.perform(MockMvcRequestBuilders.post("/curvePoint/update/1").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("curveId", ""))
                 .andExpect(status().isOk())
-                .andExpect(view().name("bidList/update"))
-                .andExpect(model().errorCount(2))
-                .andExpect(model().attributeHasFieldErrorCode("bidList", "account", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("bidList", "type", "NotBlank"))
+                .andExpect(view().name("curvePoint/update"))
+                .andExpect(model().errorCount(1))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint", "curveId", "NotNull"))
+
                 .andDo(print());
     }
 
     @Test
-    public void deleteBidTest() throws Exception {
+    public void deleteCurvePointTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(MockMvcRequestBuilders.get("/bidList/delete/2")
+        mockMvcCurvePoint.perform(MockMvcRequestBuilders.get("/curvePoint/delete/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/bidList/list"))
-                .andExpect(view().name("redirect:/bidList/list"))
+                .andExpect(redirectedUrl("/curvePoint/list"))
+                .andExpect(view().name("redirect:/curvePoint/list"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
