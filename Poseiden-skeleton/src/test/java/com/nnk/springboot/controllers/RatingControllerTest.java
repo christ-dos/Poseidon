@@ -176,9 +176,4 @@ public class RatingControllerTest {
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
-
-
-
-
-
 }

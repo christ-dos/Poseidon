@@ -1,29 +1,30 @@
-package com.nnk.springboot.controllers;
+package com.nnk.springboot.IT;
 
-import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.RuleNameRepository;
-import com.nnk.springboot.services.RuleNameService;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(RuleNameController.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-public class RuleNameControllerTest {
+@ActiveProfiles("test")
+@Sql(value = {"/dataTest.sql"},executionPhase = BEFORE_TEST_METHOD)
+public class RuleNameTestIT {
 
     /**
      * An instance of {@link MockMvc} that permit simulate a request HTTP
@@ -31,11 +32,22 @@ public class RuleNameControllerTest {
     @Autowired
     private MockMvc mockMvcRuleName;
 
-    @MockBean
-    private RuleNameService ruleNameServiceMock;
+    /**
+     * An instance of {@link WebApplicationContext}
+     */
+    @Autowired
+    private WebApplicationContext context;
 
-    @MockBean
-    private RuleNameRepository ruleNameRepositoryMock;
+    /**
+     * Method that build the mockMvc with the context and springSecurity
+     */
+    @Before
+    public void setup() {
+        mockMvcRuleName = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @Test
     public void getHomeTest() throws Exception {
@@ -61,7 +73,6 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -78,7 +89,6 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -96,21 +106,9 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
-        RuleName ruleName = RuleName.builder()
-                .id(1)
-                .name("Name")
-                .description("Description")
-                .json("Json")
-                .template("Template")
-                .sqlStr("Sql Str")
-                .sqlPart("Sql Part")
-                .build();
-        when(ruleNameRepositoryMock.getById(anyInt())).thenReturn(ruleName);
-        when(ruleNameServiceMock.getRuleNameById(anyInt())).thenReturn(ruleName);
         //WHEN
         //THEN
         mockMvcRuleName.perform(get("/ruleName/update/1")
@@ -121,7 +119,6 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRuleNameTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -137,7 +134,6 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRuleNameTest_whenFieldsHasErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -153,7 +149,6 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteRuleNameTest() throws Exception {
         //GIVEN

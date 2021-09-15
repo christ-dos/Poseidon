@@ -70,6 +70,12 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--************************Passay********************-->
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>1.6.1</version>
+        </dependency>
         <!-- *************jaCoCo dependency******************-->
         <dependency>
             <groupId>org.jacoco</groupId>

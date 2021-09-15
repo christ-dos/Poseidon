@@ -32,6 +32,10 @@ CREATE TABLE bid_list
     PRIMARY KEY (bid_list_id)
 );
 
+INSERT INTO bid_list(account, type, bid_quantity)
+VALUES ('Account', 'Type', 10.0),
+       ('Account2', 'Type2', 15.0);
+
 CREATE TABLE Trade
 (
     trade_id     tinyint(4)  NOT NULL AUTO_INCREMENT,
@@ -59,6 +63,10 @@ CREATE TABLE Trade
     PRIMARY KEY (trade_id)
 );
 
+INSERT INTO trade(account, type, buy_quantity)
+ VALUES('Account','Type',10.0),
+       ('Account1','Type1',20.0) ;
+
 CREATE TABLE curve_point
 (
     Id           tinyint(4) NOT NULL AUTO_INCREMENT,
@@ -71,6 +79,9 @@ CREATE TABLE curve_point
     PRIMARY KEY (Id)
 );
 
+INSERT INTO curve_point(curve_id, term, value) VALUES (10,14.0,16.0),
+                                                      (20,24.0,26.0);
+
 CREATE TABLE Rating
 (
     Id           tinyint(4) NOT NULL AUTO_INCREMENT,
@@ -81,6 +92,9 @@ CREATE TABLE Rating
 
     PRIMARY KEY (Id)
 );
+INSERT INTO rating(moodys_rating, sand_p_rating, fitch_rating, order_number)
+VALUES ('MoodysRating','SandPRating','Firchrating',10),
+       ('MoodysRating1','SandPRating1','Firchrating1',20);
 
 CREATE TABLE rule_name
 (
@@ -94,6 +108,9 @@ CREATE TABLE rule_name
 
     PRIMARY KEY (Id)
 );
+INSERT INTO rule_name(name, description, json, template, sql_str, sql_part) VALUES
+('Name','Description','Json','Template','SqlStr','SqlPart'),
+('Name1','Description1','Json1','Template1','SqlStr1','SqlPart1');
 
 CREATE TABLE Users
 (
