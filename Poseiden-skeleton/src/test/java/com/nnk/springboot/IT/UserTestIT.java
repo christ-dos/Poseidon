@@ -1,42 +1,59 @@
-package com.nnk.springboot.controllers;
+package com.nnk.springboot.IT;
 
-import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.repositories.UserRepository;
-import com.nnk.springboot.services.UserService;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
-@WebMvcTest(UserController.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+@ActiveProfiles("test")
+@Sql(value = {"/dataTest.sql"},executionPhase = BEFORE_TEST_METHOD)
+public class UserTestIT {
     /**
      * An instance of {@link MockMvc} that permit simulate a request HTTP
      */
     @Autowired
     private MockMvc mockMvcUser;
 
-    @MockBean
-    private UserService userServiceMock;
+    /**
+     * An instance of {@link WebApplicationContext}
+     */
+    @Autowired
+    private WebApplicationContext context;
 
-    @MockBean
-    private UserRepository userRepositoryMock;
+    /**
+     * Method that build the mockMvc with the context and springSecurity
+     */
+    @Before
+    public void setup() {
+        mockMvcUser = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @Test
     public void getHomeTest() throws Exception {
@@ -62,7 +79,6 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -73,7 +89,7 @@ public class UserControllerTest {
                         .param("username", "Username")
                         .param("password", "Password")
                         .param("fullname", "Fullname")
-                        .param("role", "Role"))
+                        .param("role", "ROLE"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/user/list"))
                 .andExpect(redirectedUrl("/user/list"))
@@ -105,18 +121,9 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
-       User user = User.builder()
-               .fullname("Fullname")
-               .username("Username")
-               .password("Password")
-               .role("Role")
-               .build();
-        when(userRepositoryMock.findById(anyInt())).thenReturn(Optional.of(user));
-        when(userServiceMock.getUserById(anyInt())).thenReturn(Optional.of(user));
         //WHEN
         //THEN
         mockMvcUser.perform(get("/user/update/1")
@@ -127,7 +134,6 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -135,10 +141,10 @@ public class UserControllerTest {
         //THEN
         mockMvcUser.perform(MockMvcRequestBuilders.post("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("username", "Username")
-                        .param("password", "Password")
-                        .param("fullname", "Fullname")
-                        .param("role", "Role"))
+                        .param("username", "UsernameUpdated")
+                        .param("password", "PasswordUpdated")
+                        .param("fullname", "FullnameUpdated")
+                        .param("role", "RoleUpdated"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/list"))
                 .andExpect(view().name("redirect:/user/list"))
@@ -146,7 +152,6 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
         //GIVEN
@@ -168,7 +173,6 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteUserTest() throws Exception {
         //GIVEN
@@ -182,4 +186,5 @@ public class UserControllerTest {
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
+
 }

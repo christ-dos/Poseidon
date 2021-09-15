@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Sql(value = {"/dataTest.sql"},executionPhase = BEFORE_TEST_METHOD)
 public class CurvePointTestIT {
-
     /**
      * An instance of {@link MockMvc} that permit simulate a request HTTP
      */
