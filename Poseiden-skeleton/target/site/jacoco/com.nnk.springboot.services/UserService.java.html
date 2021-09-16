@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.services</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.services;
+
+import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exceptions.UserNotFoundException;
+import com.nnk.springboot.repositories.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Class of service that manage {@link User} entity
+ *
+ * @author Christine Duarte
+ */
+@Service
+<span class="fc" id="L21">@Slf4j</span>
+public class UserService implements IUserService {
+
+    /**
+     * An instance Of {@link UserRepository}
+     */
+    private UserRepository userRepository;
+
+    /**
+     * Constructor
+     *
+     * @param userRepository An instance of {@link UserRepository}
+     */
+    @Autowired
+<span class="fc" id="L35">    public UserService(UserRepository userRepository) {</span>
+<span class="fc" id="L36">        this.userRepository = userRepository;</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * Method that get all {@link User}
+     *
+     * @return A list of {@link User}
+     */
+    @Override
+    public List&lt;User&gt; getUsers() {
+<span class="fc" id="L46">        log.info(&quot;Service: displaying Users&quot;);</span>
+<span class="fc" id="L47">        return userRepository.findAll();</span>
+    }
+
+    /**
+     * Method that get a {@link User} by Id
+     *
+     * @param id An Integer containing the id of the User
+     * @return An instance of {@link User}
+     */
+    @Override
+    public Optional&lt;User&gt; getUserById(Integer id) {
+<span class="fc" id="L58">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!user.isPresent()) {</span>
+<span class="fc" id="L60">            log.error(&quot;Service: User NOT FOUND with ID: &quot; + id);</span>
+<span class="fc" id="L61">            throw new UserNotFoundException(&quot;User not found&quot;);</span>
+        }
+<span class="fc" id="L63">        log.info(&quot;Service: User found with ID: &quot; + id);</span>
+
+<span class="fc" id="L65">        return user;</span>
+    }
+
+    /**
+     * Method which add a {@link User}
+     *
+     * @param user An instance {@link User}
+     * @return The {@link User} saved
+     */
+    @Override
+    public User addUser(User user) {
+<span class="fc" id="L76">        log.info(&quot;Service: User saved&quot;);</span>
+<span class="fc" id="L77">        user.setPassword(encryptedPassword(user.getPassword()));</span>
+<span class="fc" id="L78">        return userRepository.save(user);</span>
+    }
+
+    /**
+     * Method which update a {@link User}
+     *
+     * @param user An instance {@link User}
+     * @return the {@link User} updated
+     */
+    @Override
+    public User updateUser(User user) {
+<span class="fc" id="L89">        User userToUpdate = userRepository.getById(user.getId());</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (userToUpdate == null) {</span>
+<span class="fc" id="L91">            log.error(&quot;Service: User NOT FOUND with ID: &quot; + user.getId());</span>
+<span class="fc" id="L92">            throw new UserNotFoundException(&quot;User not found&quot;);</span>
+        }
+<span class="fc" id="L94">        userToUpdate.setFullname(user.getFullname());</span>
+<span class="fc" id="L95">        userToUpdate.setUsername(user.getUsername());</span>
+<span class="fc" id="L96">        userToUpdate.setPassword(encryptedPassword(user.getPassword()));</span>
+<span class="fc" id="L97">        userToUpdate.setRole(user.getRole());</span>
+<span class="fc" id="L98">        log.info(&quot;Service: User updated with ID: &quot; + user.getId());</span>
+
+<span class="fc" id="L100">        return userRepository.save(userToUpdate);</span>
+    }
+
+    /**
+     * Method that delete a {@link User}
+     *
+     * @param id An integer containing the id
+     * @return A String containing &quot;User deleted&quot;
+     */
+    @Override
+    public String deleteUser(Integer id) {
+<span class="fc" id="L111">        userRepository.deleteById(id);</span>
+<span class="fc" id="L112">        log.info(&quot;Service: User deleted with ID:&quot; + id);</span>
+
+<span class="fc" id="L114">        return &quot;User deleted&quot;;</span>
+    }
+
+    /**
+     * Method private which encrypt the password before recording in Database
+     *
+     * @param password A String containing the password unencrypted
+     * @return A String containing the password encrypted
+     */
+    private String encryptedPassword(String password) {
+<span class="fc" id="L124">        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();</span>
+<span class="fc" id="L125">        return encoder.encode(password);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

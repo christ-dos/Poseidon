@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import com.nnk.springboot.security.ValidPassword;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
+@Entity
+@Table(name = &quot;users&quot;)
+<span class="pc" id="L13">@Builder</span>
+<span class="fc" id="L14">@AllArgsConstructor</span>
+<span class="fc" id="L15">@NoArgsConstructor</span>
+public class User {
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer id;
+    @NotBlank(message = &quot;Username is mandatory&quot;)
+    private String username;
+//    @NotBlank(message = &quot;Password is mandatory&quot;)
+    @ValidPassword
+    private String password;
+    @NotBlank(message = &quot;FullName is mandatory&quot;)
+    private String fullname;
+    @NotBlank(message = &quot;Role is mandatory&quot;)
+    private String role;
+
+    public Integer getId() {
+<span class="fc" id="L31">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="fc" id="L35">        this.id = id;</span>
+<span class="fc" id="L36">    }</span>
+
+    public String getUsername() {
+<span class="fc" id="L39">        return username;</span>
+    }
+
+    public void setUsername(String username) {
+<span class="fc" id="L43">        this.username = username;</span>
+<span class="fc" id="L44">    }</span>
+
+    public String getPassword() {
+<span class="fc" id="L47">        return password;</span>
+    }
+
+    public void setPassword(String password) {
+<span class="fc" id="L51">        this.password = password;</span>
+<span class="fc" id="L52">    }</span>
+
+    public String getFullname() {
+<span class="fc" id="L55">        return fullname;</span>
+    }
+
+    public void setFullname(String fullname) {
+<span class="fc" id="L59">        this.fullname = fullname;</span>
+<span class="fc" id="L60">    }</span>
+
+    public String getRole() {
+<span class="fc" id="L63">        return role;</span>
+    }
+
+    public void setRole(String role) {
+<span class="fc" id="L67">        this.role = role;</span>
+<span class="fc" id="L68">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L72">        return &quot;User{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, username='&quot; + username + '\'' +
+                &quot;, password='&quot; + password + '\'' +
+                &quot;, fullname='&quot; + fullname + '\'' +
+                &quot;, role='&quot; + role + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

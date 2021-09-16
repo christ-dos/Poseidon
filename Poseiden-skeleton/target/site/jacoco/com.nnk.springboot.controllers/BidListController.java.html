@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BidListController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">BidListController.java</span></div><h1>BidListController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.services.IBidListService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
+
+
+@Controller
+<span class="fc" id="L17">@Slf4j</span>
+<span class="fc" id="L18">public class BidListController {</span>
+    @Autowired
+    private IBidListService bidListService;
+
+    @RequestMapping(&quot;/bidList/list&quot;)
+    public String home(Model model) {
+<span class="fc" id="L24">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
+<span class="fc" id="L25">        log.info(&quot;Controller: displaying List of BidList&quot;);</span>
+<span class="fc" id="L26">        return &quot;bidList/list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/bidList/add&quot;)
+    public String addBidForm(BidList bidList) {
+<span class="fc" id="L31">        log.info(&quot;Controller: request to add a BidList&quot;);</span>
+<span class="fc" id="L32">        return &quot;bidList/add&quot;;</span>
+    }
+
+
+    @PostMapping(&quot;/bidList/validate&quot;)
+    public String validate(@Valid BidList bidList, BindingResult result, Model model) {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L39">            log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L40">            return &quot;bidList/add&quot;;</span>
+        }
+<span class="fc" id="L42">        bidListService.addBidList(bidList);</span>
+<span class="fc" id="L43">        log.info(&quot;Controller: redirection to bidList list&quot;);</span>
+<span class="fc" id="L44">        return &quot;redirect:/bidList/list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/bidList/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, @ModelAttribute(&quot;bidList&quot;) BidList bidList, BindingResult result,
+                                 Model model) {
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L51">            return &quot;bidList/update&quot;;</span>
+        }
+<span class="fc" id="L53">        bidList = bidListService.getBidListById(id);</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">        if (bidList == null) {</span>
+<span class="nc" id="L55">            model.addAttribute(&quot;errorMessage&quot;, &quot;BidList Not Found&quot;);</span>
+<span class="nc" id="L56">            throw new EntityNotFoundException();</span>
+
+        }
+//        try {
+//            bidList = bidListService.getBidListById(id);
+//        } catch (EntityNotFoundException ex) {
+////            result.rejectValue(&quot;id&quot;, ex.getMessage());
+//            model.addAttribute(&quot;errorMessage&quot;, ex.getMessage());
+//            return &quot;bidList/update&quot;;
+//        }
+<span class="fc" id="L66">        model.addAttribute(&quot;bidList&quot;, bidList);</span>
+<span class="fc" id="L67">        log.info(&quot;Controller: BidList found with id: &quot; + id);</span>
+
+<span class="fc" id="L69">        return &quot;bidList/update&quot;;</span>
+        // TODO: get Bid by Id and to model then show to the form
+    }
+
+    @PostMapping(&quot;/bidList/update/{id}&quot;)
+    public String updateBid(@PathVariable(&quot;id&quot;) Integer id, @Valid BidList bidList,
+                            BindingResult result, Model model) {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L77">            return &quot;bidList/update&quot;;</span>
+        }
+<span class="fc" id="L79">        bidList.setBidListId(id);</span>
+<span class="fc" id="L80">        bidListService.updateBidList(bidList);</span>
+<span class="fc" id="L81">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
+<span class="fc" id="L82">        log.info(&quot;Controller: BidList updated with: &quot; + id);</span>
+<span class="fc" id="L83">        return &quot;redirect:/bidList/list&quot;;</span>
+
+    }
+
+    @GetMapping(&quot;/bidList/delete/{id}&quot;)
+    public String deleteBid(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+<span class="fc" id="L89">        bidListService.deleteBidList(id);</span>
+<span class="fc" id="L90">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
+<span class="fc" id="L91">        log.info(&quot;Controller: BidList deleted&quot;);</span>
+<span class="fc" id="L92">        return &quot;redirect:/bidList/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
