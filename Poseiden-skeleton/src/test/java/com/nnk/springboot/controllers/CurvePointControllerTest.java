@@ -34,6 +34,7 @@ public class CurvePointControllerTest {
     @MockBean
     private CurvePointRepository curvePointRepository;
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -46,6 +47,7 @@ public class CurvePointControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddBidFormTest() throws Exception {
         //GIVEN

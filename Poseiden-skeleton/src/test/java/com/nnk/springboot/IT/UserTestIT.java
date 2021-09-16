@@ -55,6 +55,7 @@ public class UserTestIT {
                 .build();
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -67,6 +68,7 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddUserFormTest() throws Exception {
         //GIVEN
@@ -79,6 +81,7 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -87,7 +90,7 @@ public class UserTestIT {
         mockMvcUser.perform(post("/user/validate")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("username", "Username")
-                        .param("password", "Password")
+                        .param("password", "Pa8547925**")
                         .param("fullname", "Fullname")
                         .param("role", "ROLE"))
                 .andExpect(status().is3xxRedirection())
@@ -98,6 +101,7 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -115,12 +119,13 @@ public class UserTestIT {
                 .andExpect(model().errorCount(4))
                 .andExpect(model().attributeDoesNotExist())
                 .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "ValidPassword"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
@@ -134,6 +139,7 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -142,7 +148,7 @@ public class UserTestIT {
         mockMvcUser.perform(MockMvcRequestBuilders.post("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("username", "UsernameUpdated")
-                        .param("password", "PasswordUpdated")
+                        .param("password", "Pa4569817**")
                         .param("fullname", "FullnameUpdated")
                         .param("role", "RoleUpdated"))
                 .andExpect(status().is3xxRedirection())
@@ -152,6 +158,7 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
         //GIVEN
@@ -167,12 +174,13 @@ public class UserTestIT {
                 .andExpect(view().name("user/update"))
                 .andExpect(model().errorCount(4))
                 .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "ValidPassword"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteUserTest() throws Exception {
         //GIVEN

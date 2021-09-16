@@ -50,6 +50,7 @@ public class BidListTestIT {
                 .build();
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -62,6 +63,7 @@ public class BidListTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddBidFormTest() throws Exception {
         //GIVEN
@@ -74,6 +76,7 @@ public class BidListTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -95,6 +98,7 @@ public class BidListTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsAccountAndTypeHasError_thenReturnToViewAdd() throws Exception {
         //GIVEN
@@ -126,6 +130,7 @@ public class BidListTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateBidTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -144,6 +149,7 @@ public class BidListTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateBidTest_whenFieldsHasErrors_thenReturnViewUpdate() throws Exception {
         //GIVEN
@@ -160,6 +166,7 @@ public class BidListTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteBidTest() throws Exception {
         //GIVEN

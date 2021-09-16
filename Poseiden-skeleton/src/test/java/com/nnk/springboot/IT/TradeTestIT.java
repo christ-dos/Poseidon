@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
@@ -53,6 +54,7 @@ public class TradeTestIT {
                 .build();
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -65,18 +67,21 @@ public class TradeTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddTradeFormTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcTrade.perform(get("/trade/add"))
+        mockMvcTrade.perform(get("/trade/add")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/add"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -95,6 +100,7 @@ public class TradeTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasErrors_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -116,6 +122,7 @@ public class TradeTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
@@ -147,7 +154,7 @@ public class TradeTestIT {
                 .andDo(print());
     }
 
-
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateTradeTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
         //GIVEN
@@ -167,6 +174,7 @@ public class TradeTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteTradeTest() throws Exception {
         //GIVEN

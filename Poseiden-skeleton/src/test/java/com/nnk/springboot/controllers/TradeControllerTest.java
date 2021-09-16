@@ -35,6 +35,7 @@ public class TradeControllerTest {
     @MockBean
     private TradeRepository tradeRepositoryMock;
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -47,6 +48,7 @@ public class TradeControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddTradeFormTest() throws Exception {
         //GIVEN

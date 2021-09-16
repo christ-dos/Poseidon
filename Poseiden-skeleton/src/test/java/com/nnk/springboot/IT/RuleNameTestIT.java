@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -49,6 +50,7 @@ public class RuleNameTestIT {
                 .build();
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -61,6 +63,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddRuleNameFormTest() throws Exception {
         //GIVEN
@@ -73,6 +76,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -89,6 +93,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -106,6 +111,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
@@ -119,6 +125,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRuleNameTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -134,6 +141,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRuleNameTest_whenFieldsHasErrors_thenRedirectViewList() throws Exception {
         //GIVEN
@@ -149,6 +157,7 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteRuleNameTest() throws Exception {
         //GIVEN

@@ -37,6 +37,7 @@ public class RuleNameControllerTest {
     @MockBean
     private RuleNameRepository ruleNameRepositoryMock;
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -49,6 +50,7 @@ public class RuleNameControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddRuleNameFormTest() throws Exception {
         //GIVEN

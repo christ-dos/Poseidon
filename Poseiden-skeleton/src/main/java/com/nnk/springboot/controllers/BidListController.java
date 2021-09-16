@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 
 @Controller
@@ -48,16 +47,12 @@ public class BidListController {
     }
 
     @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id,
+    public String showUpdateForm(@PathVariable("id") @Valid Integer id,
                                  Model model) {
-        BidList bidList = null;
-        try {
-            bidList = bidListService.getBidListById(id);
-        } catch (BidListNotFoundException ex) {
-//            result.rejectValue("bidListId", ex.getMessage());
-        }
+           BidList bidList = bidListService.getBidListById(id);
         model.addAttribute("bidList", bidList);
         log.info("Controller: BidList found with id: " + id);
+
         return "bidList/update";
         // TODO: get Bid by Id and to model then show to the form
     }
@@ -69,7 +64,11 @@ public class BidListController {
             return "bidList/update";
         }
         bidList.setBidListId(id);
-        bidListService.updateBidList(bidList);
+        try {
+            bidListService.updateBidList(bidList);
+        } catch (Exception ex) {
+            model.addAttribute("messageError",ex.getMessage());
+        }
         model.addAttribute("bidLists", bidListService.getBidLists());
         log.info("Controller: BidList updated with: " + id);
         return "redirect:/bidList/list";

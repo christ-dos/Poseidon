@@ -36,24 +36,26 @@ public class BidListControllerTest {
     @MockBean
     private BidListRepository bidListRepositoryMock;
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/list"))
+        mockMvcBidList.perform(get("/bidList/list").with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/list"))
                 .andExpect(model().attributeExists("bidLists"))
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddBidFormTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/add"))
+        mockMvcBidList.perform(get("/bidList/add").with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/add"))
                 .andExpect(model().attributeDoesNotExist())

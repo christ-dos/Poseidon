@@ -38,6 +38,7 @@ public class UserControllerTest {
     @MockBean
     private UserRepository userRepositoryMock;
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -50,6 +51,7 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddUserFormTest() throws Exception {
         //GIVEN
@@ -71,7 +73,7 @@ public class UserControllerTest {
         mockMvcUser.perform(post("/user/validate")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("username", "Username")
-                        .param("password", "Password")
+                        .param("password", "Pa9876523**")
                         .param("fullname", "Fullname")
                         .param("role", "Role"))
                 .andExpect(status().is3xxRedirection())
@@ -82,6 +84,7 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -99,7 +102,7 @@ public class UserControllerTest {
                 .andExpect(model().errorCount(4))
                 .andExpect(model().attributeDoesNotExist())
                 .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "ValidPassword"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
@@ -136,7 +139,7 @@ public class UserControllerTest {
         mockMvcUser.perform(MockMvcRequestBuilders.post("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("username", "Username")
-                        .param("password", "Password")
+                        .param("password", "Pa2597868**")
                         .param("fullname", "Fullname")
                         .param("role", "Role"))
                 .andExpect(status().is3xxRedirection())
@@ -162,7 +165,7 @@ public class UserControllerTest {
                 .andExpect(view().name("user/update"))
                 .andExpect(model().errorCount(4))
                 .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "ValidPassword"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());

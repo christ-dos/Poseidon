@@ -54,6 +54,7 @@ public class CurvePointTestIT {
                 .build();
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -66,6 +67,7 @@ public class CurvePointTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddBidFormTest() throws Exception {
         //GIVEN
@@ -78,6 +80,7 @@ public class CurvePointTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
         //GIVEN
@@ -95,6 +98,7 @@ public class CurvePointTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsCurveIdIsNull_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -110,6 +114,7 @@ public class CurvePointTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
@@ -145,6 +150,7 @@ public class CurvePointTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateCurvePointTest_whenFieldCurvePointIdIsNull_thenReturnViewUpdate() throws Exception {
         //GIVEN
@@ -160,6 +166,7 @@ public class CurvePointTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteCurvePointTest() throws Exception {
         //GIVEN
