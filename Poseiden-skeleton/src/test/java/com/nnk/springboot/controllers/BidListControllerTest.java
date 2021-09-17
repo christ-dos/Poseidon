@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.BidListService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,13 @@ public class BidListControllerTest {
     @MockBean
     private BidListRepository bidListRepositoryMock;
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    /**
+     * A mock of {@link MyUserDetailsService}
+     */
+    @MockBean
+    private MyUserDetailsService myUserDetailsServiceMock;
+
+    @WithMockUser(username = "user", roles = "USER", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN

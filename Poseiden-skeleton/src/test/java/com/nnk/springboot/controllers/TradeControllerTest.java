@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.TradeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class TradeControllerTest {
 
     @MockBean
     private TradeRepository tradeRepositoryMock;
+
+    /**
+     * A mock of {@link MyUserDetailsService}
+     */
+    @MockBean
+    private MyUserDetailsService myUserDetailsServiceMock;
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test

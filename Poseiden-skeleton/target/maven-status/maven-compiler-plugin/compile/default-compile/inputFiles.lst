@@ -13,6 +13,7 @@ C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\serv
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\domain\CurvePoint.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\domain\Rating.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\services\RatingService.java
+C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\security\MyUserDetailsService.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\security\ValidPassword.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\controllers\UserController.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\controllers\LoginController.java
@@ -23,6 +24,7 @@ C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\cont
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\domain\RuleName.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\exceptions\RatingNotFoundException.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\services\RuleNameService.java
+C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\controllers\LoginControllerTest.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\controllers\CurvePointController.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\domain\BidList.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\exceptions\UserNotFoundException.java
@@ -30,6 +32,7 @@ C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\serv
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\exceptions\RuleNameNotFoundException.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\repositories\TradeRepository.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\services\UserService.java
+C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\security\MyUserDetails.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\repositories\UserRepository.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\services\CurvePointService.java
 C:\Users\Kikine\poseidon\Poseiden-skeleton\src\main\java\com\nnk\springboot\services\ICurvePointService.java
