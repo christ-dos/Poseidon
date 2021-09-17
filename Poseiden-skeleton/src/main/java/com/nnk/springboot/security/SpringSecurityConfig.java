@@ -1,16 +1,27 @@
 package com.nnk.springboot.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    /**
+     * Core interface which loads user-specific data
+     * {@link UserDetailsService}
+     */
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     /**
      * A bean that permit crypt the password before recording in the database
      *
@@ -21,6 +32,23 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+
+    /**
+     * Implementation that retrieves user details from a
+     * {@link UserDetailsService}.
+     * to authenticate the User
+     *
+     * @return authentication set with the user find in database
+     */
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
     /**
      * Method configure to determine the authentication provider
      * here provide from the database
@@ -29,11 +57,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user").password(passwordEncoder().encode("user123")).authorities("ROLE_USER")
-                .and()
-                .withUser("admin").password(passwordEncoder().encode("admin123")).authorities("ROLE_ADMIN");
-//        auth.authenticationProvider(authenticationProvider());
+//        auth.inMemoryAuthentication()
+//                .withUser("user").password(passwordEncoder().encode("user123")).authorities("ROLE_USER")
+//                .and()
+//                .withUser("admin").password(passwordEncoder().encode("admin123")).authorities("ROLE_ADMIN");
+        auth.authenticationProvider(authenticationProvider());
     }
 
     /**
@@ -47,22 +75,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/login","/", "/app/error","/css/*").permitAll()
+                .antMatchers("/bidList/list").hasRole("USER")
                 .antMatchers("/user/list").hasRole("ADMIN")
-                .antMatchers("/bidList/list").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .formLogin()
                 .defaultSuccessUrl("/app/default",true)
-//                .failureUrl("/app/error")
                 .and()
                 .logout()
                 .logoutUrl("/app-logout")
                 .logoutSuccessUrl("/")
-//                .deleteCookies("JSESSIONID")
+                .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true);
-        ;
+
 
 
     }
