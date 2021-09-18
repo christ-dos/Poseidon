@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.BidListService;
@@ -14,8 +15,11 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.persistence.EntityNotFoundException;
+
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -113,8 +117,8 @@ public class BidListControllerTest {
                 .account("account")
                 .type("type")
                 .bidQuantity(10d).build();
-        when(bidListRepositoryMock.getById(anyInt())).thenReturn(bidList);
-        when(bidListServiceMock.getBidListById(anyInt())).thenReturn(bidList);
+        when(bidListRepositoryMock.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(bidList));
+        when(bidListServiceMock.getBidListById(anyInt())).thenReturn(java.util.Optional.ofNullable(bidList));
         //WHEN
         //THEN
         mockMvcBidList.perform(get("/bidList/update/1").with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -126,14 +130,33 @@ public class BidListControllerTest {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postUpdateBidTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcBidList.perform(MockMvcRequestBuilders.get("/bidList/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("bidListId", String.valueOf(14))
+                        .param("account", "Account")
+                        .param("type", "Type"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("bidList", 1))
+                .andExpect(model().attributeHasFieldErrorCode("bidList", "bidListId","BidListNotFound"))
+                .andDo(print());
+    }
+
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void postUpdateBidTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         BidList bidList = BidList.builder()
                 .bidListId(1)
                 .account("account")
                 .type("type")
                 .bidQuantity(10d).build();
-        when(bidListRepositoryMock.getById(1)).thenReturn(bidList);
+        when(bidListRepositoryMock.getById(anyInt())).thenReturn(bidList);
         when(bidListServiceMock.updateBidList(isA(BidList.class))).thenReturn(bidList);
         //WHEN
         //THEN
@@ -164,6 +187,7 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
+
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteBidTest() throws Exception {
@@ -178,5 +202,4 @@ public class BidListControllerTest {
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
-
 }

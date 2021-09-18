@@ -53,6 +53,7 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found:" + username);
         }
         log.debug("MyUserDetailsService: User found with username :" + username +  " " + user.getRole() + user.getFullname());
+        //TODO retirer le log
         return new MyUserDetails(user.getUsername(), user.getPassword(), user.getRole());
     }
 }

@@ -139,6 +139,24 @@ public class UserControllerTest {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcUser.perform(MockMvcRequestBuilders.get("/user/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(14))
+                        .param("username", "UserName")
+                        .param("password", "Password"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("user", 1))
+                .andExpect(model().attributeHasFieldErrorCode("user", "id","UserNotFound"))
+                .andDo(print());
+    }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
     public void postUpdateUserTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN

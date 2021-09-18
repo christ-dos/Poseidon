@@ -1,6 +1,5 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.exceptions.UserNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +41,7 @@ public class UserService implements IUserService {
      *
      * @return A list of {@link User}
      */
+    @RolesAllowed("ROLE_ADMIN")
     @Override
     public List<User> getUsers() {
         log.info("Service: displaying Users");
@@ -61,7 +62,6 @@ public class UserService implements IUserService {
             throw new UserNotFoundException("User not found");
         }
         log.info("Service: User found with ID: " + id);
-
         return user;
     }
 

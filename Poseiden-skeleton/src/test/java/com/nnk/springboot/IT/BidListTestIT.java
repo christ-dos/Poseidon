@@ -132,6 +132,25 @@ public class BidListTestIT {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcBidList.perform(MockMvcRequestBuilders.get("/bidList/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("bidListId", String.valueOf(14))
+                        .param("account", "Account")
+                        .param("type", "Type"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("bidList", 1))
+                .andExpect(model().attributeHasFieldErrorCode("bidList", "bidListId","BidListNotFound"))
+                .andDo(print());
+    }
+
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
     public void postUpdateBidTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN

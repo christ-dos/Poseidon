@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
@@ -63,23 +64,23 @@ public class BidListServiceTest {
     @Test
     public void getBidListByIdTest_whenBidListExist_thenReturnBidList() {
         //GIVEN
-        when(bidListRepositoryMock.getById(anyInt())).thenReturn(bidListTest);
+        when(bidListRepositoryMock.findById(anyInt())).thenReturn(Optional.ofNullable(bidListTest));
         //WHEN
-        BidList bidListResult = bidListServiceTest.getBidListById(bidListTest.getBidListId());
+        Optional<BidList> bidListResult = bidListServiceTest.getBidListById(bidListTest.getBidListId());
         //THEN
-        verify(bidListRepositoryMock, times(1)).getById(anyInt());
+        verify(bidListRepositoryMock, times(1)).findById(anyInt());
         assertNotNull(bidListResult);
-        assertEquals("Account Test", bidListResult.getAccount());
-        assertEquals(10d, bidListResult.getBidQuantity());
+        assertEquals("Account Test", bidListResult.get().getAccount());
+        assertEquals(10d, bidListResult.get().getBidQuantity());
     }
 
     @Test
     public void getBidListByIdTest_whenBidListNotExist_thenThrowBidListNotFoundException() {
         //GIVEN
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(bidListRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
-        verify(bidListRepositoryMock, times(0)).getById(isA(Integer.class));
+        verify(bidListRepositoryMock, times(0)).findById(isA(Integer.class));
         assertThrows(BidListNotFoundException.class, () -> bidListServiceTest.getBidListById(bidListTest.getBidListId()));
     }
 
@@ -109,7 +110,7 @@ public class BidListServiceTest {
                 .build();
         LocalDateTime dateRevisionIsAfter = LocalDateTime.of(2021, 9, 10, 14, 00);
 
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
+        when(bidListRepositoryMock.getById(1)).thenReturn(bidListTest);
         when(bidListRepositoryMock.save(isA(BidList.class))).thenReturn(bidListTestUpdated);
         //WHEN
         BidList bidListUpdated = bidListServiceTest.updateBidList(bidListTestUpdated);

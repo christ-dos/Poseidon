@@ -33,7 +33,7 @@ public class LoginController {
 
     @GetMapping("default")
     public String defaultAfterLogin(HttpServletRequest request) {
-        if (request.isUserInRole("ROLE_ADMIN")) {
+        if (request.isUserInRole("ADMIN")) {
             return "redirect:/";
         }
             return "redirect:/bidList/list";

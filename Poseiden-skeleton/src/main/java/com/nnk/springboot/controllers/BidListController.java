@@ -10,9 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 
 @Controller
@@ -47,12 +45,17 @@ public class BidListController {
     }
 
     @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") @Valid Integer id,
+    public String showUpdateForm(@PathVariable("id") @Valid Integer id, BidList bidList, BindingResult result,
                                  Model model) {
-           BidList bidList = bidListService.getBidListById(id);
-        model.addAttribute("bidList", bidList);
-        log.info("Controller: BidList found with id: " + id);
-
+        try {
+            bidList = bidListService.getBidListById(id).orElseThrow(() -> new BidListNotFoundException("Invalid BidListId: " + id));
+            model.addAttribute("bidList",bidList);
+            log.info("Controller: BidList found with id: " + id);
+        } catch (BidListNotFoundException ex) {
+            result.rejectValue("bidListId", "BidListNotFound", ex.getMessage());
+            model.addAttribute("errorMessage", ex.getMessage());
+            log.error("Controller: BidList NOT found with id: " + id);
+        }
         return "bidList/update";
         // TODO: get Bid by Id and to model then show to the form
     }
@@ -60,15 +63,12 @@ public class BidListController {
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                             BindingResult result, Model model) {
+
         if (result.hasErrors()) {
             return "bidList/update";
         }
         bidList.setBidListId(id);
-        try {
-            bidListService.updateBidList(bidList);
-        } catch (Exception ex) {
-            model.addAttribute("messageError",ex.getMessage());
-        }
+        bidListService.updateBidList(bidList);
         model.addAttribute("bidLists", bidListService.getBidLists());
         log.info("Controller: BidList updated with: " + id);
         return "redirect:/bidList/list";

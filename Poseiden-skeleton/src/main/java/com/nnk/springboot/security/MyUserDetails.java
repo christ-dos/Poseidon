@@ -45,8 +45,6 @@ public class MyUserDetails implements UserDetails {
 
         listRoles.add(new SimpleGrantedAuthority(role));
         return listRoles;
-//        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-//                new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
     /**

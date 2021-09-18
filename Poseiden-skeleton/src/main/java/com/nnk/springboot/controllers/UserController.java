@@ -1,12 +1,11 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.exceptions.UserNotFoundException;
-import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -26,14 +23,12 @@ public class UserController {
     private IUserService userService;
 
     @RequestMapping("/user/list")
-    @RolesAllowed("ADMIN")
     public String home(Model model) {
         model.addAttribute("users", userService.getUsers());
         log.info("Controller: displaying List of User");
         return "user/list";
     }
 
-    @RolesAllowed("ADMIN")
     @GetMapping("/user/add")
     public String addUser(User user) {
         log.info("Controller: request to add a user");
@@ -55,14 +50,17 @@ public class UserController {
     }
 
     @GetMapping("/user/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-//        User user = userRepository.getUserById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        Optional<User> user = userService.getUserById(id);
-        if (user.isPresent()) {
-            user.get().setPassword("");
-            model.addAttribute("user", user.get());
+    public String showUpdateForm(@PathVariable("id") Integer id, User user, BindingResult result, Model model) {
+        try {
+            user = userService.getUserById(id).orElseThrow(() -> new UserNotFoundException("Invalid user ID: " + id));
+            model.addAttribute("user", user);
+            user.setPassword("");
+            log.info("Controller: User found with id: " + id);
+        } catch (UserNotFoundException ex) {
+            result.rejectValue("id", "UserNotFound", ex.getMessage());
+            model.addAttribute("errorMessage", ex.getMessage());
+            log.error("Controller: User NOT found with id: " + id);
         }
-        log.info("Controller: User found with id: " + id);
         // TODO: get User by Id and to model then show to the form
         return "user/update";
     }

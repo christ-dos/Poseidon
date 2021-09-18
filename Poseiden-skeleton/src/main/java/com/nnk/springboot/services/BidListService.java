@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link BidList} entity
@@ -53,9 +54,9 @@ public class BidListService implements IBidListService {
      * @return An instance of {@link BidList}
      */
     @Override
-    public BidList getBidListById(Integer bidListId) {
-        BidList bidList = bidListRepository.getById(bidListId);
-        if (bidList == null) {
+    public Optional<BidList> getBidListById(Integer bidListId) {
+           Optional<BidList> bidList = bidListRepository.findById(bidListId);
+        if (!bidList.isPresent()) {
             log.error("Service: BidList NOT FOUND with ID: " + bidListId);
             throw new BidListNotFoundException("BidList not found");
         }
@@ -85,7 +86,7 @@ public class BidListService implements IBidListService {
      */
     @Override
     public BidList updateBidList(BidList bidList) {
-        BidList bidListToUpdate = bidListRepository.getById(bidList.getBidListId());
+          BidList bidListToUpdate = bidListRepository.getById(bidList.getBidListId());
         if (bidListToUpdate == null) {
             log.error("Service: BidList NOT FOUND with ID: " + bidList.getBidListId());
             throw new BidListNotFoundException("BidList not found");
