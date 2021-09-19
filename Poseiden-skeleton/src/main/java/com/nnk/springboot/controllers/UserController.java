@@ -16,12 +16,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+/**
+ * Class Controller that manage User's requests
+ *
+ * @author Christine Duarte
+ */
 @Controller
 @Slf4j
 public class UserController {
+    /**
+     * Dependency  {@link IUserService} injected
+     */
     @Autowired
     private IUserService userService;
 
+    /**
+     * Method GET which displayed the view with the list of all {@link User}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @RequestMapping("/user/list")
     public String home(Model model) {
         model.addAttribute("users", userService.getUsers());
@@ -29,12 +43,26 @@ public class UserController {
         return "user/list";
     }
 
+    /**
+     * Method GET which permit adding A {@link User}
+     *
+     * @param user An instance fo {@link User}
+     * @return A String containing the name of the view
+     */
     @GetMapping("/user/add")
     public String addUser(User user) {
         log.info("Controller: request to add a user");
         return "user/add";
     }
 
+    /**
+     * Method POST which valid entry in the form for User
+     *
+     * @param user   An instance fo {@link User}
+     * @param result An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model  Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (!result.hasErrors()) {
@@ -47,10 +75,17 @@ public class UserController {
         return "user/add";
     }
 
+    /**
+     * Method GET which permit displaying the {@link User} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-           User user = userService.getUserById(id);
+            User user = userService.getUserById(id);
             model.addAttribute("user", user);
             user.setPassword("");
             log.info("Controller: User found with id: " + id);
@@ -61,32 +96,40 @@ public class UserController {
         return "user/update";
     }
 
+    /**
+     * Method POST that permit update a {@link User}
+     *
+     * @param id     An Integer containing the id of BidList to update
+     * @param user   An instance of {@link User}
+     * @param result An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model  Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "user/update";
         }
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        user.setPassword(encoder.encode(user.getPassword()));
         user.setId(id);
-        try {
-            userService.updateUser(user);
-        } catch (UserNotFoundException ex) {
-            result.rejectValue("id", "userNotFound", ex.getMessage());
-
-
-        }
+        userService.updateUser(user);
         model.addAttribute("users", userService.getUsers());
         log.info("Controller: User updated with: " + id);
         return "redirect:/user/list";
     }
 
+    /**
+     * Method GET which delete a {@link User}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
-//        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userService.deleteUser(id);
         model.addAttribute("users", userService.getUsers());
+        log.info("Controller: User deleted");
         return "redirect:/user/list";
     }
 }

@@ -30,7 +30,7 @@ public class BidListController {
     private IBidListService bidListService;
 
     /**
-     * Method GET which displayed the view with the list of all BidList
+     * Method GET which displayed the view with the list of all {@link BidList}
      *
      * @param model Interface that defines a support for model attributes
      * @return A String containing the name of the view
@@ -42,13 +42,26 @@ public class BidListController {
         return "bidList/list";
     }
 
+    /**
+     * Method GET which permit adding A {@link BidList}
+     *
+     * @param bidList An instance fo {@link BidList}
+     * @return A String containing the name of the view
+     */
     @GetMapping("/bidList/add")
     public String addBidForm(BidList bidList) {
         log.info("Controller: request to add a BidList");
         return "bidList/add";
     }
 
-
+    /**
+     * Method POST which valid entry in the form for BidList
+     *
+     * @param bidList An instance fo {@link BidList}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidList bidList, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -60,10 +73,17 @@ public class BidListController {
         return "redirect:/bidList/list";
     }
 
+    /**
+     * Method GET which permit displaying the {@link BidList} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") @Valid Integer id, Model model) {
         try {
-           BidList bidList = bidListService.getBidListById(id);
+            BidList bidList = bidListService.getBidListById(id);
             model.addAttribute("bidList", bidList);
             log.info("Controller: BidList found with id: " + id);
         } catch (BidListNotFoundException ex) {
@@ -73,6 +93,15 @@ public class BidListController {
         return "bidList/update";
     }
 
+    /**
+     * Method POST that permit update a {@link BidList}
+     *
+     * @param id      An Integer containing the id of BidList to update
+     * @param bidList An instance of {@link BidList}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
                             BindingResult result, Model model) {
@@ -85,9 +114,15 @@ public class BidListController {
         model.addAttribute("bidLists", bidListService.getBidLists());
         log.info("Controller: BidList updated with: " + id);
         return "redirect:/bidList/list";
-
     }
 
+    /**
+     * Method GET which delete a {@link BidList}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
         bidListService.deleteBidList(id);
