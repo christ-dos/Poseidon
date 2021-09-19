@@ -114,16 +114,28 @@ public class LoginControllerTest {
 
     @WithMockUser(username = "user1", roles = "USER1", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void getErrorTest_whenCredentialsIsWrong_thenRedirect403() throws Exception {
+    public void getErrorTest_whenUserHasNotAuthorization_thenRedirect403View() throws Exception {
         //GIVEN
         //WHEN
         //THEN
         mockMvcLogin.perform(get("/app/error")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("role", "ROLE_USER1"))
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("403"))
                 .andExpect(model().attribute("errorMsg","You are not authorized for the requested data."))
+                .andDo(print());
+    }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getError404Test_whenUserIsNotFound_thenRedirect404View() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcLogin.perform(get("/app/404")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("404"))
                 .andDo(print());
     }
 }

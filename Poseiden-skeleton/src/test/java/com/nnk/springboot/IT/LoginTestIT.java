@@ -129,4 +129,17 @@ public class LoginTestIT {
                 .andDo(print());
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getError404Test_whenUserIsNotFound_thenRedirect404View() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcLogin.perform(get("/app/404")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("404"))
+                .andDo(print());
+    }
+
 }
