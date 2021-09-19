@@ -51,7 +51,7 @@ public class BidListService implements IBidListService {
      * Method that get a {@link BidList} by Id
      *
      * @param bidListId An Integer containing the id of the BidList
-     * @return An instance of {@link BidList}
+     * @return An Optional of {@link BidList}
      */
     @Override
     public Optional<BidList> getBidListById(Integer bidListId) {

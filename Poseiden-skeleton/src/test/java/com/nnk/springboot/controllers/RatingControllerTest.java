@@ -119,14 +119,33 @@ public class RatingControllerTest {
                 .fitchRating("fitchRating")
                 .sandPRating("sandPRating")
                 .orderNumber(10).build();
-        when(ratingRepositoryMock.getById(anyInt())).thenReturn(rating);
-        when(ratingServiceMock.getRatingById(anyInt())).thenReturn(rating);
+        when(ratingRepositoryMock.findById((anyInt()))).thenReturn(java.util.Optional.of(rating));
+        when(ratingServiceMock.getRatingById(anyInt())).thenReturn(java.util.Optional.of(rating));
         //WHEN
         //THEN
         mockMvcRating.perform(get("/rating/update/1").with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/update"))
                 .andExpect(model().attributeDoesNotExist())
+                .andDo(print());
+    }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcRating.perform(MockMvcRequestBuilders.get("/rating/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("moodysRating", "MoodysRating")
+                        .param("sandPRating", "SandPRating")
+                        .param("fitchRating", "FitchRating")
+                        .param("orderNumber", String.valueOf(10)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("rating/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("rating", 1))
+                .andExpect(model().attributeHasFieldErrorCode("rating", "id","RatingNotFound"))
                 .andDo(print());
     }
 

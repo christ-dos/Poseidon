@@ -1,7 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
+import com.nnk.springboot.exceptions.RuleNameNotFoundException;
 import com.nnk.springboot.services.IRuleNameService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +47,16 @@ public class RuleNameController {
     }
 
     @GetMapping("/ruleName/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        RuleName ruleName = ruleNameService.getRuleNameById(id);
-        model.addAttribute("ruleName", ruleName);
-        log.info("Controller: RuleName found with id: " + id);
-        // TODO: get RuleName by Id and to model then show to the form
+    public String showUpdateForm(@PathVariable("id") Integer id, RuleName ruleName, BindingResult result, Model model) {
+        try {
+            ruleName = ruleNameService.getRuleNameById(id).orElseThrow(()->new RuleNameNotFoundException("Invalid RuleName: " + id));
+            model.addAttribute("ruleName", ruleName);
+            log.info("Controller: RuleName found with id: " + id);
+        } catch (RuleNameNotFoundException ex) {
+            result.rejectValue("id", "RuleNameNotFound", ex.getMessage());
+            model.addAttribute("errorMessage", ex.getMessage());
+            log.error("Controller: RuleName NOT found with id: " + id);
+        }
         return "ruleName/update";
     }
 

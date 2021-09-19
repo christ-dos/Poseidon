@@ -127,6 +127,24 @@ public class RuleNameTestIT {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcRuleName.perform(MockMvcRequestBuilders.get("/ruleName/update/14")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(14))
+                        .param("name","Name"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("ruleName/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("ruleName", 1))
+                .andExpect(model().attributeHasFieldErrorCode("ruleName", "id","RuleNameNotFound"))
+                .andDo(print());
+    }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
     public void postUpdateRuleNameTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN

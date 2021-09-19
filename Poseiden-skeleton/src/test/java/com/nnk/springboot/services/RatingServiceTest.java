@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -59,22 +60,22 @@ public class RatingServiceTest {
     @Test
     public void getRatingByIdTest_whenRatingFound_thenReturnRating() {
         //GIVEN
-        when(ratingRepositoryMock.getById(isA(Integer.class))).thenReturn(ratingTest);
+        when(ratingRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.ofNullable(ratingTest));
         //WHEN
-        Rating ratingByIdResult = ratingServiceTest.getRatingById(ratingTest.getId());
+        Optional<Rating> ratingByIdResult = ratingServiceTest.getRatingById(ratingTest.getId());
         //THEN
-        verify(ratingRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(ratingRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(ratingByIdResult);
-        assertEquals("Moodys Rating", ratingByIdResult.getMoodysRating());
-        assertEquals("Sand PRating", ratingByIdResult.getSandPRating());
-        assertEquals("Fitch Rating", ratingByIdResult.getFitchRating());
-        assertEquals(10, ratingByIdResult.getOrderNumber());
+        assertEquals("Moodys Rating", ratingByIdResult.get().getMoodysRating());
+        assertEquals("Sand PRating", ratingByIdResult.get().getSandPRating());
+        assertEquals("Fitch Rating", ratingByIdResult.get().getFitchRating());
+        assertEquals(10, ratingByIdResult.get().getOrderNumber());
     }
 
     @Test
     public void getRatingByIdTest_whenRatingNotFound_thenRatingNotFoundException() {
         //GIVEN
-        when(ratingRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(ratingRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
         verify(ratingRepositoryMock, times(0)).getById(isA(Integer.class));

@@ -1,6 +1,7 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -56,20 +58,20 @@ public class CurvePointServiceTest {
     @Test
     public void getCurvePointByIdTest_whenCurvePointIsFound_thenReturnCurvePoint() {
         //GIVEN
-        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(curvePointTest);
+        when(curvePointRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.ofNullable(curvePointTest));
         //WHEN
-        CurvePoint curvePointResult = curvePointServiceTest.getCurvePointById(curvePointTest.getId());
+        Optional<CurvePoint> curvePointResult = curvePointServiceTest.getCurvePointById(curvePointTest.getId());
         //THEN
         assertNotNull(curvePointResult);
-        assertEquals(1, curvePointResult.getId());
-        assertEquals(10d, curvePointResult.getTerm());
-        assertEquals(30d, curvePointResult.getValue());
+        assertEquals(1, curvePointResult.get().getId());
+        assertEquals(10d, curvePointResult.get().getTerm());
+        assertEquals(30d, curvePointResult.get().getValue());
     }
 
     @Test
     public void getCurvePointByIdTest_whenCurvePointNotFound_thenThrowCurvePointNotFoundException() {
         //GIVEN
-        when(curvePointRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(curvePointRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
         verify(curvePointRepositoryMock, times(0)).getById(isA(Integer.class));

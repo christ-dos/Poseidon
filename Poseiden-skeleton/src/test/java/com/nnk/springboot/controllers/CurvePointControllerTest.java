@@ -110,15 +110,35 @@ public class CurvePointControllerTest {
                 .value(10.0)
                 .build();
         when(curvePointRepository.getById(anyInt())).thenReturn(curvePoint);
-        when(curvePointService.getCurvePointById(anyInt())).thenReturn(curvePoint);
+        when(curvePointService.getCurvePointById(anyInt())).thenReturn(java.util.Optional.ofNullable(curvePoint));
         //WHEN
         //THEN
-        mockMvcCurvePoint.perform(get("/curvePoint/update/1").with(SecurityMockMvcRequestPostProcessors.csrf()))
+        mockMvcCurvePoint.perform(get("/curvePoint/update/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/update"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcCurvePoint.perform(MockMvcRequestBuilders.get("/curvePoint/update/14")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(14))
+                        .param("curveId", String.valueOf(10)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("curvePoint/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("curvePoint", 1))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint", "id", "CurvePointNotFound"))
+                .andDo(print());
+    }
+
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test

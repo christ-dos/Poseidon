@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.services.IRatingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +47,17 @@ public class RatingController {
     }
 
     @GetMapping("/rating/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Rating rating = ratingService.getRatingById(id);
-        model.addAttribute("rating",rating);
-        log.info("Controller: Rating found with id: " + id);
-        // TODO: get Rating by Id and to model then show to the form
+    public String showUpdateForm(@PathVariable("id") Integer id, Rating rating, BindingResult result, Model model) {
+        try {
+            rating = ratingService.getRatingById(id).orElseThrow(()->new RatingNotFoundException("Invalid Rating: " + id));
+            model.addAttribute("rating",rating);
+            log.info("Controller: Rating found with id: " + id);
+        } catch (RatingNotFoundException ex) {
+            result.rejectValue("id", "RatingNotFound", ex.getMessage());
+            model.addAttribute("errorMessage", ex.getMessage());
+            log.error("Controller: Rating NOT found with id: " + id);
+
+        }
         return "rating/update";
     }
 

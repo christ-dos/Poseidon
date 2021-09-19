@@ -129,6 +129,25 @@ public class CurvePointTestIT {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcCurvePoint.perform(MockMvcRequestBuilders.get("/curvePoint/update/14")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(14))
+                        .param("curveId", String.valueOf(10)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("curvePoint/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("curvePoint", 1))
+                .andExpect(model().attributeHasFieldErrorCode("curvePoint", "id", "CurvePointNotFound"))
+                .andDo(print());
+    }
+
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
     public void postUpdateCurvePointTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         CurvePoint curvePoint = CurvePoint.builder()

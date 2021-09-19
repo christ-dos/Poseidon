@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link RuleName} entity
@@ -50,9 +51,9 @@ public class RuleNameService implements IRuleNameService {
      * @return An instance of {@link RuleName}
      */
     @Override
-    public RuleName getRuleNameById(Integer id) {
-        RuleName ruleName = ruleNameRepository.getById(id);
-        if (ruleName == null) {
+    public Optional<RuleName> getRuleNameById(Integer id) {
+        Optional<RuleName> ruleName = ruleNameRepository.findById(id);
+        if (!ruleName.isPresent()) {
             log.error("Service: Rule name NOT FOUND with ID: " + id);
             throw new RuleNameNotFoundException("Rule name not found");
         }

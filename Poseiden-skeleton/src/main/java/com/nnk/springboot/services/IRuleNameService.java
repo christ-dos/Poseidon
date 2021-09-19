@@ -3,11 +3,12 @@ package com.nnk.springboot.services;
 import com.nnk.springboot.domain.RuleName;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IRuleNameService {
     List<RuleName> getRulesNames();
 
-    RuleName getRuleNameById(Integer id);
+    Optional<RuleName> getRuleNameById(Integer id);
 
     RuleName addRuleName(RuleName ruleName);
 

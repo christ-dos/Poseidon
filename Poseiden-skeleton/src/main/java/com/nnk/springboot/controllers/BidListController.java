@@ -57,7 +57,6 @@ public class BidListController {
             log.error("Controller: BidList NOT found with id: " + id);
         }
         return "bidList/update";
-        // TODO: get Bid by Id and to model then show to the form
     }
 
     @PostMapping("/bidList/update/{id}")

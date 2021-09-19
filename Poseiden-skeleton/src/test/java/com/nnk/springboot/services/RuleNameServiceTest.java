@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -66,27 +67,27 @@ public class RuleNameServiceTest {
     @Test
     public void getRulesNameByIdTest_whenRulesNameFound_thenReturnRulesName() {
         //GIVEN
-        when(ruleNameRepositoryMock.getById(isA(Integer.class))).thenReturn(ruleNameTest);
+        when(ruleNameRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.of(ruleNameTest));
         //WHEN
-        RuleName ruleNameByIdResult = ruleNameServiceTest.getRuleNameById(ruleNameTest.getId());
+        Optional<RuleName> ruleNameByIdResult = ruleNameServiceTest.getRuleNameById(ruleNameTest.getId());
         //THEN
-        verify(ruleNameRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(ruleNameRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(ruleNameByIdResult);
-        assertEquals("Name", ruleNameByIdResult.getName());
-        assertEquals("Description", ruleNameByIdResult.getDescription());
-        assertEquals("Json", ruleNameByIdResult.getJson());
-        assertEquals("Template", ruleNameByIdResult.getTemplate());
-        assertEquals("Sql str", ruleNameByIdResult.getSqlStr());
-        assertEquals("Sql part", ruleNameByIdResult.getSqlPart());
+        assertEquals("Name", ruleNameByIdResult.get().getName());
+        assertEquals("Description", ruleNameByIdResult.get().getDescription());
+        assertEquals("Json", ruleNameByIdResult.get().getJson());
+        assertEquals("Template", ruleNameByIdResult.get().getTemplate());
+        assertEquals("Sql str", ruleNameByIdResult.get().getSqlStr());
+        assertEquals("Sql part", ruleNameByIdResult.get().getSqlPart());
     }
 
     @Test
     public void getRuleNameByIdTest_whenRuleNameNotFound_thenRuleNameNotFoundException() {
         //GIVEN
-        when(ruleNameRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(ruleNameRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
-        verify(ruleNameRepositoryMock, times(0)).getById(isA(Integer.class));
+        verify(ruleNameRepositoryMock, times(0)).findById(isA(Integer.class));
         assertThrows(RuleNameNotFoundException.class, () -> ruleNameServiceTest.getRuleNameById(ruleNameTest.getId()));
     }
 

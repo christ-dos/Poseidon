@@ -133,6 +133,26 @@ public class RatingTestIT {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcRating.perform(MockMvcRequestBuilders.get("/rating/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("moodysRating", "MoodysRating")
+                        .param("sandPRating", "SandPRating")
+                        .param("fitchRating", "FitchRating")
+                        .param("orderNumber", String.valueOf(10)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("rating/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("rating", 1))
+                .andExpect(model().attributeHasFieldErrorCode("rating", "id", "RatingNotFound"))
+                .andDo(print());
+    }
+
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
     public void postUpdateRatingTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN

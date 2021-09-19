@@ -2,6 +2,8 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
+import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.services.ICurvePointService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -46,10 +49,16 @@ public class CurvePointController {
     }
 
     @GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        CurvePoint curvePoint = curvePointService.getCurvePointById(id);
-        model.addAttribute("curvePoint",curvePoint);
-        log.info("Controller: CurvePoint found with id: " + id);
+    public String showUpdateForm(@PathVariable("id") Integer id, CurvePoint curvePoint, BindingResult result, Model model) {
+        try {
+            curvePoint = curvePointService.getCurvePointById(id).orElseThrow(() -> new CurvePointNotFoundException("Invalid BidListId: " + id));
+            model.addAttribute("curvePoint",curvePoint);
+            log.info("Controller: CurvePoint found with id: " + id);
+        } catch (CurvePointNotFoundException ex) {
+            result.rejectValue("id", "CurvePointNotFound", ex.getMessage());
+            model.addAttribute("errorMessage", ex.getMessage());
+            log.error("Controller: CurvePoint NOT found with id: " + id);
+        }
 
         return "curvePoint/update";
         // TODO: get CurvePoint by Id and to model then show to the form

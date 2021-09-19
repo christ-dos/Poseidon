@@ -38,8 +38,6 @@ public class UserController {
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (!result.hasErrors()) {
-//            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//            user.setPassword(encoder.encode(user.getPassword()));
             userService.addUser(user);
             model.addAttribute("users", userService.getUsers());
             log.info("Controller: redirection to user list");

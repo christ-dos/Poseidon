@@ -117,8 +117,8 @@ public class RuleNameControllerTest {
                 .sqlStr("Sql Str")
                 .sqlPart("Sql Part")
                 .build();
-        when(ruleNameRepositoryMock.getById(anyInt())).thenReturn(ruleName);
-        when(ruleNameServiceMock.getRuleNameById(anyInt())).thenReturn(ruleName);
+        when(ruleNameRepositoryMock.findById(anyInt())).thenReturn(java.util.Optional.of(ruleName));
+        when(ruleNameServiceMock.getRuleNameById(anyInt())).thenReturn(java.util.Optional.of(ruleName));
         //WHEN
         //THEN
         mockMvcRuleName.perform(get("/ruleName/update/1")
@@ -128,6 +128,24 @@ public class RuleNameControllerTest {
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcRuleName.perform(MockMvcRequestBuilders.get("/ruleName/update/14")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("name","Name"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("ruleName/update"))
+                .andExpect(model().attributeHasNoErrors())
+                .andExpect(model().attributeErrorCount("ruleName", 1))
+                .andExpect(model().attributeHasFieldErrorCode("ruleName", "id","RuleNameNotFound"))
+                .andDo(print());
+    }
+
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
