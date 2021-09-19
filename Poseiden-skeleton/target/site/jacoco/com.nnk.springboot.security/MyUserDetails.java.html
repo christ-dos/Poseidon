@@ -45,8 +45,6 @@ public class MyUserDetails implements UserDetails {
 
 <span class="nc" id="L46">        listRoles.add(new SimpleGrantedAuthority(role));</span>
 <span class="nc" id="L47">        return listRoles;</span>
-//        return Arrays.asList(new SimpleGrantedAuthority(&quot;ROLE_USER&quot;),
-//                new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;));
     }
 
     /**
@@ -56,7 +54,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public String getPassword() {
-<span class="nc" id="L59">        return password;</span>
+<span class="nc" id="L57">        return password;</span>
     }
 
     /**
@@ -66,7 +64,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public String getUsername() {
-<span class="nc" id="L69">        return username;</span>
+<span class="nc" id="L67">        return username;</span>
     }
 
     /**
@@ -76,7 +74,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isAccountNonExpired() {
-<span class="nc" id="L79">        return true;</span>
+<span class="nc" id="L77">        return true;</span>
     }
 
     /**
@@ -86,7 +84,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-<span class="nc" id="L89">        return true;</span>
+<span class="nc" id="L87">        return true;</span>
     }
 
     /**
@@ -97,7 +95,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isCredentialsNonExpired() {
-<span class="nc" id="L100">        return true;</span>
+<span class="nc" id="L98">        return true;</span>
     }
 
     /**
@@ -108,7 +106,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-<span class="nc" id="L111">        return true;</span>
+<span class="nc" id="L109">        return true;</span>
     }
 
     /**
@@ -118,7 +116,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public String toString() {
-<span class="nc" id="L121">        return &quot;MyUserDetails{&quot; +</span>
+<span class="nc" id="L119">        return &quot;MyUserDetails{&quot; +</span>
                 &quot;username='&quot; + username + '\'' +
                 &quot;, password='&quot; + password + '\'' +
                 '}';

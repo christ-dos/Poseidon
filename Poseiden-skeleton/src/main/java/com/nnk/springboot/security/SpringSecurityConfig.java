@@ -57,10 +57,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("user").password(passwordEncoder().encode("user123")).authorities("ROLE_USER")
-//                .and()
-//                .withUser("admin").password(passwordEncoder().encode("admin123")).authorities("ROLE_ADMIN");
         auth.authenticationProvider(authenticationProvider());
     }
 
@@ -81,7 +77,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/app/default",true)
+                .defaultSuccessUrl("/bidList/list",true)
                 .and()
                 .logout()
                 .logoutUrl("/app-logout")

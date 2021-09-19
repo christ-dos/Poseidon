@@ -31,21 +31,18 @@ import javax.servlet.http.HttpServletRequest;
 <span class="fc" id="L31">        return mav;</span>
     }
 
-    @GetMapping(&quot;default&quot;)
-    public String defaultAfterLogin(HttpServletRequest request) {
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (request.isUserInRole(&quot;ROLE_ADMIN&quot;)) {</span>
-<span class="fc" id="L37">            return &quot;redirect:/&quot;;</span>
-        }
-<span class="fc" id="L39">            return &quot;redirect:/bidList/list&quot;;</span>
-    }
-
     @GetMapping(&quot;error&quot;)
     public ModelAndView error() {
-<span class="fc" id="L44">        ModelAndView mav = new ModelAndView();</span>
-<span class="fc" id="L45">        String errorMessage = &quot;You are not authorized for the requested data.&quot;;</span>
-<span class="fc" id="L46">        mav.addObject(&quot;errorMsg&quot;, errorMessage);</span>
-<span class="fc" id="L47">        mav.setViewName(&quot;403&quot;);</span>
-<span class="fc" id="L48">        return mav;</span>
+<span class="fc" id="L36">        ModelAndView mav = new ModelAndView();</span>
+<span class="fc" id="L37">        String errorMessage = &quot;You are not authorized for the requested data.&quot;;</span>
+<span class="fc" id="L38">        mav.addObject(&quot;errorMsg&quot;, errorMessage);</span>
+<span class="fc" id="L39">        mav.setViewName(&quot;403&quot;);</span>
+<span class="fc" id="L40">        return mav;</span>
+    }
+
+    @GetMapping(&quot;404&quot;)
+    public String error404() {
+<span class="fc" id="L45">        return &quot;404&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

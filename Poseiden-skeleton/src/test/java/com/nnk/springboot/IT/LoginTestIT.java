@@ -70,50 +70,6 @@ public class LoginTestIT {
                 .andDo(print());
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
-    @Test
-    public void getDefaultAfterLoginTest_whenUsernameIsAdmin_thenRedirectSlash() throws Exception {
-        //GIVEN
-        //WHEN
-        //THEN
-        mockMvcLogin.perform(get("/app/default")
-                        .param("role", "ROLE_ADMIN"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-                .andExpect(model().attributeDoesNotExist())
-                .andDo(print());
-    }
-
-    @WithMockUser(username = "user", roles = "USER", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
-    @Test
-    public void getDefaultAfterLoginTest_whenUsernameIsUser_thenRedirectInBidListList() throws Exception {
-        //GIVEN
-        //WHEN
-        //THEN
-        mockMvcLogin.perform(get("/app/default")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("role", "ROLE_USER"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/bidList/list"))
-                .andExpect(model().attributeDoesNotExist())
-                .andDo(print());
-    }
-
-    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
-    @Test
-    public void getDefaultAfterLoginTest_whenUsernameIsAdmin_thenRedirectInEndpointSlash() throws Exception {
-        //GIVEN
-        //WHEN
-        //THEN
-        mockMvcLogin.perform(get("/app/default")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("role", "ROLE_ADMIN"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-                .andExpect(model().attributeDoesNotExist())
-                .andDo(print());
-    }
-
     @WithMockUser(username = "user1", roles = "USER1", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getErrorTest_whenCredentialsIsWrong_thenRedirect403() throws Exception {

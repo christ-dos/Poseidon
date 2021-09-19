@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.nnk.springboot.controllers.RatingControllerTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.041 s - in com.nnk.springboot.controllers.RatingControllerTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.126 s - in com.nnk.springboot.controllers.RatingControllerTest

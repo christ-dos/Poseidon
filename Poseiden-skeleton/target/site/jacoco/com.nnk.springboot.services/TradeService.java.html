@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link Trade} entity
@@ -15,7 +16,7 @@ import java.util.List;
  * @author Christine Duarte
  */
 @Service
-<span class="fc" id="L18">@Slf4j</span>
+<span class="fc" id="L19">@Slf4j</span>
 public class TradeService implements ITradeService {
     /**
      * An instance Of {@link TradeRepository}
@@ -28,9 +29,9 @@ public class TradeService implements ITradeService {
      * @param tradeRepository An instance of {@link TradeRepository}
      */
     @Autowired
-<span class="fc" id="L31">    public TradeService(TradeRepository tradeRepository) {</span>
-<span class="fc" id="L32">        this.tradeRepository = tradeRepository;</span>
-<span class="fc" id="L33">    }</span>
+<span class="fc" id="L32">    public TradeService(TradeRepository tradeRepository) {</span>
+<span class="fc" id="L33">        this.tradeRepository = tradeRepository;</span>
+<span class="fc" id="L34">    }</span>
 
     /**
      * Method that get all {@link Trade}
@@ -39,8 +40,8 @@ public class TradeService implements ITradeService {
      */
     @Override
     public List&lt;Trade&gt; getTrades() {
-<span class="fc" id="L42">        log.info(&quot;Service: displaying Trades&quot;);</span>
-<span class="fc" id="L43">        return tradeRepository.findAll();</span>
+<span class="fc" id="L43">        log.info(&quot;Service: displaying Trades&quot;);</span>
+<span class="fc" id="L44">        return tradeRepository.findAll();</span>
     }
 
     /**
@@ -51,14 +52,13 @@ public class TradeService implements ITradeService {
      */
     @Override
     public Trade getTradeById(Integer tradeId) {
-<span class="fc" id="L54">        Trade trade = tradeRepository.getById(tradeId);</span>
-<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (trade == null) {</span>
-<span class="fc" id="L56">            log.error(&quot;Service: Trade NOT FOUND with ID: &quot; + tradeId);</span>
-<span class="fc" id="L57">            throw new TradeNotFoundException(&quot;Trade not found&quot;);</span>
+<span class="fc" id="L55">        Optional&lt;Trade&gt; trade = tradeRepository.findById(tradeId);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!trade.isPresent()) {</span>
+<span class="fc" id="L57">            log.error(&quot;Service: Trade NOT FOUND with ID: &quot; + tradeId);</span>
+<span class="fc" id="L58">            throw new TradeNotFoundException(&quot;Trade not found&quot;);</span>
         }
-<span class="fc" id="L59">        log.info(&quot;Service: Trade found with ID: &quot; + tradeId);</span>
-
-<span class="fc" id="L61">        return trade;</span>
+<span class="fc" id="L60">        log.info(&quot;Service: Trade found with ID: &quot; + tradeId);</span>
+<span class="fc" id="L61">        return trade.get();</span>
     }
 
     /**

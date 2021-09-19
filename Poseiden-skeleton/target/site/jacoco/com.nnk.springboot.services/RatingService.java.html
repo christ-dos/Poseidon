@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link Rating} entity
@@ -15,7 +16,7 @@ import java.util.List;
  * @author Christine Duarte
  */
 @Service
-<span class="fc" id="L18">@Slf4j</span>
+<span class="fc" id="L19">@Slf4j</span>
 public class RatingService implements IRatingService {
 
     /**
@@ -29,9 +30,9 @@ public class RatingService implements IRatingService {
      * @param ratingRepository An instance of {@link RatingRepository}
      */
     @Autowired
-<span class="fc" id="L32">    public RatingService(RatingRepository ratingRepository) {</span>
-<span class="fc" id="L33">        this.ratingRepository = ratingRepository;</span>
-<span class="fc" id="L34">    }</span>
+<span class="fc" id="L33">    public RatingService(RatingRepository ratingRepository) {</span>
+<span class="fc" id="L34">        this.ratingRepository = ratingRepository;</span>
+<span class="fc" id="L35">    }</span>
 
     /**
      * Method that get all {@link Rating}
@@ -40,27 +41,27 @@ public class RatingService implements IRatingService {
      */
     @Override
     public List&lt;Rating&gt; getRatings() {
-<span class="fc" id="L43">        log.info(&quot;Service: displaying Ratings&quot;);</span>
+<span class="fc" id="L44">        log.info(&quot;Service: displaying Ratings&quot;);</span>
 
-<span class="fc" id="L45">        return ratingRepository.findAll();</span>
+<span class="fc" id="L46">        return ratingRepository.findAll();</span>
     }
 
     /**
      * Method that get a {@link Rating} by Id
      *
      * @param id An Integer containing the id of the Rating
-     * @return An instance of {@link Rating}
+     * @return An Optional of {@link Rating}
      */
     @Override
     public Rating getRatingById(Integer id) {
-<span class="fc" id="L56">        Rating rating = ratingRepository.getById(id);</span>
-<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (rating == null) {</span>
-<span class="fc" id="L58">            log.error(&quot;Service: Rating NOT FOUND with ID: &quot; + id);</span>
-<span class="fc" id="L59">            throw new RatingNotFoundException(&quot;Rating not found&quot;);</span>
+<span class="fc" id="L57">        Optional&lt;Rating&gt; rating = ratingRepository.findById(id);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!rating.isPresent()) {</span>
+<span class="fc" id="L59">            log.error(&quot;Service: Rating NOT FOUND with ID: &quot; + id);</span>
+<span class="fc" id="L60">            throw new RatingNotFoundException(&quot;Rating not found&quot;);</span>
         }
-<span class="fc" id="L61">        log.info(&quot;Service: Rating found with ID: &quot; + id);</span>
+<span class="fc" id="L62">        log.info(&quot;Service: Rating found with ID: &quot; + id);</span>
 
-<span class="fc" id="L63">        return rating;</span>
+<span class="fc" id="L64">        return rating.get();</span>
     }
 
     /**
@@ -71,8 +72,8 @@ public class RatingService implements IRatingService {
      */
     @Override
     public Rating addRating(Rating rating) {
-<span class="fc" id="L74">        log.info(&quot;Service: rating saved&quot;);</span>
-<span class="fc" id="L75">        return ratingRepository.save(rating);</span>
+<span class="fc" id="L75">        log.info(&quot;Service: rating saved&quot;);</span>
+<span class="fc" id="L76">        return ratingRepository.save(rating);</span>
     }
 
     /**
@@ -83,18 +84,18 @@ public class RatingService implements IRatingService {
      */
     @Override
     public Rating updateRating(Rating rating) {
-<span class="fc" id="L86">        Rating ratingToUpdate = ratingRepository.getById(rating.getId());</span>
-<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (ratingToUpdate == null) {</span>
-<span class="fc" id="L88">            log.error(&quot;Service: Rating NOT FOUND with ID: &quot; + rating.getId());</span>
-<span class="fc" id="L89">            throw new RatingNotFoundException(&quot;Rating not found&quot;);</span>
+<span class="fc" id="L87">        Rating ratingToUpdate = ratingRepository.getById(rating.getId());</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (ratingToUpdate == null) {</span>
+<span class="fc" id="L89">            log.error(&quot;Service: Rating NOT FOUND with ID: &quot; + rating.getId());</span>
+<span class="fc" id="L90">            throw new RatingNotFoundException(&quot;Rating not found&quot;);</span>
         }
-<span class="fc" id="L91">        ratingToUpdate.setMoodysRating(rating.getMoodysRating());</span>
-<span class="fc" id="L92">        ratingToUpdate.setSandPRating(rating.getSandPRating());</span>
-<span class="fc" id="L93">        ratingToUpdate.setFitchRating(rating.getFitchRating());</span>
-<span class="fc" id="L94">        ratingToUpdate.setOrderNumber(rating.getOrderNumber());</span>
-<span class="fc" id="L95">        log.info(&quot;Service: Rating updated with ID: &quot; + rating.getId());</span>
+<span class="fc" id="L92">        ratingToUpdate.setMoodysRating(rating.getMoodysRating());</span>
+<span class="fc" id="L93">        ratingToUpdate.setSandPRating(rating.getSandPRating());</span>
+<span class="fc" id="L94">        ratingToUpdate.setFitchRating(rating.getFitchRating());</span>
+<span class="fc" id="L95">        ratingToUpdate.setOrderNumber(rating.getOrderNumber());</span>
+<span class="fc" id="L96">        log.info(&quot;Service: Rating updated with ID: &quot; + rating.getId());</span>
 
-<span class="fc" id="L97">        return ratingRepository.save(ratingToUpdate);</span>
+<span class="fc" id="L98">        return ratingRepository.save(ratingToUpdate);</span>
     }
 
     /**
@@ -105,10 +106,10 @@ public class RatingService implements IRatingService {
      */
     @Override
     public String deleteRating(Integer id) {
-<span class="fc" id="L108">        ratingRepository.deleteById(id);</span>
-<span class="fc" id="L109">        log.info(&quot;Service: Rating deleted with ID:&quot; + id);</span>
+<span class="fc" id="L109">        ratingRepository.deleteById(id);</span>
+<span class="fc" id="L110">        log.info(&quot;Service: Rating deleted with ID:&quot; + id);</span>
 
-<span class="fc" id="L111">        return &quot;Rating deleted&quot;;</span>
+<span class="fc" id="L112">        return &quot;Rating deleted&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

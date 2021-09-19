@@ -52,7 +52,7 @@ public class MyUserDetailsService implements UserDetailsService {
 <span class="nc" id="L52">            log.error(&quot;MyUserDetailsService: UserNotFound &quot;);</span>
 <span class="nc" id="L53">            throw new UsernameNotFoundException(&quot;User not found:&quot; + username);</span>
         }
-<span class="nc" id="L55">        log.debug(&quot;MyUserDetailsService: User found with username :&quot; + username +  &quot; &quot; + user.getRole() + user.getFullname());</span>
+<span class="nc" id="L55">        log.debug(&quot;MyUserDetailsService: User found with username :&quot; + username);</span>
 <span class="nc" id="L56">        return new MyUserDetails(user.getUsername(), user.getPassword(), user.getRole());</span>
     }
 }

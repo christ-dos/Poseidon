@@ -31,14 +31,6 @@ public class LoginController {
         return mav;
     }
 
-    @GetMapping("default")
-    public String defaultAfterLogin(HttpServletRequest request) {
-        if (request.isUserInRole("ADMIN")) {
-            return "redirect:/";
-        }
-            return "redirect:/bidList/list";
-    }
-
     @GetMapping("error")
     public ModelAndView error() {
         ModelAndView mav = new ModelAndView();
@@ -51,6 +43,5 @@ public class LoginController {
     @GetMapping("404")
     public String error404() {
         return "404";
-
     }
 }

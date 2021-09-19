@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link BidList} entity
@@ -17,7 +18,7 @@ import java.util.List;
  * @author Christine Duarte
  */
 @Service
-<span class="fc" id="L20">@Slf4j</span>
+<span class="fc" id="L21">@Slf4j</span>
 public class BidListService implements IBidListService {
     /**
      * An instance Of {@link BidListRepository}
@@ -30,9 +31,9 @@ public class BidListService implements IBidListService {
      * @param bidListRepository An instanec of {@link BidListRepository}
      */
     @Autowired
-<span class="fc" id="L33">    public BidListService(BidListRepository bidListRepository) {</span>
-<span class="fc" id="L34">        this.bidListRepository = bidListRepository;</span>
-<span class="fc" id="L35">    }</span>
+<span class="fc" id="L34">    public BidListService(BidListRepository bidListRepository) {</span>
+<span class="fc" id="L35">        this.bidListRepository = bidListRepository;</span>
+<span class="fc" id="L36">    }</span>
 
     /**
      * Method that get all {@link BidList}
@@ -41,27 +42,26 @@ public class BidListService implements IBidListService {
      */
     @Override
     public List&lt;BidList&gt; getBidLists() {
-<span class="fc" id="L44">        log.info(&quot;Service: displaying BidLists&quot;);</span>
+<span class="fc" id="L45">        log.info(&quot;Service: displaying BidLists&quot;);</span>
 
-<span class="fc" id="L46">        return bidListRepository.findAll();</span>
+<span class="fc" id="L47">        return bidListRepository.findAll();</span>
     }
 
     /**
      * Method that get a {@link BidList} by Id
      *
      * @param bidListId An Integer containing the id of the BidList
-     * @return An instance of {@link BidList}
+     * @return An Optional of {@link BidList}
      */
     @Override
     public BidList getBidListById(Integer bidListId) {
-<span class="fc" id="L57">        BidList bidList = bidListRepository.getById(bidListId);</span>
-<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (bidList == null) {</span>
-<span class="fc" id="L59">            log.error(&quot;Service: BidList NOT FOUND with ID: &quot; + bidListId);</span>
-<span class="fc" id="L60">            throw new BidListNotFoundException(&quot;BidList not found&quot;);</span>
+<span class="fc" id="L58">        Optional&lt;BidList&gt; bidList = bidListRepository.findById(bidListId);</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!bidList.isPresent()) {</span>
+<span class="fc" id="L60">            log.error(&quot;Service: BidList NOT FOUND with ID: &quot; + bidListId);</span>
+<span class="fc" id="L61">            throw new BidListNotFoundException(&quot;BidList not found&quot;);</span>
         }
-<span class="fc" id="L62">        log.info(&quot;Service: BidList found with ID: &quot; + bidListId);</span>
-
-<span class="fc" id="L64">        return bidList;</span>
+<span class="fc" id="L63">        log.info(&quot;Service: BidList found with ID: &quot; + bidListId);</span>
+<span class="fc" id="L64">        return bidList.get();</span>
     }
 
     /**
@@ -101,15 +101,16 @@ public class BidListService implements IBidListService {
 
     /**
      * Method that delete a {@link BidList}
+     *
      * @param bidListId An integer containing the id
      * @return A String containing &quot;BidList deleted&quot;
      */
     @Override
     public String deleteBidList(Integer bidListId) {
-<span class="fc" id="L109">        bidListRepository.deleteById(bidListId);</span>
-<span class="fc" id="L110">        log.info(&quot;Service: BidList deleted with ID: &quot; + bidListId);</span>
+<span class="fc" id="L110">        bidListRepository.deleteById(bidListId);</span>
+<span class="fc" id="L111">        log.info(&quot;Service: BidList deleted with ID: &quot; + bidListId);</span>
 
-<span class="fc" id="L112">        return &quot;BidList deleted&quot;;</span>
+<span class="fc" id="L113">        return &quot;BidList deleted&quot;;</span>
     }
 }
 

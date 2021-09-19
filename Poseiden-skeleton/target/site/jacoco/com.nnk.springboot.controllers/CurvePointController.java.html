@@ -2,6 +2,8 @@
 
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
+import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.services.ICurvePointService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,66 +16,71 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
-<span class="fc" id="L19">@Slf4j</span>
-<span class="fc" id="L20">public class CurvePointController {</span>
+<span class="fc" id="L22">@Slf4j</span>
+<span class="fc" id="L23">public class CurvePointController {</span>
     @Autowired
     private ICurvePointService curvePointService;
 
     @RequestMapping(&quot;/curvePoint/list&quot;)
     public String home(Model model) {
-<span class="fc" id="L26">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
-<span class="fc" id="L27">        log.info(&quot;Controller: displaying List of CurvePoint&quot;);</span>
-<span class="fc" id="L28">        return &quot;curvePoint/list&quot;;</span>
+<span class="fc" id="L29">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
+<span class="fc" id="L30">        log.info(&quot;Controller: displaying List of CurvePoint&quot;);</span>
+<span class="fc" id="L31">        return &quot;curvePoint/list&quot;;</span>
     }
 
     @GetMapping(&quot;/curvePoint/add&quot;)
     public String addBidForm(CurvePoint curvePoint) {
-<span class="fc" id="L33">        log.info(&quot;Controller: request to add a CurvePoint&quot;);</span>
-<span class="fc" id="L34">        return &quot;curvePoint/add&quot;;</span>
+<span class="fc" id="L36">        log.info(&quot;Controller: request to add a CurvePoint&quot;);</span>
+<span class="fc" id="L37">        return &quot;curvePoint/add&quot;;</span>
     }
 
     @PostMapping(&quot;/curvePoint/validate&quot;)
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L40">            log.error(&quot;Controller: Has error in form&quot;);</span>
-<span class="fc" id="L41">            return &quot;curvePoint/add&quot;;</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L43">            log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L44">            return &quot;curvePoint/add&quot;;</span>
         }
-<span class="fc" id="L43">        curvePointService.addCurvePoint(curvePoint);</span>
-<span class="fc" id="L44">        log.info(&quot;Controller: redirection to curve point list&quot;);</span>
-<span class="fc" id="L45">        return &quot;redirect:/curvePoint/list&quot;;</span>
+<span class="fc" id="L46">        curvePointService.addCurvePoint(curvePoint);</span>
+<span class="fc" id="L47">        log.info(&quot;Controller: redirection to curve point list&quot;);</span>
+<span class="fc" id="L48">        return &quot;redirect:/curvePoint/list&quot;;</span>
     }
 
     @GetMapping(&quot;/curvePoint/update/{id}&quot;)
     public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
-<span class="fc" id="L50">        CurvePoint curvePoint = curvePointService.getCurvePointById(id);</span>
-<span class="fc" id="L51">        model.addAttribute(&quot;curvePoint&quot;,curvePoint);</span>
-<span class="fc" id="L52">        log.info(&quot;Controller: CurvePoint found with id: &quot; + id);</span>
-
-<span class="fc" id="L54">        return &quot;curvePoint/update&quot;;</span>
-        // TODO: get CurvePoint by Id and to model then show to the form
+        try {
+<span class="fc" id="L54">            CurvePoint curvePoint = curvePointService.getCurvePointById(id);</span>
+<span class="fc" id="L55">            model.addAttribute(&quot;curvePoint&quot;,curvePoint);</span>
+<span class="fc" id="L56">            log.info(&quot;Controller: CurvePoint found with id: &quot; + id);</span>
+<span class="fc" id="L57">        } catch (CurvePointNotFoundException ex) {</span>
+<span class="fc" id="L58">            model.addAttribute(&quot;errorMessage&quot;, ex.getMessage());</span>
+<span class="fc" id="L59">            log.error(&quot;Controller: CurvePoint NOT found with id: &quot; + id);</span>
+<span class="fc" id="L60">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L61">        }</span>
+<span class="fc" id="L62">        return &quot;curvePoint/update&quot;;</span>
     }
 
     @PostMapping(&quot;/curvePoint/update/{id}&quot;)
     public String updateBid(@PathVariable(&quot;id&quot;) Integer id, @Valid CurvePoint curvePoint,
                             BindingResult result, Model model) {
-<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L62">            return &quot;curvePoint/update&quot;;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L69">            return &quot;curvePoint/update&quot;;</span>
         }
-<span class="fc" id="L64">        curvePoint.setId(id);</span>
-<span class="fc" id="L65">        curvePointService.updateCurvePoint(curvePoint);</span>
-<span class="fc" id="L66">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
-<span class="fc" id="L67">        log.info(&quot;Controller: CurvePoint updated with: &quot; + id);</span>
-<span class="fc" id="L68">        return &quot;redirect:/curvePoint/list&quot;;</span>
+<span class="fc" id="L71">        curvePoint.setId(id);</span>
+<span class="fc" id="L72">        curvePointService.updateCurvePoint(curvePoint);</span>
+<span class="fc" id="L73">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
+<span class="fc" id="L74">        log.info(&quot;Controller: CurvePoint updated with: &quot; + id);</span>
+<span class="fc" id="L75">        return &quot;redirect:/curvePoint/list&quot;;</span>
     }
 
     @GetMapping(&quot;/curvePoint/delete/{id}&quot;)
     public String deleteBid(@PathVariable(&quot;id&quot;) Integer id, Model model) {
-<span class="fc" id="L73">        curvePointService.deleteCurvePoint(id);</span>
-<span class="fc" id="L74">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
-<span class="fc" id="L75">        log.info(&quot;Controller: CurvePoint deleted&quot;);</span>
-<span class="fc" id="L76">        return &quot;redirect:/curvePoint/list&quot;;</span>
+<span class="fc" id="L80">        curvePointService.deleteCurvePoint(id);</span>
+<span class="fc" id="L81">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
+<span class="fc" id="L82">        log.info(&quot;Controller: CurvePoint deleted&quot;);</span>
+<span class="fc" id="L83">        return &quot;redirect:/curvePoint/list&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
