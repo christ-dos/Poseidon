@@ -1,14 +1,14 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exceptions.UserNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IUserService {
     List<User> getUsers();
 
-    Optional<User> getUserById(Integer id);
+    User getUserById(Integer id) throws UserNotFoundException;
 
     User addUser(User user);
 

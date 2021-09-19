@@ -117,8 +117,8 @@ public class BidListControllerTest {
                 .account("account")
                 .type("type")
                 .bidQuantity(10d).build();
-        when(bidListRepositoryMock.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(bidList));
-        when(bidListServiceMock.getBidListById(anyInt())).thenReturn(java.util.Optional.ofNullable(bidList));
+        when(bidListRepositoryMock.findById(anyInt())).thenReturn(java.util.Optional.ofNullable((bidList)));
+        when(bidListServiceMock.getBidListById(anyInt())).thenReturn((bidList));
         //WHEN
         //THEN
         mockMvcBidList.perform(get("/bidList/update/1").with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -130,19 +130,19 @@ public class BidListControllerTest {
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+    public void getShowUpdateFormTest_whenIdIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
         //GIVEN
+        when(bidListServiceMock.getBidListById(anyInt())).thenThrow(new BidListNotFoundException("BidList Not found"));
         //WHEN
         //THEN
-        mockMvcBidList.perform(MockMvcRequestBuilders.get("/bidList/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+        mockMvcBidList.perform(MockMvcRequestBuilders.get("/bidList/update/14")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("bidListId", String.valueOf(14))
                         .param("account", "Account")
                         .param("type", "Type"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bidList/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("bidList", 1))
-                .andExpect(model().attributeHasFieldErrorCode("bidList", "bidListId","BidListNotFound"))
                 .andDo(print());
     }
 

@@ -51,14 +51,14 @@ public class RuleNameService implements IRuleNameService {
      * @return An instance of {@link RuleName}
      */
     @Override
-    public Optional<RuleName> getRuleNameById(Integer id) {
+    public RuleName getRuleNameById(Integer id) {
         Optional<RuleName> ruleName = ruleNameRepository.findById(id);
         if (!ruleName.isPresent()) {
             log.error("Service: Rule name NOT FOUND with ID: " + id);
             throw new RuleNameNotFoundException("Rule name not found");
         }
         log.info("Service: Trade found with ID: " + id);
-        return ruleName;
+        return ruleName.get();
     }
 
     /**

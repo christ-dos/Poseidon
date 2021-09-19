@@ -135,11 +135,9 @@ public class RuleNameTestIT {
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("id", String.valueOf(14))
                         .param("name","Name"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("ruleName/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("ruleName", 1))
-                .andExpect(model().attributeHasFieldErrorCode("ruleName", "id","RuleNameNotFound"))
                 .andDo(print());
     }
 

@@ -140,11 +140,9 @@ public class BidListTestIT {
                         .param("bidListId", String.valueOf(14))
                         .param("account", "Account")
                         .param("type", "Type"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("bidList/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("bidList", 1))
-                .andExpect(model().attributeHasFieldErrorCode("bidList", "bidListId","BidListNotFound"))
                 .andDo(print());
     }
 

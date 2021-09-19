@@ -47,4 +47,10 @@ public class LoginController {
         mav.setViewName("403");
         return mav;
     }
+
+    @GetMapping("404")
+    public String error404() {
+        return "404";
+
+    }
 }

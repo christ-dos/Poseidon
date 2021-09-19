@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exceptions.UserNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.UserService;
@@ -126,7 +127,7 @@ public class UserControllerTest {
                .role("Role")
                .build();
         when(userRepositoryMock.findById(anyInt())).thenReturn(Optional.of(user));
-        when(userServiceMock.getUserById(anyInt())).thenReturn(Optional.of(user));
+        when(userServiceMock.getUserById(anyInt())).thenReturn(user);
         //WHEN
         //THEN
         mockMvcUser.perform(get("/user/update/1")
@@ -141,17 +142,16 @@ public class UserControllerTest {
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
         //GIVEN
+        when(userServiceMock.getUserById(anyInt())).thenThrow(new UserNotFoundException("User nor found"));
         //WHEN
         //THEN
         mockMvcUser.perform(MockMvcRequestBuilders.get("/user/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("id", String.valueOf(14))
                         .param("username", "UserName")
                         .param("password", "Password"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("user", 1))
-                .andExpect(model().attributeHasFieldErrorCode("user", "id","UserNotFound"))
                 .andDo(print());
     }
 

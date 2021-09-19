@@ -1,6 +1,5 @@
 package com.nnk.springboot.IT;
 
-import com.nnk.springboot.domain.User;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +14,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -149,11 +143,9 @@ public class UserTestIT {
                         .param("id", String.valueOf(14))
                         .param("username", "UserName")
                         .param("password", "Password"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("user/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("user", 1))
-                .andExpect(model().attributeHasFieldErrorCode("user", "id","UserNotFound"))
                 .andDo(print());
     }
 

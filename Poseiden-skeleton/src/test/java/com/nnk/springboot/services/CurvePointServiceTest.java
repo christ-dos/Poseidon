@@ -60,12 +60,12 @@ public class CurvePointServiceTest {
         //GIVEN
         when(curvePointRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.ofNullable(curvePointTest));
         //WHEN
-        Optional<CurvePoint> curvePointResult = curvePointServiceTest.getCurvePointById(curvePointTest.getId());
+        CurvePoint curvePointResult = curvePointServiceTest.getCurvePointById(curvePointTest.getId());
         //THEN
         assertNotNull(curvePointResult);
-        assertEquals(1, curvePointResult.get().getId());
-        assertEquals(10d, curvePointResult.get().getTerm());
-        assertEquals(30d, curvePointResult.get().getValue());
+        assertEquals(1, curvePointResult.getId());
+        assertEquals(10d, curvePointResult.getTerm());
+        assertEquals(30d, curvePointResult.getValue());
     }
 
     @Test

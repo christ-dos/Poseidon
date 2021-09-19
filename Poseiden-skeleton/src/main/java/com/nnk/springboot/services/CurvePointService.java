@@ -54,14 +54,14 @@ public class CurvePointService implements ICurvePointService {
      * @return An instance of {@link CurvePoint}
      */
     @Override
-    public Optional<CurvePoint> getCurvePointById(Integer id) {
+    public CurvePoint getCurvePointById(Integer id) {
         Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);
         if (!curvePoint.isPresent()) {
             log.error("Service: CurvePoint NOT FOUND with ID: " + id);
             throw new CurvePointNotFoundException("CurvePoint not found");
         }
         log.info("Service: CurvePoint found with ID: " + id);
-        return curvePoint;
+        return curvePoint.get();
     }
 
     /**

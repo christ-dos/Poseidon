@@ -54,15 +54,14 @@ public class BidListService implements IBidListService {
      * @return An Optional of {@link BidList}
      */
     @Override
-    public Optional<BidList> getBidListById(Integer bidListId) {
-           Optional<BidList> bidList = bidListRepository.findById(bidListId);
+    public BidList getBidListById(Integer bidListId) {
+        Optional<BidList> bidList = bidListRepository.findById(bidListId);
         if (!bidList.isPresent()) {
             log.error("Service: BidList NOT FOUND with ID: " + bidListId);
             throw new BidListNotFoundException("BidList not found");
         }
         log.info("Service: BidList found with ID: " + bidListId);
-
-        return bidList;
+        return bidList.get();
     }
 
     /**
@@ -86,7 +85,7 @@ public class BidListService implements IBidListService {
      */
     @Override
     public BidList updateBidList(BidList bidList) {
-          BidList bidListToUpdate = bidListRepository.getById(bidList.getBidListId());
+        BidList bidListToUpdate = bidListRepository.getById(bidList.getBidListId());
         if (bidListToUpdate == null) {
             log.error("Service: BidList NOT FOUND with ID: " + bidList.getBidListId());
             throw new BidListNotFoundException("BidList not found");
@@ -102,6 +101,7 @@ public class BidListService implements IBidListService {
 
     /**
      * Method that delete a {@link BidList}
+     *
      * @param bidListId An integer containing the id
      * @return A String containing "BidList deleted"
      */

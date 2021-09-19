@@ -16,7 +16,6 @@
 	<div class="row">
 		<form action="#" th:action="@{/ruleName/update/{id}(id=${ruleName.id})}" th:object="${ruleName}" method="post" class="form-horizontal" style="width: 100%">
 			<div class="form-group">
-				<p class="text-danger pl-3 pt-4 mb-1" th:if="${errorMessage}" th:text="${errorMessage}"></p>
 				<label for="name" class="col-sm-2 control-label">Name</label>
 				<div class="col-sm-10">
 					<input type="text" th:field="*{name}" id="name" placeholder="Name"

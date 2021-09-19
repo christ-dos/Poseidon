@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.exceptions.TradeNotFoundException;
 import com.nnk.springboot.services.ITradeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +48,14 @@ public class TradeController {
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Trade trade = tradeService.getTradeById(id);
-        model.addAttribute("trade", trade);
-        log.info("Controller: Trade found with id: " + id);
-        // TODO: get Trade by Id and to model then show to the form
+        try {
+            Trade trade = tradeService.getTradeById(id);
+            model.addAttribute("trade", trade);
+            log.info("Controller: Trade found with id: " + id);
+        } catch (TradeNotFoundException e) {
+            log.error("Controller: Trade NOT found with id: " + id);
+            return "redirect:/app/404";
+        }
         return "trade/update";
     }
 

@@ -1,6 +1,7 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +9,7 @@ import java.util.Optional;
 public interface IBidListService {
     List<BidList> getBidLists();
 
-    Optional<BidList> getBidListById(Integer bidListId);
+    BidList getBidListById(Integer bidListId) throws BidListNotFoundException;
 
     BidList addBidList(BidList bidList);
 

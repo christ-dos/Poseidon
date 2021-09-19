@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -60,11 +61,11 @@ public class TradeServiceTest {
     @Test
     public void getTradeByIdTest_whenTradeFound_thenReturnTrade() {
         //GIVEN
-        when(tradeRepositoryMock.getById(isA(Integer.class))).thenReturn(tradeTest);
+        when(tradeRepositoryMock.findById(isA(Integer.class))).thenReturn(java.util.Optional.ofNullable(tradeTest));
         //WHEN
         Trade tradeByIdResult = tradeServiceTest.getTradeById(tradeTest.getTradeId());
         //THEN
-        verify(tradeRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(tradeRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(tradeByIdResult);
         assertEquals(1, tradeByIdResult.getTradeId());
         assertEquals("Account", tradeByIdResult.getAccount());
@@ -75,10 +76,10 @@ public class TradeServiceTest {
     @Test
     public void getTradeByIdTest_whenTradeNotFound_thenTradeNotFoundException() {
         //GIVEN
-        when(tradeRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(tradeRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
-        verify(tradeRepositoryMock, times(0)).getById(isA(Integer.class));
+        verify(tradeRepositoryMock, times(0)).findById(isA(Integer.class));
         assertThrows(TradeNotFoundException.class, () -> tradeServiceTest.getTradeById(tradeTest.getTradeId()));
     }
 

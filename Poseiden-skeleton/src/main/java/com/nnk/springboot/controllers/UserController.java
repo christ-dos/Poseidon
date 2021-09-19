@@ -48,18 +48,16 @@ public class UserController {
     }
 
     @GetMapping("/user/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, User user, BindingResult result, Model model) {
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            user = userService.getUserById(id).orElseThrow(() -> new UserNotFoundException("Invalid user ID: " + id));
+           User user = userService.getUserById(id);
             model.addAttribute("user", user);
             user.setPassword("");
             log.info("Controller: User found with id: " + id);
         } catch (UserNotFoundException ex) {
-            result.rejectValue("id", "UserNotFound", ex.getMessage());
-            model.addAttribute("errorMessage", ex.getMessage());
             log.error("Controller: User NOT found with id: " + id);
+            return "redirect:/app/404";
         }
-        // TODO: get User by Id and to model then show to the form
         return "user/update";
     }
 

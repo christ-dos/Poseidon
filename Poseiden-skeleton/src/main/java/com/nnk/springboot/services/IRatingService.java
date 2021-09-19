@@ -1,14 +1,14 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IRatingService {
     List<Rating> getRatings();
 
-    Optional<Rating> getRatingById(Integer id);
+    Rating getRatingById(Integer id) throws RatingNotFoundException;
 
     Rating addRating(Rating rating);
 

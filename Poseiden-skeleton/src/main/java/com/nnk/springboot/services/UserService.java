@@ -55,14 +55,14 @@ public class UserService implements IUserService {
      * @return An instance of {@link User}
      */
     @Override
-    public Optional<User> getUserById(Integer id) {
+    public User getUserById(Integer id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             log.error("Service: User NOT FOUND with ID: " + id);
             throw new UserNotFoundException("User not found");
         }
         log.info("Service: User found with ID: " + id);
-        return user;
+        return user.get();
     }
 
     /**

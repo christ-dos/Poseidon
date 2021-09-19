@@ -66,15 +66,15 @@ public class UserServiceTest {
         //GIVEN
         when(userRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.of(userTest));
         //WHEN
-        Optional<User> userByIdResult = userServiceTest.getUserById(userTest.getId());
+       User userByIdResult = userServiceTest.getUserById(userTest.getId());
         //THEN
         verify(userRepositoryMock, times(1)).findById(isA(Integer.class));
-        assertTrue(userByIdResult.isPresent());
-        assertEquals(1, userByIdResult.get().getId());
-        assertEquals("Fullname", userByIdResult.get().getFullname());
-        assertEquals("Username", userByIdResult.get().getUsername());
-        assertEquals("Password", userByIdResult.get().getPassword());
-        assertEquals("Role", userByIdResult.get().getRole());
+        assertNotNull(userByIdResult);
+        assertEquals(1, userByIdResult.getId());
+        assertEquals("Fullname", userByIdResult.getFullname());
+        assertEquals("Username", userByIdResult.getUsername());
+        assertEquals("Password", userByIdResult.getPassword());
+        assertEquals("Role", userByIdResult.getRole());
     }
 
     @Test

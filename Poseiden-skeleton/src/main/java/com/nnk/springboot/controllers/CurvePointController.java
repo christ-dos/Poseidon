@@ -49,19 +49,17 @@ public class CurvePointController {
     }
 
     @GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, CurvePoint curvePoint, BindingResult result, Model model) {
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            curvePoint = curvePointService.getCurvePointById(id).orElseThrow(() -> new CurvePointNotFoundException("Invalid BidListId: " + id));
+            CurvePoint curvePoint = curvePointService.getCurvePointById(id);
             model.addAttribute("curvePoint",curvePoint);
             log.info("Controller: CurvePoint found with id: " + id);
         } catch (CurvePointNotFoundException ex) {
-            result.rejectValue("id", "CurvePointNotFound", ex.getMessage());
             model.addAttribute("errorMessage", ex.getMessage());
             log.error("Controller: CurvePoint NOT found with id: " + id);
+            return "redirect:/app/404";
         }
-
         return "curvePoint/update";
-        // TODO: get CurvePoint by Id and to model then show to the form
     }
 
     @PostMapping("/curvePoint/update/{id}")

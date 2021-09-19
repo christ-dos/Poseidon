@@ -62,14 +62,14 @@ public class RatingServiceTest {
         //GIVEN
         when(ratingRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.ofNullable(ratingTest));
         //WHEN
-        Optional<Rating> ratingByIdResult = ratingServiceTest.getRatingById(ratingTest.getId());
+        Rating ratingByIdResult = ratingServiceTest.getRatingById(ratingTest.getId());
         //THEN
         verify(ratingRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(ratingByIdResult);
-        assertEquals("Moodys Rating", ratingByIdResult.get().getMoodysRating());
-        assertEquals("Sand PRating", ratingByIdResult.get().getSandPRating());
-        assertEquals("Fitch Rating", ratingByIdResult.get().getFitchRating());
-        assertEquals(10, ratingByIdResult.get().getOrderNumber());
+        assertEquals("Moodys Rating", ratingByIdResult.getMoodysRating());
+        assertEquals("Sand PRating", ratingByIdResult.getSandPRating());
+        assertEquals("Fitch Rating", ratingByIdResult.getFitchRating());
+        assertEquals(10, ratingByIdResult.getOrderNumber());
     }
 
     @Test

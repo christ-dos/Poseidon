@@ -47,16 +47,14 @@ public class RatingController {
     }
 
     @GetMapping("/rating/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Rating rating, BindingResult result, Model model) {
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            rating = ratingService.getRatingById(id).orElseThrow(()->new RatingNotFoundException("Invalid Rating: " + id));
+            Rating rating = ratingService.getRatingById(id);
             model.addAttribute("rating",rating);
             log.info("Controller: Rating found with id: " + id);
         } catch (RatingNotFoundException ex) {
-            result.rejectValue("id", "RatingNotFound", ex.getMessage());
-            model.addAttribute("errorMessage", ex.getMessage());
             log.error("Controller: Rating NOT found with id: " + id);
-
+            return "redirect:/app/404";
         }
         return "rating/update";
     }

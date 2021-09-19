@@ -1,6 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
+import com.nnk.springboot.exceptions.TradeNotFoundException;
 import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.TradeService;
@@ -128,6 +130,25 @@ public class TradeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/update"))
                 .andExpect(model().attributeDoesNotExist())
+                .andDo(print());
+    }
+
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getShowUpdateFormTest_whenIdIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        when(tradeServiceMock.getTradeById(anyInt())).thenThrow(new TradeNotFoundException("Trade Not found"));
+        //WHEN
+        //THEN
+        mockMvcTrade.perform(MockMvcRequestBuilders.get("/trade/update/14")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(14))
+                        .param("account","Account")
+                        .param("type","Type")
+                        .param("buyQuantity","10.0"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
+                .andExpect(model().attributeHasNoErrors())
                 .andDo(print());
     }
 

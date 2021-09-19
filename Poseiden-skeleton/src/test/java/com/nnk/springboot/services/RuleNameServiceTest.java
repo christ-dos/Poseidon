@@ -69,16 +69,16 @@ public class RuleNameServiceTest {
         //GIVEN
         when(ruleNameRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.of(ruleNameTest));
         //WHEN
-        Optional<RuleName> ruleNameByIdResult = ruleNameServiceTest.getRuleNameById(ruleNameTest.getId());
+        RuleName ruleNameByIdResult = ruleNameServiceTest.getRuleNameById(ruleNameTest.getId());
         //THEN
         verify(ruleNameRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(ruleNameByIdResult);
-        assertEquals("Name", ruleNameByIdResult.get().getName());
-        assertEquals("Description", ruleNameByIdResult.get().getDescription());
-        assertEquals("Json", ruleNameByIdResult.get().getJson());
-        assertEquals("Template", ruleNameByIdResult.get().getTemplate());
-        assertEquals("Sql str", ruleNameByIdResult.get().getSqlStr());
-        assertEquals("Sql part", ruleNameByIdResult.get().getSqlPart());
+        assertEquals("Name", ruleNameByIdResult.getName());
+        assertEquals("Description", ruleNameByIdResult.getDescription());
+        assertEquals("Json", ruleNameByIdResult.getJson());
+        assertEquals("Template", ruleNameByIdResult.getTemplate());
+        assertEquals("Sql str", ruleNameByIdResult.getSqlStr());
+        assertEquals("Sql part", ruleNameByIdResult.getSqlPart());
     }
 
     @Test

@@ -53,7 +53,7 @@ public class RatingService implements IRatingService {
      * @return An Optional of {@link Rating}
      */
     @Override
-    public Optional<Rating> getRatingById(Integer id) {
+    public Rating getRatingById(Integer id) {
         Optional<Rating> rating = ratingRepository.findById(id);
         if (!rating.isPresent()) {
             log.error("Service: Rating NOT FOUND with ID: " + id);
@@ -61,7 +61,7 @@ public class RatingService implements IRatingService {
         }
         log.info("Service: Rating found with ID: " + id);
 
-        return rating;
+        return rating.get();
     }
 
     /**

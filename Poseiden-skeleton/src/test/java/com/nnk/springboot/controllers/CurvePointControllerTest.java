@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.CurvePointService;
@@ -110,7 +111,7 @@ public class CurvePointControllerTest {
                 .value(10.0)
                 .build();
         when(curvePointRepository.getById(anyInt())).thenReturn(curvePoint);
-        when(curvePointService.getCurvePointById(anyInt())).thenReturn(java.util.Optional.ofNullable(curvePoint));
+        when(curvePointService.getCurvePointById(anyInt())).thenReturn(curvePoint);
         //WHEN
         //THEN
         mockMvcCurvePoint.perform(get("/curvePoint/update/1")
@@ -125,20 +126,18 @@ public class CurvePointControllerTest {
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
         //GIVEN
+        when(curvePointService.getCurvePointById(anyInt())).thenThrow(new CurvePointNotFoundException("CurvePoint not found"));
         //WHEN
         //THEN
         mockMvcCurvePoint.perform(MockMvcRequestBuilders.get("/curvePoint/update/14")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("id", String.valueOf(14))
                         .param("curveId", String.valueOf(10)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("curvePoint/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("curvePoint", 1))
-                .andExpect(model().attributeHasFieldErrorCode("curvePoint", "id", "CurvePointNotFound"))
                 .andDo(print());
     }
-
 
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test

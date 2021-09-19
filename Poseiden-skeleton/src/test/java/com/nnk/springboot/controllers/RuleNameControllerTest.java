@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.exceptions.RuleNameNotFoundException;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.RuleNameService;
@@ -118,7 +119,7 @@ public class RuleNameControllerTest {
                 .sqlPart("Sql Part")
                 .build();
         when(ruleNameRepositoryMock.findById(anyInt())).thenReturn(java.util.Optional.of(ruleName));
-        when(ruleNameServiceMock.getRuleNameById(anyInt())).thenReturn(java.util.Optional.of(ruleName));
+        when(ruleNameServiceMock.getRuleNameById(anyInt())).thenReturn(ruleName);
         //WHEN
         //THEN
         mockMvcRuleName.perform(get("/ruleName/update/1")
@@ -133,16 +134,15 @@ public class RuleNameControllerTest {
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
         //GIVEN
+        when(ruleNameServiceMock.getRuleNameById(anyInt())).thenThrow(new RuleNameNotFoundException("RuleName not found"));
         //WHEN
         //THEN
         mockMvcRuleName.perform(MockMvcRequestBuilders.get("/ruleName/update/14")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("name","Name"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("ruleName/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("ruleName", 1))
-                .andExpect(model().attributeHasFieldErrorCode("ruleName", "id","RuleNameNotFound"))
                 .andDo(print());
     }
 

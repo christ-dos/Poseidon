@@ -137,11 +137,9 @@ public class CurvePointTestIT {
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("id", String.valueOf(14))
                         .param("curveId", String.valueOf(10)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("curvePoint/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("curvePoint", 1))
-                .andExpect(model().attributeHasFieldErrorCode("curvePoint", "id", "CurvePointNotFound"))
                 .andDo(print());
     }
 

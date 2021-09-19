@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.RatingService;
@@ -120,7 +121,7 @@ public class RatingControllerTest {
                 .sandPRating("sandPRating")
                 .orderNumber(10).build();
         when(ratingRepositoryMock.findById((anyInt()))).thenReturn(java.util.Optional.of(rating));
-        when(ratingServiceMock.getRatingById(anyInt())).thenReturn(java.util.Optional.of(rating));
+        when(ratingServiceMock.getRatingById(anyInt())).thenReturn(rating);
         //WHEN
         //THEN
         mockMvcRating.perform(get("/rating/update/1").with(SecurityMockMvcRequestPostProcessors.csrf()))
@@ -134,6 +135,7 @@ public class RatingControllerTest {
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
         //GIVEN
+        when(ratingServiceMock.getRatingById(anyInt())).thenThrow(new RatingNotFoundException("Rating not found"));
         //WHEN
         //THEN
         mockMvcRating.perform(MockMvcRequestBuilders.get("/rating/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
@@ -141,11 +143,9 @@ public class RatingControllerTest {
                         .param("sandPRating", "SandPRating")
                         .param("fitchRating", "FitchRating")
                         .param("orderNumber", String.valueOf(10)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("rating/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("rating", 1))
-                .andExpect(model().attributeHasFieldErrorCode("rating", "id","RatingNotFound"))
                 .andDo(print());
     }
 

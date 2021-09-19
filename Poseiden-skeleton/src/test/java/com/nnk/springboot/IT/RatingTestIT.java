@@ -142,11 +142,9 @@ public class RatingTestIT {
                         .param("sandPRating", "SandPRating")
                         .param("fitchRating", "FitchRating")
                         .param("orderNumber", String.valueOf(10)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("rating/update"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
-                .andExpect(model().attributeErrorCount("rating", 1))
-                .andExpect(model().attributeHasFieldErrorCode("rating", "id", "RatingNotFound"))
                 .andDo(print());
     }
 

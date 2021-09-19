@@ -66,12 +66,12 @@ public class BidListServiceTest {
         //GIVEN
         when(bidListRepositoryMock.findById(anyInt())).thenReturn(Optional.ofNullable(bidListTest));
         //WHEN
-        Optional<BidList> bidListResult = bidListServiceTest.getBidListById(bidListTest.getBidListId());
+        BidList bidListResult = bidListServiceTest.getBidListById(bidListTest.getBidListId());
         //THEN
         verify(bidListRepositoryMock, times(1)).findById(anyInt());
         assertNotNull(bidListResult);
-        assertEquals("Account Test", bidListResult.get().getAccount());
-        assertEquals(10d, bidListResult.get().getBidQuantity());
+        assertEquals("Account Test", bidListResult.getAccount());
+        assertEquals(10d, bidListResult.getBidQuantity());
     }
 
     @Test

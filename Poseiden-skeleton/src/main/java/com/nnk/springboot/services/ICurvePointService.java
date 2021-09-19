@@ -1,14 +1,14 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ICurvePointService {
     List<CurvePoint> getCurvePoints();
 
-    Optional<CurvePoint> getCurvePointById(Integer id);
+    CurvePoint getCurvePointById(Integer id) throws CurvePointNotFoundException;
 
     CurvePoint addCurvePoint(CurvePoint curvePoint);
 

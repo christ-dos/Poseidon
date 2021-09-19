@@ -47,15 +47,14 @@ public class RuleNameController {
     }
 
     @GetMapping("/ruleName/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, RuleName ruleName, BindingResult result, Model model) {
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            ruleName = ruleNameService.getRuleNameById(id).orElseThrow(()->new RuleNameNotFoundException("Invalid RuleName: " + id));
+           RuleName ruleName = ruleNameService.getRuleNameById(id);
             model.addAttribute("ruleName", ruleName);
             log.info("Controller: RuleName found with id: " + id);
         } catch (RuleNameNotFoundException ex) {
-            result.rejectValue("id", "RuleNameNotFound", ex.getMessage());
-            model.addAttribute("errorMessage", ex.getMessage());
             log.error("Controller: RuleName NOT found with id: " + id);
+            return "redirect:/app/404";
         }
         return "ruleName/update";
     }
