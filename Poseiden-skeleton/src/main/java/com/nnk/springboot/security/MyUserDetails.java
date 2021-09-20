@@ -7,14 +7,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Class that Provides core user information.
- * <p>
- * * @author Christine Duarte
+ *
+ * @author Christine Duarte
  */
 @AllArgsConstructor
 @NoArgsConstructor

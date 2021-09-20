@@ -11,10 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Class of configuration SpringSecurity
+ *
+ * @author Christine Duarte
+ */
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
-
     /**
      * Core interface which loads user-specific data
      * {@link UserDetailsService}
@@ -70,14 +74,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login","/", "/app/error","/css/**").permitAll()
+                .antMatchers("/login", "/", "/app/error", "/css/**").permitAll()
                 .antMatchers("/user/list").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().accessDeniedPage("/app/error")
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/admin/home",true)
+                .defaultSuccessUrl("/admin/home", true)
                 .and()
                 .logout()
                 .logoutUrl("/app-logout")
