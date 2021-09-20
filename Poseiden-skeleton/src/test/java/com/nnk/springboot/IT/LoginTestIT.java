@@ -10,6 +10,7 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -115,6 +116,25 @@ public class LoginTestIT {
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("404"))
+                .andDo(print());
+    }
+
+    /**
+     * Method that test log out
+     * then redirect  view home
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void logOutTest() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcLogin.perform(MockMvcRequestBuilders.post("/app-logout")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
                 .andDo(print());
     }
 }

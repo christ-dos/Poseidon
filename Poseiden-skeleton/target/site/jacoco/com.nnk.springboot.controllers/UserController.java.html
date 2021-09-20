@@ -16,78 +16,121 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+/**
+ * Class Controller that manage User's requests
+ *
+ * @author Christine Duarte
+ */
 @Controller
-<span class="fc" id="L20">@Slf4j</span>
-<span class="fc" id="L21">public class UserController {</span>
+<span class="fc" id="L25">@Slf4j</span>
+<span class="fc" id="L26">public class UserController {</span>
+    /**
+     * Dependency  {@link IUserService} injected
+     */
     @Autowired
     private IUserService userService;
 
+    /**
+     * Method GET which displayed the view with the list of all {@link User}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @RequestMapping(&quot;/user/list&quot;)
     public String home(Model model) {
-<span class="fc" id="L27">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
-<span class="fc" id="L28">        log.info(&quot;Controller: displaying List of User&quot;);</span>
-<span class="fc" id="L29">        return &quot;user/list&quot;;</span>
+<span class="fc" id="L41">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L42">        log.info(&quot;Controller: displaying List of User&quot;);</span>
+<span class="fc" id="L43">        return &quot;user/list&quot;;</span>
     }
 
+    /**
+     * Method GET which permit adding A {@link User}
+     *
+     * @param user An instance fo {@link User}
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/user/add&quot;)
     public String addUser(User user) {
-<span class="fc" id="L34">        log.info(&quot;Controller: request to add a user&quot;);</span>
-<span class="fc" id="L35">        return &quot;user/add&quot;;</span>
+<span class="fc" id="L54">        log.info(&quot;Controller: request to add a user&quot;);</span>
+<span class="fc" id="L55">        return &quot;user/add&quot;;</span>
     }
 
+    /**
+     * Method POST which valid entry in the form for User
+     *
+     * @param user   An instance fo {@link User}
+     * @param result An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model  Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping(&quot;/user/validate&quot;)
     public String validate(@Valid User user, BindingResult result, Model model) {
-<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (!result.hasErrors()) {</span>
-<span class="fc" id="L41">            userService.addUser(user);</span>
-<span class="fc" id="L42">            model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
-<span class="fc" id="L43">            log.info(&quot;Controller: redirection to user list&quot;);</span>
-<span class="fc" id="L44">            return &quot;redirect:/user/list&quot;;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!result.hasErrors()) {</span>
+<span class="fc" id="L69">            userService.addUser(user);</span>
+<span class="fc" id="L70">            model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L71">            log.info(&quot;Controller: redirection to user list&quot;);</span>
+<span class="fc" id="L72">            return &quot;redirect:/user/list&quot;;</span>
         }
-<span class="fc" id="L46">        log.error(&quot;Controller: Has error in form&quot;);</span>
-<span class="fc" id="L47">        return &quot;user/add&quot;;</span>
+<span class="fc" id="L74">        log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L75">        return &quot;user/add&quot;;</span>
     }
 
+    /**
+     * Method GET which permit displaying the {@link User} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/user/update/{id}&quot;)
     public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
         try {
-<span class="fc" id="L53">           User user = userService.getUserById(id);</span>
-<span class="fc" id="L54">            model.addAttribute(&quot;user&quot;, user);</span>
-<span class="fc" id="L55">            user.setPassword(&quot;&quot;);</span>
-<span class="fc" id="L56">            log.info(&quot;Controller: User found with id: &quot; + id);</span>
-<span class="fc" id="L57">        } catch (UserNotFoundException ex) {</span>
-<span class="fc" id="L58">            log.error(&quot;Controller: User NOT found with id: &quot; + id);</span>
-<span class="fc" id="L59">            return &quot;redirect:/app/404&quot;;</span>
-<span class="fc" id="L60">        }</span>
-<span class="fc" id="L61">        return &quot;user/update&quot;;</span>
+<span class="fc" id="L88">            User user = userService.getUserById(id);</span>
+<span class="fc" id="L89">            model.addAttribute(&quot;user&quot;, user);</span>
+<span class="fc" id="L90">            user.setPassword(&quot;&quot;);</span>
+<span class="fc" id="L91">            log.info(&quot;Controller: User found with id: &quot; + id);</span>
+<span class="fc" id="L92">        } catch (UserNotFoundException ex) {</span>
+<span class="fc" id="L93">            log.error(&quot;Controller: User NOT found with id: &quot; + id);</span>
+<span class="fc" id="L94">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L95">        }</span>
+<span class="fc" id="L96">        return &quot;user/update&quot;;</span>
     }
 
+    /**
+     * Method POST that permit update a {@link User}
+     *
+     * @param id     An Integer containing the id of BidList to update
+     * @param user   An instance of {@link User}
+     * @param result An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model  Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping(&quot;/user/update/{id}&quot;)
     public String updateUser(@PathVariable(&quot;id&quot;) Integer id, @Valid User user,
                              BindingResult result, Model model) {
-<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L68">            return &quot;user/update&quot;;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L112">            return &quot;user/update&quot;;</span>
         }
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//        user.setPassword(encoder.encode(user.getPassword()));
-<span class="fc" id="L72">        user.setId(id);</span>
-        try {
-<span class="fc" id="L74">            userService.updateUser(user);</span>
-<span class="nc" id="L75">        } catch (UserNotFoundException ex) {</span>
-<span class="nc" id="L76">            result.rejectValue(&quot;id&quot;, &quot;userNotFound&quot;, ex.getMessage());</span>
-
-
-<span class="fc" id="L79">        }</span>
-<span class="fc" id="L80">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
-<span class="fc" id="L81">        log.info(&quot;Controller: User updated with: &quot; + id);</span>
-<span class="fc" id="L82">        return &quot;redirect:/user/list&quot;;</span>
+<span class="fc" id="L114">        user.setId(id);</span>
+<span class="fc" id="L115">        userService.updateUser(user);</span>
+<span class="fc" id="L116">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L117">        log.info(&quot;Controller: User updated with: &quot; + id);</span>
+<span class="fc" id="L118">        return &quot;redirect:/user/list&quot;;</span>
     }
 
+    /**
+     * Method GET which delete a {@link User}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/user/delete/{id}&quot;)
     public String deleteUser(@PathVariable(&quot;id&quot;) Integer id, Model model) {
-//        User user = userRepository.findById(id).orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid user Id:&quot; + id));
-<span class="fc" id="L88">        userService.deleteUser(id);</span>
-<span class="fc" id="L89">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
-<span class="fc" id="L90">        return &quot;redirect:/user/list&quot;;</span>
+<span class="fc" id="L130">        userService.deleteUser(id);</span>
+<span class="fc" id="L131">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L132">        log.info(&quot;Controller: User deleted&quot;);</span>
+<span class="fc" id="L133">        return &quot;redirect:/user/list&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

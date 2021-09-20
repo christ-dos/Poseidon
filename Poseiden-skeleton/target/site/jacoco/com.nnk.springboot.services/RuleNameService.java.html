@@ -93,8 +93,7 @@ public class RuleNameService implements IRuleNameService {
 <span class="fc" id="L93">        ruleNameToUpdate.setSqlStr(ruleName.getSqlStr());</span>
 <span class="fc" id="L94">        ruleNameToUpdate.setSqlPart(ruleName.getSqlPart());</span>
 <span class="fc" id="L95">        log.info(&quot;Service: RuleName updated with ID: &quot; + ruleName.getId());</span>
-
-<span class="fc" id="L97">        return ruleNameRepository.save(ruleNameToUpdate);</span>
+<span class="fc" id="L96">        return ruleNameRepository.save(ruleNameToUpdate);</span>
     }
 
     /**
@@ -105,10 +104,9 @@ public class RuleNameService implements IRuleNameService {
      */
     @Override
     public String deleteRuleName(Integer id) {
-<span class="fc" id="L108">        ruleNameRepository.deleteById(id);</span>
-<span class="fc" id="L109">        log.info(&quot;Service: RuleName deleted with ID:&quot; + id);</span>
-
-<span class="fc" id="L111">        return &quot;RuleName deleted&quot;;</span>
+<span class="fc" id="L107">        ruleNameRepository.deleteById(id);</span>
+<span class="fc" id="L108">        log.info(&quot;Service: RuleName deleted with ID:&quot; + id);</span>
+<span class="fc" id="L109">        return &quot;RuleName deleted&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

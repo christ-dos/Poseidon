@@ -6,33 +6,55 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
-
+/**
+ * Class that manage the entity {@link CurvePoint}
+ *
+ * @author Christine Duarte
+ */
 @Entity
 @Table(name = &quot;curve_point&quot;)
-<span class="fc" id="L12">@NoArgsConstructor</span>
-<span class="fc" id="L13">@AllArgsConstructor</span>
-<span class="pc" id="L14">@Builder</span>
+<span class="fc" id="L16">@NoArgsConstructor</span>
+<span class="fc" id="L17">@AllArgsConstructor</span>
+<span class="pc" id="L18">@Builder</span>
 @Getter
-<span class="pc" id="L16">@Setter</span>
+<span class="pc" id="L20">@Setter</span>
 public class CurvePoint {
 
+    /**
+     * An Integer that contain the id of the {@link CurvePoint}
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<span class="fc" id="L21">    private Integer id;</span>
+<span class="fc" id="L28">    private Integer id;</span>
 
+    /**
+     * A String containing curve id of CurvePoint
+     */
     @NotNull(message = &quot;must not be null&quot;)
     @Column(name = &quot;curve_id&quot;)
-<span class="fc" id="L25">    private  Integer curveId;</span>
+<span class="fc" id="L35">    private  Integer curveId;</span>
 
+    /**
+     * A Timestamp with the as fo date
+     */
     @Column(name = &quot;as_of_date&quot;)
-<span class="nc" id="L28">    private Timestamp asOfDate;</span>
+<span class="nc" id="L41">    private Timestamp asOfDate;</span>
 
-<span class="fc" id="L30">    private  Double term;</span>
+    /**
+     * A Double containing the term
+     */
+<span class="fc" id="L46">    private  Double term;</span>
 
-<span class="fc" id="L32">    private  Double value;</span>
+    /**
+     * A Double containing the value
+     */
+<span class="fc" id="L51">    private  Double value;</span>
 
+    /**
+     * A Timestamp with the creation date
+     */
     @Column(name = &quot;creation_date&quot;)
-<span class="fc" id="L35">    private  Timestamp creationDate;</span>
+<span class="fc" id="L57">    private  Timestamp creationDate;</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

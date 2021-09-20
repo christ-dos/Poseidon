@@ -7,17 +7,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Class that Provides core user information.
- * &lt;p&gt;
- * * @author Christine Duarte
+ *
+ * @author Christine Duarte
  */
-<span class="nc" id="L19">@AllArgsConstructor</span>
-<span class="nc" id="L20">@NoArgsConstructor</span>
+<span class="fc" id="L18">@AllArgsConstructor</span>
+<span class="nc" id="L19">@NoArgsConstructor</span>
 public class MyUserDetails implements UserDetails {
     /**
      * A string containing the username of the user
@@ -41,10 +40,10 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
-<span class="nc" id="L44">        List&lt;GrantedAuthority&gt; listRoles = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L43">        List&lt;GrantedAuthority&gt; listRoles = new ArrayList&lt;&gt;();</span>
 
-<span class="nc" id="L46">        listRoles.add(new SimpleGrantedAuthority(role));</span>
-<span class="nc" id="L47">        return listRoles;</span>
+<span class="fc" id="L45">        listRoles.add(new SimpleGrantedAuthority(role));</span>
+<span class="fc" id="L46">        return listRoles;</span>
     }
 
     /**
@@ -54,7 +53,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public String getPassword() {
-<span class="nc" id="L57">        return password;</span>
+<span class="fc" id="L56">        return password;</span>
     }
 
     /**
@@ -64,7 +63,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public String getUsername() {
-<span class="nc" id="L67">        return username;</span>
+<span class="nc" id="L66">        return username;</span>
     }
 
     /**
@@ -74,7 +73,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isAccountNonExpired() {
-<span class="nc" id="L77">        return true;</span>
+<span class="fc" id="L76">        return true;</span>
     }
 
     /**
@@ -84,7 +83,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isAccountNonLocked() {
-<span class="nc" id="L87">        return true;</span>
+<span class="fc" id="L86">        return true;</span>
     }
 
     /**
@@ -95,7 +94,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isCredentialsNonExpired() {
-<span class="nc" id="L98">        return true;</span>
+<span class="fc" id="L97">        return true;</span>
     }
 
     /**
@@ -106,7 +105,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-<span class="nc" id="L109">        return true;</span>
+<span class="fc" id="L108">        return true;</span>
     }
 
     /**
@@ -116,7 +115,7 @@ public class MyUserDetails implements UserDetails {
      */
     @Override
     public String toString() {
-<span class="nc" id="L119">        return &quot;MyUserDetails{&quot; +</span>
+<span class="fc" id="L118">        return &quot;MyUserDetails{&quot; +</span>
                 &quot;username='&quot; + username + '\'' +
                 &quot;, password='&quot; + password + '\'' +
                 '}';

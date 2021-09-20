@@ -4,21 +4,33 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Class Controller that display the view home
+ *
+ * @author Christine Duarte
+ */
 @Controller
-<span class="nc" id="L8">public class HomeController</span>
-{
-	@RequestMapping(&quot;/&quot;)
-	public String home(Model model)
-	{
-<span class="nc" id="L13">		return &quot;home&quot;;</span>
-	}
+<span class="fc" id="L13">public class HomeController {</span>
+    /**
+     * Method which displayed the view home
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @RequestMapping(&quot;/&quot;)
+    public String home(Model model) {
+<span class="nc" id="L22">        return &quot;home&quot;;</span>
+    }
 
-	@RequestMapping(&quot;/admin/home&quot;)
-	public String adminHome(Model model)
-	{
-<span class="nc" id="L19">		return &quot;redirect:/bidList/list&quot;;</span>
-	}
-
-
+    /**
+     * Method which displayed the view bidList/list
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @RequestMapping(&quot;/admin/home&quot;)
+    public String adminHome(Model model) {
+<span class="nc" id="L33">        return &quot;redirect:/bidList/list&quot;;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

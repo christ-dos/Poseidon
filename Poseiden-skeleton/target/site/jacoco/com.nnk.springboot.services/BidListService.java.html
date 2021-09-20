@@ -43,8 +43,7 @@ public class BidListService implements IBidListService {
     @Override
     public List&lt;BidList&gt; getBidLists() {
 <span class="fc" id="L45">        log.info(&quot;Service: displaying BidLists&quot;);</span>
-
-<span class="fc" id="L47">        return bidListRepository.findAll();</span>
+<span class="fc" id="L46">        return bidListRepository.findAll();</span>
     }
 
     /**
@@ -55,13 +54,13 @@ public class BidListService implements IBidListService {
      */
     @Override
     public BidList getBidListById(Integer bidListId) {
-<span class="fc" id="L58">        Optional&lt;BidList&gt; bidList = bidListRepository.findById(bidListId);</span>
-<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!bidList.isPresent()) {</span>
-<span class="fc" id="L60">            log.error(&quot;Service: BidList NOT FOUND with ID: &quot; + bidListId);</span>
-<span class="fc" id="L61">            throw new BidListNotFoundException(&quot;BidList not found&quot;);</span>
+<span class="fc" id="L57">        Optional&lt;BidList&gt; bidList = bidListRepository.findById(bidListId);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!bidList.isPresent()) {</span>
+<span class="fc" id="L59">            log.error(&quot;Service: BidList NOT FOUND with ID: &quot; + bidListId);</span>
+<span class="fc" id="L60">            throw new BidListNotFoundException(&quot;BidList not found&quot;);</span>
         }
-<span class="fc" id="L63">        log.info(&quot;Service: BidList found with ID: &quot; + bidListId);</span>
-<span class="fc" id="L64">        return bidList.get();</span>
+<span class="fc" id="L62">        log.info(&quot;Service: BidList found with ID: &quot; + bidListId);</span>
+<span class="fc" id="L63">        return bidList.get();</span>
     }
 
     /**
@@ -72,9 +71,9 @@ public class BidListService implements IBidListService {
      */
     @Override
     public BidList addBidList(BidList bidList) {
-<span class="fc" id="L75">        bidList.setCreationDate(Timestamp.from(Instant.now()));</span>
-<span class="fc" id="L76">        log.info(&quot;Service: BidList saved&quot;);</span>
-<span class="fc" id="L77">        return bidListRepository.save(bidList);</span>
+<span class="fc" id="L74">        bidList.setCreationDate(Timestamp.from(Instant.now()));</span>
+<span class="fc" id="L75">        log.info(&quot;Service: BidList saved&quot;);</span>
+<span class="fc" id="L76">        return bidListRepository.save(bidList);</span>
     }
 
     /**
@@ -85,18 +84,17 @@ public class BidListService implements IBidListService {
      */
     @Override
     public BidList updateBidList(BidList bidList) {
-<span class="fc" id="L88">        BidList bidListToUpdate = bidListRepository.getById(bidList.getBidListId());</span>
-<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (bidListToUpdate == null) {</span>
-<span class="fc" id="L90">            log.error(&quot;Service: BidList NOT FOUND with ID: &quot; + bidList.getBidListId());</span>
-<span class="fc" id="L91">            throw new BidListNotFoundException(&quot;BidList not found&quot;);</span>
+<span class="fc" id="L87">        BidList bidListToUpdate = bidListRepository.getById(bidList.getBidListId());</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (bidListToUpdate == null) {</span>
+<span class="fc" id="L89">            log.error(&quot;Service: BidList NOT FOUND with ID: &quot; + bidList.getBidListId());</span>
+<span class="fc" id="L90">            throw new BidListNotFoundException(&quot;BidList not found&quot;);</span>
         }
-<span class="fc" id="L93">        bidListToUpdate.setAccount(bidList.getAccount());</span>
-<span class="fc" id="L94">        bidListToUpdate.setType(bidList.getType());</span>
-<span class="fc" id="L95">        bidListToUpdate.setBidQuantity(bidList.getBidQuantity());</span>
-<span class="fc" id="L96">        bidListToUpdate.setRevisionDate(Timestamp.from(Instant.now()));</span>
-<span class="fc" id="L97">        log.info(&quot;Service: BidList updated with ID: &quot; + bidList.getBidListId());</span>
-
-<span class="fc" id="L99">        return bidListRepository.save(bidListToUpdate);</span>
+<span class="fc" id="L92">        bidListToUpdate.setAccount(bidList.getAccount());</span>
+<span class="fc" id="L93">        bidListToUpdate.setType(bidList.getType());</span>
+<span class="fc" id="L94">        bidListToUpdate.setBidQuantity(bidList.getBidQuantity());</span>
+<span class="fc" id="L95">        bidListToUpdate.setRevisionDate(Timestamp.from(Instant.now()));</span>
+<span class="fc" id="L96">        log.info(&quot;Service: BidList updated with ID: &quot; + bidList.getBidListId());</span>
+<span class="fc" id="L97">        return bidListRepository.save(bidListToUpdate);</span>
     }
 
     /**
@@ -107,10 +105,9 @@ public class BidListService implements IBidListService {
      */
     @Override
     public String deleteBidList(Integer bidListId) {
-<span class="fc" id="L110">        bidListRepository.deleteById(bidListId);</span>
-<span class="fc" id="L111">        log.info(&quot;Service: BidList deleted with ID: &quot; + bidListId);</span>
-
-<span class="fc" id="L113">        return &quot;BidList deleted&quot;;</span>
+<span class="fc" id="L108">        bidListRepository.deleteById(bidListId);</span>
+<span class="fc" id="L109">        log.info(&quot;Service: BidList deleted with ID: &quot; + bidListId);</span>
+<span class="fc" id="L110">        return &quot;BidList deleted&quot;;</span>
     }
 }
 

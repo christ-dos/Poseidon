@@ -2,15 +2,19 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.security.MyUserDetails;
 import com.nnk.springboot.security.MyUserDetailsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,6 +118,49 @@ public class LoginControllerTest {
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("404"))
+                .andDo(print());
+    }
+
+    /**
+     * Method that test authentication in view login when username exist and password match
+     * then redirect to "/admin/home
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void authenticationLoginViewTest_whenUserExistAndPasswordIsGood_thenReturnStatusRedirectUradminSlashHome() throws Exception {
+        //GIVEN
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String username = "admin";
+        MyUserDetails myUserDetails = new MyUserDetails("admin", bCryptPasswordEncoder.encode("Admin12345*"),"ADMIN");
+        when(myUserDetailsServiceMock.loadUserByUsername(username)).thenReturn(myUserDetails);
+        //WHEN
+        //THEN
+        mockMvcLogin.perform(MockMvcRequestBuilders.post("/login").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("username", username)
+                        .param("password", "Admin12345*"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/home"))
+                .andDo(print());
+    }
+
+    /**
+     * Method that test log out
+     * then redirect  view home
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void logOutTest() throws Exception {
+        //GIVEN
+        //WHEN
+        //THEN
+        mockMvcLogin.perform(MockMvcRequestBuilders.post("/app-logout")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
                 .andDo(print());
     }
 }

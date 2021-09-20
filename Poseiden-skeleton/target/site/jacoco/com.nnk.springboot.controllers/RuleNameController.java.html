@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RuleNameController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">RuleNameController.java</span></div><h1>RuleNameController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.exceptions.RuleNameNotFoundException;
 import com.nnk.springboot.services.IRuleNameService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,68 +15,119 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+/**
+ * Class Controller that manage RuleName's requests
+ *
+ * @author Christine Duarte
+ */
 @Controller
-<span class="fc" id="L20">@Slf4j</span>
-<span class="fc" id="L21">public class RuleNameController {</span>
+<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">public class RuleNameController {</span>
+    /**
+     * Dependency  {@link IRuleNameService} injected
+     */
     @Autowired
-    IRuleNameService ruleNameService;
+    private IRuleNameService ruleNameService;
 
+    /**
+     * Method GET which displayed the view with the list of all {@link RuleName}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @RequestMapping(&quot;/ruleName/list&quot;)
     public String home(Model model) {
-<span class="fc" id="L27">        model.addAttribute(&quot;ruleNames&quot;, ruleNameService.getRulesNames());</span>
-<span class="fc" id="L28">        log.info(&quot;Controller: displaying List of RuleName&quot;);</span>
-<span class="fc" id="L29">        return &quot;ruleName/list&quot;;</span>
+<span class="fc" id="L40">        model.addAttribute(&quot;ruleNames&quot;, ruleNameService.getRulesNames());</span>
+<span class="fc" id="L41">        log.info(&quot;Controller: displaying List of RuleName&quot;);</span>
+<span class="fc" id="L42">        return &quot;ruleName/list&quot;;</span>
     }
 
+    /**
+     * Method GET which permit adding A {@link RuleName}
+     *
+     * @param ruleName An instance fo {@link RuleName}
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/ruleName/add&quot;)
-    public String addRuleForm(RuleName bid) {
-<span class="fc" id="L34">        log.info(&quot;Controller: request to add a ruleName&quot;);</span>
-<span class="fc" id="L35">        return &quot;ruleName/add&quot;;</span>
+    public String addRuleForm(RuleName ruleName) {
+<span class="fc" id="L53">        log.info(&quot;Controller: request to add a ruleName&quot;);</span>
+<span class="fc" id="L54">        return &quot;ruleName/add&quot;;</span>
     }
 
+    /**
+     * Method POST which valid entry in the form for RuleName
+     *
+     * @param ruleName An instance fo {@link RuleName}
+     * @param result   An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model    Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping(&quot;/ruleName/validate&quot;)
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
-<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L41">            log.error(&quot;Controller: Has error in form&quot;);</span>
-<span class="fc" id="L42">            return &quot;ruleName/add&quot;;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L68">            log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L69">            return &quot;ruleName/add&quot;;</span>
         }
-<span class="fc" id="L44">        ruleNameService.addRuleName(ruleName);</span>
-<span class="fc" id="L45">        log.info(&quot;Controller: redirection to ruleName list&quot;);</span>
-<span class="fc" id="L46">        return &quot;redirect:/ruleName/list&quot;;</span>
+<span class="fc" id="L71">        ruleNameService.addRuleName(ruleName);</span>
+<span class="fc" id="L72">        log.info(&quot;Controller: redirection to ruleName list&quot;);</span>
+<span class="fc" id="L73">        return &quot;redirect:/ruleName/list&quot;;</span>
     }
 
+    /**
+     * Method GET which permit displaying the {@link RuleName} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/ruleName/update/{id}&quot;)
     public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
         try {
-<span class="fc" id="L52">           RuleName ruleName = ruleNameService.getRuleNameById(id);</span>
-<span class="fc" id="L53">            model.addAttribute(&quot;ruleName&quot;, ruleName);</span>
-<span class="fc" id="L54">            log.info(&quot;Controller: RuleName found with id: &quot; + id);</span>
-<span class="fc" id="L55">        } catch (RuleNameNotFoundException ex) {</span>
-<span class="fc" id="L56">            log.error(&quot;Controller: RuleName NOT found with id: &quot; + id);</span>
-<span class="fc" id="L57">            return &quot;redirect:/app/404&quot;;</span>
-<span class="fc" id="L58">        }</span>
-<span class="fc" id="L59">        return &quot;ruleName/update&quot;;</span>
+<span class="fc" id="L86">            RuleName ruleName = ruleNameService.getRuleNameById(id);</span>
+<span class="fc" id="L87">            model.addAttribute(&quot;ruleName&quot;, ruleName);</span>
+<span class="fc" id="L88">            log.info(&quot;Controller: RuleName found with id: &quot; + id);</span>
+<span class="fc" id="L89">        } catch (RuleNameNotFoundException ex) {</span>
+<span class="fc" id="L90">            log.error(&quot;Controller: RuleName NOT found with id: &quot; + id);</span>
+<span class="fc" id="L91">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        return &quot;ruleName/update&quot;;</span>
     }
 
+    /**
+     * Method POST that permit update a {@link RuleName}
+     *
+     * @param id       An Integer containing the id of BidList to update
+     * @param ruleName An instance of {@link RuleName}
+     * @param result   An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model    Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping(&quot;/ruleName/update/{id}&quot;)
     public String updateRuleName(@PathVariable(&quot;id&quot;) Integer id, @Valid RuleName ruleName,
                                  BindingResult result, Model model) {
-<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L66">            return &quot;ruleName/update&quot;;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L109">            return &quot;ruleName/update&quot;;</span>
         }
-<span class="fc" id="L68">        ruleName.setId(id);</span>
-<span class="fc" id="L69">        ruleNameService.updateRuleName(ruleName);</span>
-<span class="fc" id="L70">        model.addAttribute(&quot;ruleNames&quot;, ruleNameService.getRulesNames());</span>
-<span class="fc" id="L71">        log.info(&quot;Controller: RuleName updated with: &quot; + id);</span>
-<span class="fc" id="L72">        return &quot;redirect:/ruleName/list&quot;;</span>
+<span class="fc" id="L111">        ruleName.setId(id);</span>
+<span class="fc" id="L112">        ruleNameService.updateRuleName(ruleName);</span>
+<span class="fc" id="L113">        model.addAttribute(&quot;ruleNames&quot;, ruleNameService.getRulesNames());</span>
+<span class="fc" id="L114">        log.info(&quot;Controller: RuleName updated with: &quot; + id);</span>
+<span class="fc" id="L115">        return &quot;redirect:/ruleName/list&quot;;</span>
     }
 
+    /**
+     * Method GET which delete a {@link RuleName}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/ruleName/delete/{id}&quot;)
     public String deleteRuleName(@PathVariable(&quot;id&quot;) Integer id, Model model) {
-<span class="fc" id="L77">        ruleNameService.deleteRuleName(id);</span>
-<span class="fc" id="L78">        model.addAttribute(&quot;ruleNames&quot;, ruleNameService.getRulesNames());</span>
-<span class="fc" id="L79">        log.info(&quot;Controller: RuleName deleted&quot;);</span>
-<span class="fc" id="L80">        return &quot;redirect:/ruleName/list&quot;;</span>
+<span class="fc" id="L127">        ruleNameService.deleteRuleName(id);</span>
+<span class="fc" id="L128">        model.addAttribute(&quot;ruleNames&quot;, ruleNameService.getRulesNames());</span>
+<span class="fc" id="L129">        log.info(&quot;Controller: RuleName deleted&quot;);</span>
+<span class="fc" id="L130">        return &quot;redirect:/ruleName/list&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

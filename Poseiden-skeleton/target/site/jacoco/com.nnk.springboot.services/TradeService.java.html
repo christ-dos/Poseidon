@@ -90,8 +90,7 @@ public class TradeService implements ITradeService {
 <span class="fc" id="L90">        tradeToUpdate.setType(trade.getType());</span>
 <span class="fc" id="L91">        tradeToUpdate.setBuyQuantity(trade.getBuyQuantity());</span>
 <span class="fc" id="L92">        log.info(&quot;Service: Trade updated with ID: &quot; + trade.getTradeId());</span>
-
-<span class="fc" id="L94">        return tradeRepository.save(tradeToUpdate);</span>
+<span class="fc" id="L93">        return tradeRepository.save(tradeToUpdate);</span>
     }
 
     /**
@@ -102,12 +101,9 @@ public class TradeService implements ITradeService {
      */
     @Override
     public String deleteTrade(Integer tradeId) {
-<span class="fc" id="L105">        tradeRepository.deleteById(tradeId);</span>
-<span class="fc" id="L106">        log.info(&quot;Service: Trade deleted with ID:&quot; + tradeId);</span>
-
-<span class="fc" id="L108">        return &quot;Trade deleted&quot;;</span>
+<span class="fc" id="L104">        tradeRepository.deleteById(tradeId);</span>
+<span class="fc" id="L105">        log.info(&quot;Service: Trade deleted with ID:&quot; + tradeId);</span>
+<span class="fc" id="L106">        return &quot;Trade deleted&quot;;</span>
     }
-
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -8,68 +8,146 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Class that manage the entity {@link User}
+ *
+ * @author Christine Duarte
+ */
 @Entity
 @Table(name = &quot;users&quot;)
-<span class="pc" id="L13">@Builder</span>
-<span class="fc" id="L14">@AllArgsConstructor</span>
-<span class="fc" id="L15">@NoArgsConstructor</span>
+<span class="pc" id="L18">@Builder</span>
+<span class="fc" id="L19">@AllArgsConstructor</span>
+<span class="fc" id="L20">@NoArgsConstructor</span>
 public class User {
+    /**
+     * An Integer that contain the id of the {@link User}
+     */
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * A String containing username of User
+     */
     @NotBlank(message = &quot;Username is mandatory&quot;)
     private String username;
-//    @NotBlank(message = &quot;Password is mandatory&quot;)
+
+    /**
+     * A String containing password of User
+     */
     @ValidPassword
     private String password;
+
+    /**
+     * A String containing fullname of User
+     */
     @NotBlank(message = &quot;FullName is mandatory&quot;)
     private String fullname;
+
+    /**
+     * A String containing role of User
+     */
     @NotBlank(message = &quot;Role is mandatory&quot;)
     private String role;
 
+    /**
+     * getter to obtain id
+     *
+     * @return An Integer with the id of User
+     */
     public Integer getId() {
-<span class="fc" id="L31">        return id;</span>
+<span class="fc" id="L59">        return id;</span>
     }
 
+    /**
+     * setter for attribute id
+     *
+     * @param id An Integer with the id of User
+     */
     public void setId(Integer id) {
-<span class="fc" id="L35">        this.id = id;</span>
-<span class="fc" id="L36">    }</span>
+<span class="fc" id="L68">        this.id = id;</span>
+<span class="fc" id="L69">    }</span>
 
+    /**
+     * getter to obtain  username
+     *
+     * @return A String with the username of User
+     */
     public String getUsername() {
-<span class="fc" id="L39">        return username;</span>
+<span class="fc" id="L77">        return username;</span>
     }
 
+    /**
+     * setter for username
+     *
+     * @param username A String with the username of User
+     */
     public void setUsername(String username) {
-<span class="fc" id="L43">        this.username = username;</span>
-<span class="fc" id="L44">    }</span>
+<span class="fc" id="L86">        this.username = username;</span>
+<span class="fc" id="L87">    }</span>
 
+    /**
+     * getter to obtain  password
+     *
+     * @return A String with the password of User
+     */
     public String getPassword() {
-<span class="fc" id="L47">        return password;</span>
+<span class="fc" id="L95">        return password;</span>
     }
 
+    /**
+     * setter for  password
+     *
+     * @param password A String with the password of User
+     */
     public void setPassword(String password) {
-<span class="fc" id="L51">        this.password = password;</span>
-<span class="fc" id="L52">    }</span>
+<span class="fc" id="L104">        this.password = password;</span>
+<span class="fc" id="L105">    }</span>
 
+    /**
+     * getter to obtain  fullname
+     *
+     * @return A String with the fullname of User
+     */
     public String getFullname() {
-<span class="fc" id="L55">        return fullname;</span>
+<span class="fc" id="L113">        return fullname;</span>
     }
 
+    /**
+     * setter for fullname
+     *
+     * @param fullname A String with the fullname of User
+     */
     public void setFullname(String fullname) {
-<span class="fc" id="L59">        this.fullname = fullname;</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L122">        this.fullname = fullname;</span>
+<span class="fc" id="L123">    }</span>
 
+    /**
+     * getter to obtain  role
+     *
+     * @return A String with the role of User
+     */
     public String getRole() {
-<span class="fc" id="L63">        return role;</span>
+<span class="fc" id="L131">        return role;</span>
     }
 
+    /**
+     * setter for role
+     *
+     * @param role A String with the role of User
+     */
     public void setRole(String role) {
-<span class="fc" id="L67">        this.role = role;</span>
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L140">        this.role = role;</span>
+<span class="fc" id="L141">    }</span>
 
+    /**
+     * Method toString
+     *
+     * @return a String of the object User
+     */
     @Override
     public String toString() {
-<span class="fc" id="L72">        return &quot;User{&quot; +</span>
+<span class="fc" id="L150">        return &quot;User{&quot; +</span>
                 &quot;id=&quot; + id +
                 &quot;, username='&quot; + username + '\'' +
                 &quot;, password='&quot; + password + '\'' +

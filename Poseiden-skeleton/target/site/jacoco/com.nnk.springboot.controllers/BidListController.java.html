@@ -30,7 +30,7 @@ import javax.validation.Valid;
     private IBidListService bidListService;
 
     /**
-     * Method GET which displayed the view with the list of all BidList
+     * Method GET which displayed the view with the list of all {@link BidList}
      *
      * @param model Interface that defines a support for model attributes
      * @return A String containing the name of the view
@@ -42,58 +42,93 @@ import javax.validation.Valid;
 <span class="fc" id="L42">        return &quot;bidList/list&quot;;</span>
     }
 
+    /**
+     * Method GET which permit adding A {@link BidList}
+     *
+     * @param bidList An instance fo {@link BidList}
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/bidList/add&quot;)
     public String addBidForm(BidList bidList) {
-<span class="fc" id="L47">        log.info(&quot;Controller: request to add a BidList&quot;);</span>
-<span class="fc" id="L48">        return &quot;bidList/add&quot;;</span>
+<span class="fc" id="L53">        log.info(&quot;Controller: request to add a BidList&quot;);</span>
+<span class="fc" id="L54">        return &quot;bidList/add&quot;;</span>
     }
 
-
+    /**
+     * Method POST which valid entry in the form for BidList
+     *
+     * @param bidList An instance fo {@link BidList}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping(&quot;/bidList/validate&quot;)
     public String validate(@Valid BidList bidList, BindingResult result, Model model) {
-<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L55">            log.error(&quot;Controller: Has error in form&quot;);</span>
-<span class="fc" id="L56">            return &quot;bidList/add&quot;;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L68">            log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L69">            return &quot;bidList/add&quot;;</span>
         }
-<span class="fc" id="L58">        bidListService.addBidList(bidList);</span>
-<span class="fc" id="L59">        log.info(&quot;Controller: redirection to bidList list&quot;);</span>
-<span class="fc" id="L60">        return &quot;redirect:/bidList/list&quot;;</span>
+<span class="fc" id="L71">        bidListService.addBidList(bidList);</span>
+<span class="fc" id="L72">        log.info(&quot;Controller: redirection to bidList list&quot;);</span>
+<span class="fc" id="L73">        return &quot;redirect:/bidList/list&quot;;</span>
     }
 
+    /**
+     * Method GET which permit displaying the {@link BidList} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/bidList/update/{id}&quot;)
     public String showUpdateForm(@PathVariable(&quot;id&quot;) @Valid Integer id, Model model) {
         try {
-<span class="fc" id="L66">           BidList bidList = bidListService.getBidListById(id);</span>
-<span class="fc" id="L67">            model.addAttribute(&quot;bidList&quot;, bidList);</span>
-<span class="fc" id="L68">            log.info(&quot;Controller: BidList found with id: &quot; + id);</span>
-<span class="fc" id="L69">        } catch (BidListNotFoundException ex) {</span>
-<span class="fc" id="L70">            log.error(&quot;Controller: BidList NOT found with id: &quot; + id);</span>
-<span class="fc" id="L71">            return &quot;redirect:/app/404&quot;;</span>
-<span class="fc" id="L72">        }</span>
-<span class="fc" id="L73">        return &quot;bidList/update&quot;;</span>
+<span class="fc" id="L86">            BidList bidList = bidListService.getBidListById(id);</span>
+<span class="fc" id="L87">            model.addAttribute(&quot;bidList&quot;, bidList);</span>
+<span class="fc" id="L88">            log.info(&quot;Controller: BidList found with id: &quot; + id);</span>
+<span class="fc" id="L89">        } catch (BidListNotFoundException ex) {</span>
+<span class="fc" id="L90">            log.error(&quot;Controller: BidList NOT found with id: &quot; + id);</span>
+<span class="fc" id="L91">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        return &quot;bidList/update&quot;;</span>
     }
 
+    /**
+     * Method POST that permit update a {@link BidList}
+     *
+     * @param id      An Integer containing the id of BidList to update
+     * @param bidList An instance of {@link BidList}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping(&quot;/bidList/update/{id}&quot;)
     public String updateBid(@PathVariable(&quot;id&quot;) Integer id, @Valid BidList bidList,
                             BindingResult result, Model model) {
 
-<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
-<span class="fc" id="L81">            return &quot;bidList/update&quot;;</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L110">            return &quot;bidList/update&quot;;</span>
         }
-<span class="fc" id="L83">        bidList.setBidListId(id);</span>
-<span class="fc" id="L84">        bidListService.updateBidList(bidList);</span>
-<span class="fc" id="L85">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
-<span class="fc" id="L86">        log.info(&quot;Controller: BidList updated with: &quot; + id);</span>
-<span class="fc" id="L87">        return &quot;redirect:/bidList/list&quot;;</span>
-
+<span class="fc" id="L112">        bidList.setBidListId(id);</span>
+<span class="fc" id="L113">        bidListService.updateBidList(bidList);</span>
+<span class="fc" id="L114">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
+<span class="fc" id="L115">        log.info(&quot;Controller: BidList updated with: &quot; + id);</span>
+<span class="fc" id="L116">        return &quot;redirect:/bidList/list&quot;;</span>
     }
 
+    /**
+     * Method GET which delete a {@link BidList}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping(&quot;/bidList/delete/{id}&quot;)
     public String deleteBid(@PathVariable(&quot;id&quot;) Integer id, Model model) {
-<span class="fc" id="L93">        bidListService.deleteBidList(id);</span>
-<span class="fc" id="L94">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
-<span class="fc" id="L95">        log.info(&quot;Controller: BidList deleted&quot;);</span>
-<span class="fc" id="L96">        return &quot;redirect:/bidList/list&quot;;</span>
+<span class="fc" id="L128">        bidListService.deleteBidList(id);</span>
+<span class="fc" id="L129">        model.addAttribute(&quot;bidLists&quot;, bidListService.getBidLists());</span>
+<span class="fc" id="L130">        log.info(&quot;Controller: BidList deleted&quot;);</span>
+<span class="fc" id="L131">        return &quot;redirect:/bidList/list&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

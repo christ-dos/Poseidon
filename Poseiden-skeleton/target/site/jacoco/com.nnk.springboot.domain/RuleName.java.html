@@ -6,33 +6,57 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
+/**
+ * Class that manage the entity {@link RuleName}
+ *
+ * @author Christine Duarte
+ */
 @Entity
 @Table(name = &quot;rule_name&quot;)
 @Getter
-<span class="fc" id="L12">@Setter</span>
-<span class="fc" id="L13">@NoArgsConstructor</span>
-<span class="fc" id="L14">@AllArgsConstructor</span>
-<span class="pc" id="L15">@Builder</span>
+<span class="fc" id="L17">@Setter</span>
+<span class="fc" id="L18">@NoArgsConstructor</span>
+<span class="fc" id="L19">@AllArgsConstructor</span>
+<span class="pc" id="L20">@Builder</span>
 public class RuleName {
-
+    /**
+     * An Integer that contain the id of the {@link RuleName}
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<span class="fc" id="L20">    private Integer id;</span>
+<span class="fc" id="L27">    private Integer id;</span>
 
+    /**
+     * A String containing name of RuleName
+     */
     @NotBlank(message = &quot;Name is mandatory&quot;)
-<span class="fc" id="L23">    private String name;</span>
+<span class="fc" id="L33">    private String name;</span>
 
-<span class="fc" id="L25">    private String description;</span>
+    /**
+     * A String containing description of RuleName
+     */
+<span class="fc" id="L38">    private String description;</span>
 
-<span class="fc" id="L27">    private String json;</span>
+    /**
+     * A String containing json of RuleName
+     */
+<span class="fc" id="L43">    private String json;</span>
 
-<span class="fc" id="L29">    private String template;</span>
+    /**
+     * A String containing template of RuleName
+     */
+<span class="fc" id="L48">    private String template;</span>
 
+    /**
+     * A String containing sqlStr of RuleName
+     */
     @Column(name = &quot;sql_str&quot;)
-<span class="fc" id="L32">    private String sqlStr;</span>
+<span class="fc" id="L54">    private String sqlStr;</span>
 
+    /**
+     * A String containing sqlPart of RuleName
+     */
     @Column(name = &quot;sql_part&quot;)
-<span class="fc" id="L35">    private String sqlPart;</span>
-
+<span class="fc" id="L60">    private String sqlPart;</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
