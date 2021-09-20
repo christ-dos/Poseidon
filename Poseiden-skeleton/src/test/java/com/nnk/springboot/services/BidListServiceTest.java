@@ -21,16 +21,32 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link BidListService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class BidListServiceTest {
-
+    /**
+     * An Instance of BidListService
+     */
     private BidListService bidListServiceTest;
 
+    /**
+     * A mock of BidListRepository
+     */
     @Mock
     private BidListRepository bidListRepositoryMock;
 
+    /**
+     * An attribute of BidList
+     */
     private BidList bidListTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         bidListServiceTest = new BidListService(bidListRepositoryMock);
@@ -44,6 +60,10 @@ public class BidListServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link BidList}
+     * then return a list with three elements
+     */
     @Test
     public void getBidListsTest_whenListOfBidContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -61,8 +81,12 @@ public class BidListServiceTest {
         assertTrue(bidListsResult.size() > 0);
     }
 
+    /**
+     * Method that test get bidList by id
+     * when bidList is found in database
+     */
     @Test
-    public void getBidListByIdTest_whenBidListExist_thenReturnBidList() {
+    public void getBidListByIdTest_whenBidListIsFound_thenReturnBidList() {
         //GIVEN
         when(bidListRepositoryMock.findById(anyInt())).thenReturn(Optional.ofNullable(bidListTest));
         //WHEN
@@ -74,8 +98,13 @@ public class BidListServiceTest {
         assertEquals(10d, bidListResult.getBidQuantity());
     }
 
+    /**
+     * Method that test get bidList by id
+     * when bidList not found in database
+     * then return a {@link BidListNotFoundException}
+     */
     @Test
-    public void getBidListByIdTest_whenBidListNotExist_thenThrowBidListNotFoundException() {
+    public void getBidListByIdTest_whenBidListNotFound_thenThrowBidListNotFoundException() {
         //GIVEN
         when(bidListRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
@@ -84,6 +113,10 @@ public class BidListServiceTest {
         assertThrows(BidListNotFoundException.class, () -> bidListServiceTest.getBidListById(bidListTest.getBidListId()));
     }
 
+    /**
+     * Method that test add a bidList
+     * when bidList is not recorded in database
+     */
     @Test
     public void addBidListTest_whenBidListNotRecordedInDb_thenReturnBidListAdded() {
         //GIVEN
@@ -98,6 +131,10 @@ public class BidListServiceTest {
         assertNotNull(bidListTest.getCreationDate());
     }
 
+    /**
+     * Method that test update a bidList
+     * when bidList exist in database
+     */
     @Test
     public void updateBidListTest_whenBidListExist_thenReturnBidListUpdated() {
         //GIVEN
@@ -121,6 +158,11 @@ public class BidListServiceTest {
         assertTrue(bidListTestUpdated.getRevisionDate().after(Timestamp.valueOf(dateRevisionIsAfter)));
     }
 
+    /**
+     * Method that test update a bidList
+     * when bidList not exist in database
+     * then throw {@link BidListNotFoundException}
+     */
     @Test
     public void updateBidListTest_whenBidListNotExist_thenThrowBidListNotFoundException() {
         //GIVEN
@@ -131,6 +173,9 @@ public class BidListServiceTest {
         assertThrows(BidListNotFoundException.class, () -> bidListServiceTest.updateBidList(bidListTest));
     }
 
+    /**
+     * Method that test deletion by id of a bidList
+     */
     @Test
     public void deleteBidListTest_whenBidListExist_ThenReturnMessageBideListDeleted() {
         //GIVEN
@@ -138,8 +183,7 @@ public class BidListServiceTest {
         //WHEN
         String messageResult = bidListServiceTest.deleteBidList(id);
         //THEN
-        verify(bidListRepositoryMock,times(1)).deleteById(isA(Integer.class));
+        verify(bidListRepositoryMock, times(1)).deleteById(isA(Integer.class));
         assertEquals("BidList deleted", messageResult);
     }
-
 }

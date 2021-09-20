@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.exceptions.BidListNotFoundException;
 import com.nnk.springboot.exceptions.CurvePointNotFoundException;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,16 +17,32 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link CurvePointService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class CurvePointServiceTest {
-
+    /**
+     * An Instance of CurvePointService
+     */
     private CurvePointService curvePointServiceTest;
 
+    /**
+     * A mock of CurvePointRepository
+     */
     @Mock
     private CurvePointRepository curvePointRepositoryMock;
 
-    CurvePoint curvePointTest;
+    /**
+     * An attribute of CurvePoint
+     */
+    private CurvePoint curvePointTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         curvePointServiceTest = new CurvePointService(curvePointRepositoryMock);
@@ -39,6 +54,10 @@ public class CurvePointServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link CurvePoint}
+     * then return a list with three elements
+     */
     @Test
     public void getCurvePoints_whenListOfCurvePointContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -55,6 +74,10 @@ public class CurvePointServiceTest {
         assertTrue(curvePointsResult.size() > 0);
     }
 
+    /**
+     * Method that test get curvePoint by id
+     * when curvePoint is found in database
+     */
     @Test
     public void getCurvePointByIdTest_whenCurvePointIsFound_thenReturnCurvePoint() {
         //GIVEN
@@ -68,6 +91,11 @@ public class CurvePointServiceTest {
         assertEquals(30d, curvePointResult.getValue());
     }
 
+    /**
+     * Method that test get curvePoint by id
+     * when curvePoint not found in database
+     * then return a {@link CurvePointNotFoundException}
+     */
     @Test
     public void getCurvePointByIdTest_whenCurvePointNotFound_thenThrowCurvePointNotFoundException() {
         //GIVEN
@@ -79,6 +107,10 @@ public class CurvePointServiceTest {
 
     }
 
+    /**
+     * Method that test add a curvePoint
+     * when curvePoint is not recorded in database
+     */
     @Test
     public void addCurvePointTest_whenCurvePointNotRecordedInDb_thenReturnCurvePointAdded() {
         //GIVEN
@@ -94,7 +126,10 @@ public class CurvePointServiceTest {
         assertNotNull(curvePointResult.getCreationDate());
     }
 
-
+    /**
+     * Method that test update a curvePoint
+     * when curvePoint exist in database
+     */
     @Test
     public void updateCurvePointTest_whenCurvePointExist_thenReturnCurvePointUpdated() {
         //GIVEN
@@ -116,6 +151,11 @@ public class CurvePointServiceTest {
 
     }
 
+    /**
+     * Method that test update a curvePoint
+     * when curvePoint not exist in database
+     * then throw {@link CurvePointNotFoundException}
+     */
     @Test
     public void updateCurvePointTest_whenCurvePointNotExist_thenThrowCurvePointNotFoundException() {
         //GIVEN
@@ -126,6 +166,9 @@ public class CurvePointServiceTest {
         assertThrows(CurvePointNotFoundException.class, () -> curvePointServiceTest.updateCurvePoint(curvePointTest));
     }
 
+    /**
+     * Method that test deletion by id of a curvePoint
+     */
     @Test
     public void deleteCurvePointTest_whenCurvePointExist_ThenReturnMessageCurvePointDeleted() {
         //GIVEN
@@ -135,6 +178,5 @@ public class CurvePointServiceTest {
         //THEN
         verify(curvePointRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("CurvePoint deleted", messageResult);
-
     }
 }
