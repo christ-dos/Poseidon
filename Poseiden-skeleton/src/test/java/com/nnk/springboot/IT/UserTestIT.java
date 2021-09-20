@@ -1,5 +1,6 @@
 package com.nnk.springboot.IT;
 
+import com.nnk.springboot.exceptions.UserNotFoundException;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class of Integration test for User
+ *
+ * @author Christine Duarte
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Sql(value = {"/dataTest.sql"},executionPhase = BEFORE_TEST_METHOD)
+@Sql(value = {"/dataTest.sql"}, executionPhase = BEFORE_TEST_METHOD)
 public class UserTestIT {
     /**
      * An instance of {@link MockMvc} that permit simulate a request HTTP
@@ -49,6 +55,11 @@ public class UserTestIT {
                 .build();
     }
 
+    /**
+     * Method that test get view list for user when uri is "/user/list"
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
@@ -62,6 +73,11 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the form for add a user to list
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddUserFormTest() throws Exception {
@@ -75,6 +91,12 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a user
+     * when has no error in fields of form
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
@@ -95,6 +117,13 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a user
+     * when has error in form, fields "username", "fullname", "role" are blank
+     * and  "password" is not valid
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
@@ -119,6 +148,12 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the user to update
+     * when user exist in dataBase
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
@@ -133,6 +168,13 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the user to update
+     * when user not exist in dataBase
+     * then throw a {@link UserNotFoundException}
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
@@ -149,6 +191,13 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a user
+     * when has no error in form
+     * then redirect to view list with the user updated
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
@@ -168,6 +217,13 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a user
+     * when has error in form, fields "username", "fullname", "role" are blank
+     * and  "password" is not valid
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
@@ -190,6 +246,11 @@ public class UserTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the deletion of a user by id
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteUserTest() throws Exception {
@@ -204,5 +265,4 @@ public class UserTestIT {
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
-
 }

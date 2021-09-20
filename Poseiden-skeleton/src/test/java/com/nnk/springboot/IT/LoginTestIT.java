@@ -22,6 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class of Integration test for LoginController
+ *
+ * @author Christine Duarte
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -51,6 +56,11 @@ public class LoginTestIT {
                 .build();
     }
 
+    /**
+     * Method that test get all users in uri is "/app/secure/article-details"
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAllUserArticlesTest() throws Exception {
@@ -70,6 +80,11 @@ public class LoginTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test when user has not authorization the view 403 is displayed
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "user1", roles = "USER1", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getErrorTest_whenCredentialsIsWrong_thenRedirect403() throws Exception {
@@ -85,6 +100,11 @@ public class LoginTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test when user has not found the view 404 is displayed
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getError404Test_whenUserIsNotFound_thenRedirect404View() throws Exception {
@@ -97,5 +117,4 @@ public class LoginTestIT {
                 .andExpect(view().name("404"))
                 .andDo(print());
     }
-
 }

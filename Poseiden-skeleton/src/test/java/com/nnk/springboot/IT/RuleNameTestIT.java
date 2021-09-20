@@ -1,5 +1,6 @@
 package com.nnk.springboot.IT;
 
+import com.nnk.springboot.exceptions.RuleNameNotFoundException;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class of Integration test for RuleName
+ *
+ * @author Christine Duarte
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Sql(value = {"/dataTest.sql"},executionPhase = BEFORE_TEST_METHOD)
+@Sql(value = {"/dataTest.sql"}, executionPhase = BEFORE_TEST_METHOD)
 public class RuleNameTestIT {
 
     /**
@@ -50,6 +56,11 @@ public class RuleNameTestIT {
                 .build();
     }
 
+    /**
+     * Method that test get view list for ruleName when uri is "/ruleName/list"
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
@@ -63,6 +74,11 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the form for add a ruleName to list
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddRuleNameFormTest() throws Exception {
@@ -76,6 +92,12 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a ruleName
+     * when has no error in fields of form
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
@@ -93,6 +115,12 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a ruleName
+     * when has error in form, field "name" is blank
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
@@ -111,6 +139,12 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the ruleName to update
+     * when ruleName exist in dataBase
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
@@ -125,6 +159,13 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the ruleName to update
+     * when ruleName not exist in dataBase
+     * then throw a {@link RuleNameNotFoundException}
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
@@ -134,22 +175,29 @@ public class RuleNameTestIT {
         mockMvcRuleName.perform(MockMvcRequestBuilders.get("/ruleName/update/14")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("id", String.valueOf(14))
-                        .param("name","Name"))
+                        .param("name", "Name"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/app/404"))
                 .andExpect(model().attributeHasNoErrors())
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a ruleName
+     * when has no error in form
+     * then redirect to view list with the ruleName updated
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postUpdateRuleNameTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
+    public void postUpdateRuleNameTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN
         //THEN
         mockMvcRuleName.perform(MockMvcRequestBuilders.post("/ruleName/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("name","Name"))
+                        .param("name", "Name"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/ruleName/list"))
                 .andExpect(view().name("redirect:/ruleName/list"))
@@ -157,6 +205,12 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a ruleName
+     * when has error in form, field "name" is blank
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRuleNameTest_whenFieldsHasErrors_thenRedirectViewList() throws Exception {
@@ -165,7 +219,7 @@ public class RuleNameTestIT {
         //THEN
         mockMvcRuleName.perform(MockMvcRequestBuilders.post("/ruleName/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("name",""))
+                        .param("name", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/update"))
                 .andExpect(model().errorCount(1))
@@ -173,6 +227,11 @@ public class RuleNameTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the deletion of a ruleName by id
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteRuleNameTest() throws Exception {
@@ -187,5 +246,4 @@ public class RuleNameTestIT {
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
-
 }

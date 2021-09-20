@@ -201,7 +201,7 @@ public class RuleNameControllerTest {
      */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
-    public void postUpdateRuleNameTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
+    public void postUpdateRuleNameTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
         //WHEN
         //THEN

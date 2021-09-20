@@ -1,5 +1,6 @@
 package com.nnk.springboot.IT;
 
+import com.nnk.springboot.exceptions.RatingNotFoundException;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class of Integration test for Rating
+ *
+ * @author Christine Duarte
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -50,6 +56,11 @@ public class RatingTestIT {
                 .build();
     }
 
+    /**
+     * Method that test get view list for rating when uri is "/rating/list"
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
@@ -63,6 +74,11 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the form for add a rating to list
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddRatingFormTest() throws Exception {
@@ -76,6 +92,12 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a rating
+     * when has no error in fields of form
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
@@ -95,6 +117,13 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a rating
+     * when has error in form, fields "moodysRating" , "sandPRating",
+     * "fitchRating",are blank and "orderNumber" is null
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasErrors_thenReturnToViewAdd() throws Exception {
@@ -118,6 +147,12 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the rating to update
+     * when rating exist in dataBase
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
@@ -131,6 +166,13 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the rating to update
+     * when rating not exist in dataBase
+     * then throw a {@link RatingNotFoundException}
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
@@ -148,7 +190,13 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
-
+    /**
+     * Method that test the submission of the form for update a rating
+     * when has no error in form
+     * then redirect to view list with the rating updated
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRatingTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
@@ -168,6 +216,13 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a rating
+     * when has error in form, fields "moodysRating" , "sandPRating",
+     * "fitchRating", are blank and "orderNumber" is null
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRatingTest_whenFieldsHasErrors_thenReturnViewUpdate() throws Exception {
@@ -190,6 +245,11 @@ public class RatingTestIT {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the deletion of a rating by id
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteRatingTest() throws Exception {
