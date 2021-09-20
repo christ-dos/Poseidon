@@ -24,6 +24,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class that test {@link LoginController}
+ *
+ * @author Christine Duarte
+ */
 @WebMvcTest(LoginController.class)
 @AutoConfigureMockMvc
 public class LoginControllerTest {
@@ -34,6 +39,9 @@ public class LoginControllerTest {
     @Autowired
     private MockMvc mockMvcLogin;
 
+    /**
+     * A mock of {@link UserRepository}
+     */
     @MockBean
     private UserRepository userRepositoryMock;
     /**
@@ -42,15 +50,19 @@ public class LoginControllerTest {
     @MockBean
     private MyUserDetailsService myUserDetailsServiceMock;
 
-
+    /**
+     * Method that test get all users in uri is "/app/secure/article-details"
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAllUserArticlesTest() throws Exception {
         //GIVEN
         List<User> usersList = new ArrayList<>(
                 Arrays.asList(
-                        new User(1,"user","user123","User","ROLE_ADMIN"),
-                        new User(2,"admin","admin123","Administrator","ROLE_USER")
+                        new User(1, "user", "user123", "User", "ROLE_ADMIN"),
+                        new User(2, "admin", "admin123", "Administrator", "ROLE_USER")
                 ));
         when(userRepositoryMock.findAll()).thenReturn(usersList);
         //WHEN
@@ -59,16 +71,20 @@ public class LoginControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/list"))
                 .andExpect(model().attributeExists("users"))
-                .andExpect(model().attribute("users",hasItem(hasProperty("id",is(1)))))
-                .andExpect(model().attribute("users",hasItem(hasProperty("id",is(2)))))
-                .andExpect(model().attribute("users",hasItem(hasProperty("username",is("user")))))
-                .andExpect(model().attribute("users",hasItem(hasProperty("username",is("admin")))))
-                .andExpect(model().attribute("users",hasItem(hasProperty("role",is("ROLE_ADMIN")))))
-                .andExpect(model().attribute("users",hasItem(hasProperty("role",is("ROLE_USER")))))
+                .andExpect(model().attribute("users", hasItem(hasProperty("id", is(1)))))
+                .andExpect(model().attribute("users", hasItem(hasProperty("id", is(2)))))
+                .andExpect(model().attribute("users", hasItem(hasProperty("username", is("user")))))
+                .andExpect(model().attribute("users", hasItem(hasProperty("username", is("admin")))))
+                .andExpect(model().attribute("users", hasItem(hasProperty("role", is("ROLE_ADMIN")))))
+                .andExpect(model().attribute("users", hasItem(hasProperty("role", is("ROLE_USER")))))
                 .andDo(print());
     }
 
-
+    /**
+     * Method that test when user has not authorization the view 403 is displayed
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "user1", roles = "USER1", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getErrorTest_whenUserHasNotAuthorization_thenRedirect403View() throws Exception {
@@ -79,10 +95,15 @@ public class LoginControllerTest {
                         .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("403"))
-                .andExpect(model().attribute("errorMsg","You are not authorized for the requested data."))
+                .andExpect(model().attribute("errorMsg", "You are not authorized for the requested data."))
                 .andDo(print());
     }
 
+    /**
+     * Method that test when user has not found the view 404 is displayed
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getError404Test_whenUserIsNotFound_thenRedirect404View() throws Exception {

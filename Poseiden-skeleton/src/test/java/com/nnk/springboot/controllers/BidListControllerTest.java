@@ -15,17 +15,19 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.persistence.EntityNotFoundException;
-
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class that test {@link BidListController}
+ *
+ * @author Christine Duarte
+ */
 @WebMvcTest(BidListController.class)
 @AutoConfigureMockMvc
 public class BidListControllerTest {
@@ -35,9 +37,15 @@ public class BidListControllerTest {
     @Autowired
     private MockMvc mockMvcBidList;
 
+    /**
+     * A mock of {@link BidListService}
+     */
     @MockBean
     private BidListService bidListServiceMock;
 
+    /**
+     * A mock of {@link BidListRepository}
+     */
     @MockBean
     private BidListRepository bidListRepositoryMock;
 
@@ -47,32 +55,50 @@ public class BidListControllerTest {
     @MockBean
     private MyUserDetailsService myUserDetailsServiceMock;
 
+    /**
+     * Method that test get view list for bidList when uri is "/bidList/list"
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "user", roles = "USER", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/list").with(SecurityMockMvcRequestPostProcessors.csrf()))
+        mockMvcBidList.perform(get("/bidList/list")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/list"))
                 .andExpect(model().attributeExists("bidLists"))
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the form for add a bidList to list
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddBidFormTest() throws Exception {
         //GIVEN
         //WHEN
         //THEN
-        mockMvcBidList.perform(get("/bidList/add").with(SecurityMockMvcRequestPostProcessors.csrf()))
+        mockMvcBidList.perform(get("/bidList/add")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bidList/add"))
                 .andExpect(model().attributeDoesNotExist())
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a BidList
+     * when has no error in fields of form
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
@@ -90,6 +116,12 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a BidList
+     * when has error in form, fields "account" and "type" are blank
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsAccountAndTypeHasError_thenReturnToViewAdd() throws Exception {
@@ -108,6 +140,12 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the BidList to update
+     * when BidList exist in dataBase
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
@@ -128,6 +166,13 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the BidList to update
+     * when BidList not exist in dataBase
+     * then throw a {@link BidListNotFoundException}
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest_whenIdIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
@@ -146,7 +191,13 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
-
+    /**
+     * Method that test the submission of the form for update a BidList
+     * when has no error in form
+     * then redirect to view list with the bidList updated
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateBidTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
@@ -170,6 +221,12 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a BidList
+     * when has error in form, fields "account", and "type" are blank
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateBidTest_whenFieldsHasErrors_thenReturnViewUpdate() throws Exception {
@@ -187,7 +244,11 @@ public class BidListControllerTest {
                 .andDo(print());
     }
 
-
+    /**
+     * Method that test the deletion of a BidList by id
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteBidTest() throws Exception {
