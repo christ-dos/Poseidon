@@ -191,12 +191,6 @@ public class CurvePointTestIT {
     @Test
     public void postUpdateCurvePointTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
         //GIVEN
-        CurvePoint curvePoint = CurvePoint.builder()
-                .id(1)
-                .curveId(12)
-                .term(14.0)
-                .value(10.0)
-                .build();
         //WHEN
         //THEN
         mockMvcCurvePoint.perform(MockMvcRequestBuilders.post("/curvePoint/update/1").with(SecurityMockMvcRequestPostProcessors.csrf())
