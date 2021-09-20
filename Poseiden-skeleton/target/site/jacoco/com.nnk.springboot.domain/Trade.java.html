@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Trade.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">Trade.java</span></div><h1>Trade.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+
+/**
+ * Class that manage the entity {@link Trade}
+ *
+ * @author Christine Duarte
+ */
+@Entity
+@Getter
+<span class="pc" id="L17">@Setter</span>
+<span class="fc" id="L18">@NoArgsConstructor</span>
+<span class="fc" id="L19">@AllArgsConstructor</span>
+<span class="pc" id="L20">@Builder</span>
+public class Trade {
+    /**
+     * An Integer that contain the id of the {@link Trade}
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;trade_id&quot;, nullable = false)
+<span class="fc" id="L28">    private Integer tradeId;</span>
+
+    /**
+     * A String containing the account of Trade
+     */
+    @NotBlank(message = &quot;Account is mandatory&quot;)
+<span class="fc" id="L34">    private String account;</span>
+
+    /**
+     * A String containing the type of Trade
+     */
+    @NotBlank(message = &quot;Type is mandatory&quot;)
+<span class="fc" id="L40">    private String type;</span>
+
+    /**
+     * A Double containing buy quantity
+     */
+    @NotNull(message = &quot;must not be null&quot;)
+<span class="fc" id="L46">    private Double buyQuantity;</span>
+
+    /**
+     * A Double containing sell quantity
+     */
+    @Column(name = &quot;sell_quantity&quot;)
+<span class="nc" id="L52">    private Double sellQuantity;</span>
+
+    /**
+     * A Double containing buy price
+     */
+    @Column(name = &quot;buy_price&quot;)
+<span class="nc" id="L58">    private Double buyPrice;</span>
+
+    /**
+     * A Double containing sell price
+     */
+    @Column(name = &quot;sell_price&quot;)
+<span class="nc" id="L64">    private Double sellPrice;</span>
+
+    /**
+     * A String containing benchmark
+     */
+<span class="nc" id="L69">    private String benchmark;</span>
+
+    /**
+     * A Timestamp containing trade date
+     */
+    @Column(name = &quot;trade_date&quot;)
+<span class="nc" id="L75">    private Timestamp tradeDate;</span>
+
+    /**
+     * A String containing security
+     */
+<span class="nc" id="L80">    private String security;</span>
+
+    /**
+     * A String containing status
+     */
+<span class="nc" id="L85">    private String status;</span>
+
+    /**
+     * A String containing trader
+     */
+<span class="nc" id="L90">    private String trader;</span>
+
+    /**
+     * A String containing book
+     */
+<span class="nc" id="L95">    private String book;</span>
+
+    /**
+     * A String containing creation name
+     */
+    @Column(name = &quot;creation_name&quot;)
+<span class="nc" id="L101">    private String creationName;</span>
+
+    /**
+     * A Timestamp containing creation date
+     */
+    @Column(name = &quot;creation_date&quot;)
+<span class="nc" id="L107">    private Timestamp creationDate;</span>
+
+    /**
+     * A String containing revision name
+     */
+    @Column(name = &quot;revision_name&quot;)
+<span class="nc" id="L113">    private String revisionName;</span>
+
+    /**
+     * A Timestamp containing revision date
+     */
+    @Column(name = &quot;revision_date&quot;)
+<span class="nc" id="L119">    private Timestamp revisionDate;</span>
+
+    /**
+     * A String containing deal name
+     */
+    @Column(name = &quot;deal_name&quot;)
+<span class="nc" id="L125">    private String dealName;</span>
+
+    /**
+     * A String containing deal type
+     */
+    @Column(name = &quot;deal_type&quot;)
+<span class="nc" id="L131">    private String dealType;</span>
+
+    /**
+     * A String containing source list id
+     */
+    @Column(name = &quot;source_list_id&quot;)
+<span class="nc" id="L137">    private String sourceListId;</span>
+
+    /**
+     * A String containing side
+     */
+<span class="nc" id="L142">    private String side;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

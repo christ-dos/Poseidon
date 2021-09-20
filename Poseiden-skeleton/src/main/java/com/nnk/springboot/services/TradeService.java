@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link Trade} entity
@@ -51,14 +52,13 @@ public class TradeService implements ITradeService {
      */
     @Override
     public Trade getTradeById(Integer tradeId) {
-        Trade trade = tradeRepository.getById(tradeId);
-        if (trade == null) {
+        Optional<Trade> trade = tradeRepository.findById(tradeId);
+        if (!trade.isPresent()) {
             log.error("Service: Trade NOT FOUND with ID: " + tradeId);
             throw new TradeNotFoundException("Trade not found");
         }
         log.info("Service: Trade found with ID: " + tradeId);
-
-        return trade;
+        return trade.get();
     }
 
     /**
@@ -90,7 +90,6 @@ public class TradeService implements ITradeService {
         tradeToUpdate.setType(trade.getType());
         tradeToUpdate.setBuyQuantity(trade.getBuyQuantity());
         log.info("Service: Trade updated with ID: " + trade.getTradeId());
-
         return tradeRepository.save(tradeToUpdate);
     }
 
@@ -104,9 +103,6 @@ public class TradeService implements ITradeService {
     public String deleteTrade(Integer tradeId) {
         tradeRepository.deleteById(tradeId);
         log.info("Service: Trade deleted with ID:" + tradeId);
-
         return "Trade deleted";
     }
-
-
 }

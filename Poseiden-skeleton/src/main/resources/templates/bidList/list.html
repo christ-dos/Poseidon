@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
     <title>Home</title>
@@ -9,14 +10,15 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            <a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
-            <a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
-            <a href="/rating/list">Ratings</a>&nbsp;|&nbsp;
+        <div class="col-7">
+            <a href="/bidList/list" class="text-secondary " >Bid List</a>&nbsp;|&nbsp;
+            <a href="/curvePoint/list">Curve Point</a>&nbsp;|&nbsp;
+            <a href="/rating/list">Rating</a>&nbsp;|&nbsp;
             <a href="/trade/list">Trade</a>&nbsp;|&nbsp;
-            <a href="/ruleName/list">Rule</a>
+            <a href="/ruleName/list">Rule</a> |
+            <a sec:authorize="hasRole('ROLE_ADMIN')" href="/user/list">User</a>
         </div>
-        <div class="col-6 text-right">
+        <div class="col-5 text-right">
             Logged in user: <b th:inline="text" class="user"> [[${#httpServletRequest.remoteUser}]] </b>
             <form th:action="@{/app-logout}" method="POST">
                 <input type="submit" value="Logout"/>

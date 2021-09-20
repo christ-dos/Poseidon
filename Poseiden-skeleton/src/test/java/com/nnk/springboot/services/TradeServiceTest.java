@@ -1,11 +1,8 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.exceptions.TradeNotFoundException;
 import com.nnk.springboot.repositories.TradeRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,20 +12,37 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link TradeService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class TradeServiceTest {
-
+    /**
+     * An Instance of TradeService
+     */
     private TradeService tradeServiceTest;
 
+    /**
+     * A mock of TradeRepository
+     */
     @Mock
     private TradeRepository tradeRepositoryMock;
 
+    /**
+     * An attribute of Trade
+     */
     private Trade tradeTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         tradeServiceTest = new TradeService(tradeRepositoryMock);
@@ -40,6 +54,10 @@ public class TradeServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link Trade}
+     * then return a list with three elements
+     */
     @Test
     public void getTradesTest_whenListOfTradeContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -57,14 +75,18 @@ public class TradeServiceTest {
         assertTrue(tradesResult.size() > 0);
     }
 
+    /**
+     * Method that test get trade by id
+     * when trade is found in database
+     */
     @Test
-    public void getTradeByIdTest_whenTradeFound_thenReturnTrade() {
+    public void getTradeByIdTest_whenTradeIsFound_thenReturnTrade() {
         //GIVEN
-        when(tradeRepositoryMock.getById(isA(Integer.class))).thenReturn(tradeTest);
+        when(tradeRepositoryMock.findById(isA(Integer.class))).thenReturn(java.util.Optional.ofNullable(tradeTest));
         //WHEN
         Trade tradeByIdResult = tradeServiceTest.getTradeById(tradeTest.getTradeId());
         //THEN
-        verify(tradeRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(tradeRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(tradeByIdResult);
         assertEquals(1, tradeByIdResult.getTradeId());
         assertEquals("Account", tradeByIdResult.getAccount());
@@ -72,16 +94,25 @@ public class TradeServiceTest {
         assertEquals(10d, tradeByIdResult.getBuyQuantity());
     }
 
+    /**
+     * Method that test get trade by id
+     * when trade not found in database
+     * then return a {@link TradeNotFoundException}
+     */
     @Test
     public void getTradeByIdTest_whenTradeNotFound_thenTradeNotFoundException() {
         //GIVEN
-        when(tradeRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(tradeRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
-        verify(tradeRepositoryMock, times(0)).getById(isA(Integer.class));
+        verify(tradeRepositoryMock, times(0)).findById(isA(Integer.class));
         assertThrows(TradeNotFoundException.class, () -> tradeServiceTest.getTradeById(tradeTest.getTradeId()));
     }
 
+    /**
+     * Method that test add a trade
+     * when trade is not recorded in database
+     */
     @Test
     public void addTradeTest_whenTradeNotRecordedInDb_thenReturnTradeAdded() {
         //GIVEN
@@ -96,6 +127,10 @@ public class TradeServiceTest {
         assertEquals(10d, tradeResult.getBuyQuantity());
     }
 
+    /**
+     * Method that test update a trade
+     * when trade exist in database
+     */
     @Test
     public void updateTradeTest_whenTradeExist_thenReturnTradeUpdated() {
         //GIVEN
@@ -117,6 +152,11 @@ public class TradeServiceTest {
         assertEquals(30d, tradeUpdatedResult.getBuyQuantity());
     }
 
+    /**
+     * Method that test update a trade
+     * when trade not exist in database
+     * then throw {@link TradeNotFoundException}
+     */
     @Test
     public void updateTradeTest_whenTradeNotExist_thenThrowTradeNotFoundException() {
         //GIVEN
@@ -127,6 +167,9 @@ public class TradeServiceTest {
         assertThrows(TradeNotFoundException.class, () -> tradeServiceTest.updateTrade(tradeTest));
     }
 
+    /**
+     * Method that test deletion by id of a trade
+     */
     @Test
     public void deleteTradeTest_whenTradeExist_ThenReturnMessageTradeDeleted() {
         //GIVEN
@@ -134,7 +177,7 @@ public class TradeServiceTest {
         //WHEN
         String messageResult = tradeServiceTest.deleteTrade(id);
         //THEN
-        verify(tradeRepositoryMock,times(1)).deleteById(anyInt());
+        verify(tradeRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("Trade deleted", messageResult);
     }
 }

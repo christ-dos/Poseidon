@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link CurvePoint} entity
@@ -54,13 +55,13 @@ public class CurvePointService implements ICurvePointService {
      */
     @Override
     public CurvePoint getCurvePointById(Integer id) {
-        CurvePoint curvePoint = curvePointRepository.getById(id);
-        if (curvePoint == null) {
+        Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);
+        if (!curvePoint.isPresent()) {
             log.error("Service: CurvePoint NOT FOUND with ID: " + id);
             throw new CurvePointNotFoundException("CurvePoint not found");
         }
         log.info("Service: CurvePoint found with ID: " + id);
-        return curvePoint;
+        return curvePoint.get();
     }
 
     /**
@@ -98,6 +99,7 @@ public class CurvePointService implements ICurvePointService {
 
     /**
      * Method that delete a {@link CurvePoint }
+     *
      * @param id An Integer containing the id if the curvePoint
      * @return A String containing "CurvePoint  deleted"
      */
@@ -108,5 +110,4 @@ public class CurvePointService implements ICurvePointService {
 
         return "CurvePoint deleted";
     }
-
 }

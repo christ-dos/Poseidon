@@ -1,6 +1,5 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.exceptions.UserNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +20,6 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService implements IUserService {
-
     /**
      * An instance Of {@link UserRepository}
      */
@@ -48,21 +47,20 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Method that get a {@link User} by Id
+     * Method that get a {@link User} by id
      *
      * @param id An Integer containing the id of the User
      * @return An instance of {@link User}
      */
     @Override
-    public Optional<User> getUserById(Integer id) {
+    public User getUserById(Integer id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             log.error("Service: User NOT FOUND with ID: " + id);
             throw new UserNotFoundException("User not found");
         }
         log.info("Service: User found with ID: " + id);
-
-        return user;
+        return user.get();
     }
 
     /**
@@ -96,7 +94,6 @@ public class UserService implements IUserService {
         userToUpdate.setPassword(encryptedPassword(user.getPassword()));
         userToUpdate.setRole(user.getRole());
         log.info("Service: User updated with ID: " + user.getId());
-
         return userRepository.save(userToUpdate);
     }
 
@@ -110,7 +107,6 @@ public class UserService implements IUserService {
     public String deleteUser(Integer id) {
         userRepository.deleteById(id);
         log.info("Service: User deleted with ID:" + id);
-
         return "User deleted";
     }
 

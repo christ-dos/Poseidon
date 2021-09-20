@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RatingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">RatingController.java</span></div><h1>RatingController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
+import com.nnk.springboot.services.IRatingService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+
+/**
+ * Class Controller that manage Rating's requests
+ *
+ * @author Christine Duarte
+ */
+@Controller
+<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">public class RatingController {</span>
+    /**
+     * Dependency  {@link IRatingService} injected
+     */
+    @Autowired
+    private IRatingService ratingService;
+
+    /**
+     * Method GET which displayed the view with the list of all {@link Rating}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @RequestMapping(&quot;/rating/list&quot;)
+    public String home(Model model) {
+<span class="fc" id="L40">        model.addAttribute(&quot;ratings&quot;, ratingService.getRatings());</span>
+<span class="fc" id="L41">        log.info(&quot;Controller: displaying List of Rating&quot;);</span>
+<span class="fc" id="L42">        return &quot;rating/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which permit adding A {@link Rating}
+     *
+     * @param rating An instance fo {@link Rating}
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/rating/add&quot;)
+    public String addRatingForm(Rating rating) {
+<span class="fc" id="L53">        log.info(&quot;Controller: request to add a rating&quot;);</span>
+<span class="fc" id="L54">        return &quot;rating/add&quot;;</span>
+    }
+
+    /**
+     * Method POST which valid entry in the form for rating
+     *
+     * @param rating An instance fo {@link Rating}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @PostMapping(&quot;/rating/validate&quot;)
+    public String validate(@Valid Rating rating, BindingResult result, Model model) {
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L68">            log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L69">            return &quot;rating/add&quot;;</span>
+        }
+<span class="fc" id="L71">        ratingService.addRating(rating);</span>
+<span class="fc" id="L72">        log.info(&quot;Controller: redirection to rating list&quot;);</span>
+<span class="fc" id="L73">        return &quot;redirect:/rating/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which permit displaying the {@link Rating} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/rating/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+        try {
+<span class="fc" id="L86">            Rating rating = ratingService.getRatingById(id);</span>
+<span class="fc" id="L87">            model.addAttribute(&quot;rating&quot;,rating);</span>
+<span class="fc" id="L88">            log.info(&quot;Controller: Rating found with id: &quot; + id);</span>
+<span class="fc" id="L89">        } catch (RatingNotFoundException ex) {</span>
+<span class="fc" id="L90">            log.error(&quot;Controller: Rating NOT found with id: &quot; + id);</span>
+<span class="fc" id="L91">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        return &quot;rating/update&quot;;</span>
+    }
+
+    /**
+     * Method POST that permit update a {@link Rating}
+     *
+     * @param id      An Integer containing the id of BidList to update
+     * @param rating An instance of {@link Rating}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @PostMapping(&quot;/rating/update/{id}&quot;)
+    public String updateRating(@PathVariable(&quot;id&quot;) Integer id, @Valid Rating rating,
+                               BindingResult result, Model model) {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L109">            return &quot;rating/update&quot;;</span>
+        }
+<span class="fc" id="L111">        rating.setId(id);</span>
+<span class="fc" id="L112">        ratingService.updateRating(rating);</span>
+<span class="fc" id="L113">        model.addAttribute(&quot;ratings&quot;, ratingService.getRatings());</span>
+<span class="fc" id="L114">        log.info(&quot;Controller: Rating updated with: &quot; + id);</span>
+<span class="fc" id="L115">        return &quot;redirect:/rating/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which delete a {@link Rating}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/rating/delete/{id}&quot;)
+    public String deleteRating(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+<span class="fc" id="L127">        ratingService.deleteRating(id);</span>
+<span class="fc" id="L128">        model.addAttribute(&quot;ratings&quot;, ratingService.getRatings());</span>
+<span class="fc" id="L129">        log.info(&quot;Controller: Rating deleted&quot;);</span>
+<span class="fc" id="L130">        return &quot;redirect:/rating/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

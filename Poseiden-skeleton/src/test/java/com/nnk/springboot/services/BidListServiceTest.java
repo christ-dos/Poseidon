@@ -15,21 +15,38 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link BidListService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class BidListServiceTest {
-
+    /**
+     * An Instance of BidListService
+     */
     private BidListService bidListServiceTest;
 
+    /**
+     * A mock of BidListRepository
+     */
     @Mock
     private BidListRepository bidListRepositoryMock;
 
+    /**
+     * An attribute of BidList
+     */
     private BidList bidListTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         bidListServiceTest = new BidListService(bidListRepositoryMock);
@@ -43,6 +60,10 @@ public class BidListServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link BidList}
+     * then return a list with three elements
+     */
     @Test
     public void getBidListsTest_whenListOfBidContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -60,29 +81,42 @@ public class BidListServiceTest {
         assertTrue(bidListsResult.size() > 0);
     }
 
+    /**
+     * Method that test get bidList by id
+     * when bidList is found in database
+     */
     @Test
-    public void getBidListByIdTest_whenBidListExist_thenReturnBidList() {
+    public void getBidListByIdTest_whenBidListIsFound_thenReturnBidList() {
         //GIVEN
-        when(bidListRepositoryMock.getById(anyInt())).thenReturn(bidListTest);
+        when(bidListRepositoryMock.findById(anyInt())).thenReturn(Optional.ofNullable(bidListTest));
         //WHEN
         BidList bidListResult = bidListServiceTest.getBidListById(bidListTest.getBidListId());
         //THEN
-        verify(bidListRepositoryMock, times(1)).getById(anyInt());
+        verify(bidListRepositoryMock, times(1)).findById(anyInt());
         assertNotNull(bidListResult);
         assertEquals("Account Test", bidListResult.getAccount());
         assertEquals(10d, bidListResult.getBidQuantity());
     }
 
+    /**
+     * Method that test get bidList by id
+     * when bidList not found in database
+     * then return a {@link BidListNotFoundException}
+     */
     @Test
-    public void getBidListByIdTest_whenBidListNotExist_thenThrowBidListNotFoundException() {
+    public void getBidListByIdTest_whenBidListNotFound_thenThrowBidListNotFoundException() {
         //GIVEN
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(bidListRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
-        verify(bidListRepositoryMock, times(0)).getById(isA(Integer.class));
+        verify(bidListRepositoryMock, times(0)).findById(isA(Integer.class));
         assertThrows(BidListNotFoundException.class, () -> bidListServiceTest.getBidListById(bidListTest.getBidListId()));
     }
 
+    /**
+     * Method that test add a bidList
+     * when bidList is not recorded in database
+     */
     @Test
     public void addBidListTest_whenBidListNotRecordedInDb_thenReturnBidListAdded() {
         //GIVEN
@@ -97,6 +131,10 @@ public class BidListServiceTest {
         assertNotNull(bidListTest.getCreationDate());
     }
 
+    /**
+     * Method that test update a bidList
+     * when bidList exist in database
+     */
     @Test
     public void updateBidListTest_whenBidListExist_thenReturnBidListUpdated() {
         //GIVEN
@@ -109,7 +147,7 @@ public class BidListServiceTest {
                 .build();
         LocalDateTime dateRevisionIsAfter = LocalDateTime.of(2021, 9, 10, 14, 00);
 
-        when(bidListRepositoryMock.getById(isA(Integer.class))).thenReturn(bidListTest);
+        when(bidListRepositoryMock.getById(1)).thenReturn(bidListTest);
         when(bidListRepositoryMock.save(isA(BidList.class))).thenReturn(bidListTestUpdated);
         //WHEN
         BidList bidListUpdated = bidListServiceTest.updateBidList(bidListTestUpdated);
@@ -120,6 +158,11 @@ public class BidListServiceTest {
         assertTrue(bidListTestUpdated.getRevisionDate().after(Timestamp.valueOf(dateRevisionIsAfter)));
     }
 
+    /**
+     * Method that test update a bidList
+     * when bidList not exist in database
+     * then throw {@link BidListNotFoundException}
+     */
     @Test
     public void updateBidListTest_whenBidListNotExist_thenThrowBidListNotFoundException() {
         //GIVEN
@@ -130,6 +173,9 @@ public class BidListServiceTest {
         assertThrows(BidListNotFoundException.class, () -> bidListServiceTest.updateBidList(bidListTest));
     }
 
+    /**
+     * Method that test deletion by id of a bidList
+     */
     @Test
     public void deleteBidListTest_whenBidListExist_ThenReturnMessageBideListDeleted() {
         //GIVEN
@@ -137,8 +183,7 @@ public class BidListServiceTest {
         //WHEN
         String messageResult = bidListServiceTest.deleteBidList(id);
         //THEN
-        verify(bidListRepositoryMock,times(1)).deleteById(isA(Integer.class));
+        verify(bidListRepositoryMock, times(1)).deleteById(isA(Integer.class));
         assertEquals("BidList deleted", messageResult);
     }
-
 }

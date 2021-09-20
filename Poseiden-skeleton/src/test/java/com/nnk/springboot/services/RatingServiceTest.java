@@ -12,20 +12,37 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link RatingService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class RatingServiceTest {
-
+    /**
+     * An Instance of RatingService
+     */
     private RatingService ratingServiceTest;
 
+    /**
+     * A mock of RatingRepository
+     */
     @Mock
     private RatingRepository ratingRepositoryMock;
 
+    /**
+     * An attribute of Rating
+     */
     private Rating ratingTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         ratingServiceTest = new RatingService(ratingRepositoryMock);
@@ -39,6 +56,10 @@ public class RatingServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link Rating}
+     * then return a list with three elements
+     */
     @Test
     public void getRatingsTest_whenListOfRatingContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -49,21 +70,25 @@ public class RatingServiceTest {
                         Rating.builder().moodysRating("Moodys Rating2").sandPRating("Sand PRating2").fitchRating("Fitch Rating2").orderNumber(30).build()));
         when(ratingRepositoryMock.findAll()).thenReturn(ratings);
         //WHEN
-        List<Rating> ratingsResult =ratingServiceTest.getRatings();
+        List<Rating> ratingsResult = ratingServiceTest.getRatings();
         //THEN
         verify(ratingRepositoryMock, times(1)).findAll();
         assertEquals(ratings, ratingsResult);
         assertTrue(ratingsResult.size() > 0);
     }
 
+    /**
+     * Method that test get rating by id
+     * when rating is found in database
+     */
     @Test
     public void getRatingByIdTest_whenRatingFound_thenReturnRating() {
         //GIVEN
-        when(ratingRepositoryMock.getById(isA(Integer.class))).thenReturn(ratingTest);
+        when(ratingRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.ofNullable(ratingTest));
         //WHEN
         Rating ratingByIdResult = ratingServiceTest.getRatingById(ratingTest.getId());
         //THEN
-        verify(ratingRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(ratingRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(ratingByIdResult);
         assertEquals("Moodys Rating", ratingByIdResult.getMoodysRating());
         assertEquals("Sand PRating", ratingByIdResult.getSandPRating());
@@ -71,16 +96,25 @@ public class RatingServiceTest {
         assertEquals(10, ratingByIdResult.getOrderNumber());
     }
 
+    /**
+     * Method that test get rating by id
+     * when rating not found in database
+     * then return a {@link RatingNotFoundException}
+     */
     @Test
     public void getRatingByIdTest_whenRatingNotFound_thenRatingNotFoundException() {
         //GIVEN
-        when(ratingRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(ratingRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
         verify(ratingRepositoryMock, times(0)).getById(isA(Integer.class));
         assertThrows(RatingNotFoundException.class, () -> ratingServiceTest.getRatingById(ratingTest.getId()));
     }
 
+    /**
+     * Method that test add a rating
+     * when rating is not recorded in database
+     */
     @Test
     public void addRatingTest_whenRatingNotRecordedInDb_thenReturnRatingAdded() {
         //GIVEN
@@ -95,6 +129,10 @@ public class RatingServiceTest {
         assertEquals(10, ratingResult.getOrderNumber());
     }
 
+    /**
+     * Method that test update a rating
+     * when rating exist in database
+     */
     @Test
     public void updateRatingTest_whenRatingExist_thenReturnRatingUpdated() {
         //GIVEN
@@ -118,6 +156,11 @@ public class RatingServiceTest {
         assertEquals(20, ratingUpdatedResult.getOrderNumber());
     }
 
+    /**
+     * Method that test update a rating
+     * when rating not exist in database
+     * then throw {@link RatingNotFoundException}
+     */
     @Test
     public void updateRatingTest_whenRatingNotExist_thenThrowRatingNotFoundException() {
         //GIVEN
@@ -128,6 +171,9 @@ public class RatingServiceTest {
         assertThrows(RatingNotFoundException.class, () -> ratingServiceTest.updateRating(ratingTest));
     }
 
+    /**
+     * Method that test deletion by id of a rating
+     */
     @Test
     public void deleteRatingTest_whenRatingExist_ThenReturnMessageRatingDeleted() {
         //GIVEN
@@ -135,9 +181,7 @@ public class RatingServiceTest {
         //WHEN
         String messageResult = ratingServiceTest.deleteRating(id);
         //THEN
-        verify(ratingRepositoryMock,times(1)).deleteById(anyInt());
+        verify(ratingRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("Rating deleted", messageResult);
     }
-
-
 }

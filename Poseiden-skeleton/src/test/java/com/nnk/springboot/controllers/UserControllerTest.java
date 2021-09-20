@@ -1,8 +1,9 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exceptions.UserNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class that test {@link UserController}
+ *
+ * @author Christine Duarte
+ */
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc
 public class UserControllerTest {
@@ -32,12 +38,30 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvcUser;
 
+    /**
+     * A mock of {@link UserService}
+     */
     @MockBean
     private UserService userServiceMock;
 
+    /**
+     * A mock of {@link UserRepository}
+     */
     @MockBean
     private UserRepository userRepositoryMock;
 
+    /**
+     * A mock of {@link MyUserDetailsService}
+     */
+    @MockBean
+    private MyUserDetailsService myUserDetailsServiceMock;
+
+    /**
+     * Method that test get view list for user when uri is "/user/list"
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -50,6 +74,12 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the form for add a user to list
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddUserFormTest() throws Exception {
         //GIVEN
@@ -62,6 +92,12 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a user
+     * when has no error in fields of form
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
@@ -71,7 +107,7 @@ public class UserControllerTest {
         mockMvcUser.perform(post("/user/validate")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("username", "Username")
-                        .param("password", "Password")
+                        .param("password", "Pa9876523**")
                         .param("fullname", "Fullname")
                         .param("role", "Role"))
                 .andExpect(status().is3xxRedirection())
@@ -82,6 +118,14 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a user
+     * when has error in form, fields "username", "fullname", "role" are blank
+     * and  "password" is not valid
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasError_thenRedirectToViewAdd() throws Exception {
         //GIVEN
@@ -99,24 +143,30 @@ public class UserControllerTest {
                 .andExpect(model().errorCount(4))
                 .andExpect(model().attributeDoesNotExist())
                 .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "ValidPassword"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the user to update
+     * when user exist in dataBase
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
         //GIVEN
-       User user = User.builder()
-               .fullname("Fullname")
-               .username("Username")
-               .password("Password")
-               .role("Role")
-               .build();
+        User user = User.builder()
+                .fullname("Fullname")
+                .username("Username")
+                .password("Password")
+                .role("Role")
+                .build();
         when(userRepositoryMock.findById(anyInt())).thenReturn(Optional.of(user));
-        when(userServiceMock.getUserById(anyInt())).thenReturn(Optional.of(user));
+        when(userServiceMock.getUserById(anyInt())).thenReturn(user);
         //WHEN
         //THEN
         mockMvcUser.perform(get("/user/update/1")
@@ -127,6 +177,37 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the user to update
+     * when user not exist in dataBase
+     * then throw a {@link UserNotFoundException}
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        when(userServiceMock.getUserById(anyInt())).thenThrow(new UserNotFoundException("User nor found"));
+        //WHEN
+        //THEN
+        mockMvcUser.perform(MockMvcRequestBuilders.get("/user/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("id", String.valueOf(14))
+                        .param("username", "UserName")
+                        .param("password", "Password"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
+                .andExpect(model().attributeHasNoErrors())
+                .andDo(print());
+    }
+
+    /**
+     * Method that test the submission of the form for update a user
+     * when has no error in form
+     * then redirect to view list with the user updated
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasNoErrors_thenRedirectViewList() throws Exception {
@@ -136,7 +217,7 @@ public class UserControllerTest {
         mockMvcUser.perform(MockMvcRequestBuilders.post("/user/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("username", "Username")
-                        .param("password", "Password")
+                        .param("password", "Pa2597868**")
                         .param("fullname", "Fullname")
                         .param("role", "Role"))
                 .andExpect(status().is3xxRedirection())
@@ -146,6 +227,13 @@ public class UserControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a user
+     * when has error in form, fields "username", "fullname", "role" are blank
+     * and  "password" is not valid
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateUserTest_whenFieldsHasErrors_thenRedirectViewUpdate() throws Exception {
@@ -162,12 +250,17 @@ public class UserControllerTest {
                 .andExpect(view().name("user/update"))
                 .andExpect(model().errorCount(4))
                 .andExpect(model().attributeHasFieldErrorCode("user", "username", "NotBlank"))
-                .andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+                .andExpect(model().attributeHasFieldErrorCode("user", "password", "ValidPassword"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "fullname", "NotBlank"))
                 .andExpect(model().attributeHasFieldErrorCode("user", "role", "NotBlank"))
                 .andDo(print());
     }
 
+    /**
+     * Method that test the deletion of a user by id
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteUserTest() throws Exception {

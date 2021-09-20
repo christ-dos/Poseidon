@@ -1,7 +1,7 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.services.IRatingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+/**
+ * Class Controller that manage Rating's requests
+ *
+ * @author Christine Duarte
+ */
 @Controller
 @Slf4j
 public class RatingController {
+    /**
+     * Dependency  {@link IRatingService} injected
+     */
     @Autowired
     private IRatingService ratingService;
 
+    /**
+     * Method GET which displayed the view with the list of all {@link Rating}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @RequestMapping("/rating/list")
     public String home(Model model) {
         model.addAttribute("ratings", ratingService.getRatings());
@@ -28,12 +42,26 @@ public class RatingController {
         return "rating/list";
     }
 
+    /**
+     * Method GET which permit adding A {@link Rating}
+     *
+     * @param rating An instance fo {@link Rating}
+     * @return A String containing the name of the view
+     */
     @GetMapping("/rating/add")
     public String addRatingForm(Rating rating) {
         log.info("Controller: request to add a rating");
         return "rating/add";
     }
 
+    /**
+     * Method POST which valid entry in the form for rating
+     *
+     * @param rating An instance fo {@link Rating}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping("/rating/validate")
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -45,15 +73,35 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
+    /**
+     * Method GET which permit displaying the {@link Rating} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        Rating rating = ratingService.getRatingById(id);
-        model.addAttribute("rating",rating);
-        log.info("Controller: Rating found with id: " + id);
-        // TODO: get Rating by Id and to model then show to the form
+        try {
+            Rating rating = ratingService.getRatingById(id);
+            model.addAttribute("rating",rating);
+            log.info("Controller: Rating found with id: " + id);
+        } catch (RatingNotFoundException ex) {
+            log.error("Controller: Rating NOT found with id: " + id);
+            return "redirect:/app/404";
+        }
         return "rating/update";
     }
 
+    /**
+     * Method POST that permit update a {@link Rating}
+     *
+     * @param id      An Integer containing the id of BidList to update
+     * @param rating An instance of {@link Rating}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                                BindingResult result, Model model) {
@@ -67,6 +115,13 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
+    /**
+     * Method GET which delete a {@link Rating}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
         ratingService.deleteRating(id);

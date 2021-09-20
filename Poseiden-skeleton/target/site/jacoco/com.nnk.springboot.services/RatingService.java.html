@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RatingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.services</a> &gt; <span class="el_source">RatingService.java</span></div><h1>RatingService.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.services;
+
+import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
+import com.nnk.springboot.repositories.RatingRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Class of service that manage {@link Rating} entity
+ *
+ * @author Christine Duarte
+ */
+@Service
+<span class="fc" id="L19">@Slf4j</span>
+public class RatingService implements IRatingService {
+
+    /**
+     * An instance Of {@link RatingRepository}
+     */
+    private RatingRepository ratingRepository;
+
+    /**
+     * Constructor
+     *
+     * @param ratingRepository An instance of {@link RatingRepository}
+     */
+    @Autowired
+<span class="fc" id="L33">    public RatingService(RatingRepository ratingRepository) {</span>
+<span class="fc" id="L34">        this.ratingRepository = ratingRepository;</span>
+<span class="fc" id="L35">    }</span>
+
+    /**
+     * Method that get all {@link Rating}
+     *
+     * @return A list of {@link Rating}
+     */
+    @Override
+    public List&lt;Rating&gt; getRatings() {
+<span class="fc" id="L44">        log.info(&quot;Service: displaying Ratings&quot;);</span>
+
+<span class="fc" id="L46">        return ratingRepository.findAll();</span>
+    }
+
+    /**
+     * Method that get a {@link Rating} by Id
+     *
+     * @param id An Integer containing the id of the Rating
+     * @return An Optional of {@link Rating}
+     */
+    @Override
+    public Rating getRatingById(Integer id) {
+<span class="fc" id="L57">        Optional&lt;Rating&gt; rating = ratingRepository.findById(id);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!rating.isPresent()) {</span>
+<span class="fc" id="L59">            log.error(&quot;Service: Rating NOT FOUND with ID: &quot; + id);</span>
+<span class="fc" id="L60">            throw new RatingNotFoundException(&quot;Rating not found&quot;);</span>
+        }
+<span class="fc" id="L62">        log.info(&quot;Service: Rating found with ID: &quot; + id);</span>
+
+<span class="fc" id="L64">        return rating.get();</span>
+    }
+
+    /**
+     * Method which add a {@link Rating}
+     *
+     * @param rating An instance {@link Rating}
+     * @return The {@link Rating} saved
+     */
+    @Override
+    public Rating addRating(Rating rating) {
+<span class="fc" id="L75">        log.info(&quot;Service: rating saved&quot;);</span>
+<span class="fc" id="L76">        return ratingRepository.save(rating);</span>
+    }
+
+    /**
+     * Method which update a {@link Rating}
+     *
+     * @param rating An instance {@link Rating}
+     * @return the {@link Rating} updated
+     */
+    @Override
+    public Rating updateRating(Rating rating) {
+<span class="fc" id="L87">        Rating ratingToUpdate = ratingRepository.getById(rating.getId());</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (ratingToUpdate == null) {</span>
+<span class="fc" id="L89">            log.error(&quot;Service: Rating NOT FOUND with ID: &quot; + rating.getId());</span>
+<span class="fc" id="L90">            throw new RatingNotFoundException(&quot;Rating not found&quot;);</span>
+        }
+<span class="fc" id="L92">        ratingToUpdate.setMoodysRating(rating.getMoodysRating());</span>
+<span class="fc" id="L93">        ratingToUpdate.setSandPRating(rating.getSandPRating());</span>
+<span class="fc" id="L94">        ratingToUpdate.setFitchRating(rating.getFitchRating());</span>
+<span class="fc" id="L95">        ratingToUpdate.setOrderNumber(rating.getOrderNumber());</span>
+<span class="fc" id="L96">        log.info(&quot;Service: Rating updated with ID: &quot; + rating.getId());</span>
+
+<span class="fc" id="L98">        return ratingRepository.save(ratingToUpdate);</span>
+    }
+
+    /**
+     * Method that delete a {@link Rating}
+     *
+     * @param id An integer containing the id
+     * @return A String containing &quot;Rating deleted&quot;
+     */
+    @Override
+    public String deleteRating(Integer id) {
+<span class="fc" id="L109">        ratingRepository.deleteById(id);</span>
+<span class="fc" id="L110">        log.info(&quot;Service: Rating deleted with ID:&quot; + id);</span>
+
+<span class="fc" id="L112">        return &quot;Rating deleted&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link Rating} entity
@@ -49,18 +50,18 @@ public class RatingService implements IRatingService {
      * Method that get a {@link Rating} by Id
      *
      * @param id An Integer containing the id of the Rating
-     * @return An instance of {@link Rating}
+     * @return An Optional of {@link Rating}
      */
     @Override
     public Rating getRatingById(Integer id) {
-        Rating rating = ratingRepository.getById(id);
-        if (rating == null) {
+        Optional<Rating> rating = ratingRepository.findById(id);
+        if (!rating.isPresent()) {
             log.error("Service: Rating NOT FOUND with ID: " + id);
             throw new RatingNotFoundException("Rating not found");
         }
         log.info("Service: Rating found with ID: " + id);
 
-        return rating;
+        return rating.get();
     }
 
     /**

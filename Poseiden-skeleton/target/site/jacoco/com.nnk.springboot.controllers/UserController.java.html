@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.exceptions.UserNotFoundException;
+import com.nnk.springboot.services.IUserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+
+/**
+ * Class Controller that manage User's requests
+ *
+ * @author Christine Duarte
+ */
+@Controller
+<span class="fc" id="L25">@Slf4j</span>
+<span class="fc" id="L26">public class UserController {</span>
+    /**
+     * Dependency  {@link IUserService} injected
+     */
+    @Autowired
+    private IUserService userService;
+
+    /**
+     * Method GET which displayed the view with the list of all {@link User}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @RequestMapping(&quot;/user/list&quot;)
+    public String home(Model model) {
+<span class="fc" id="L41">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L42">        log.info(&quot;Controller: displaying List of User&quot;);</span>
+<span class="fc" id="L43">        return &quot;user/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which permit adding A {@link User}
+     *
+     * @param user An instance fo {@link User}
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/user/add&quot;)
+    public String addUser(User user) {
+<span class="fc" id="L54">        log.info(&quot;Controller: request to add a user&quot;);</span>
+<span class="fc" id="L55">        return &quot;user/add&quot;;</span>
+    }
+
+    /**
+     * Method POST which valid entry in the form for User
+     *
+     * @param user   An instance fo {@link User}
+     * @param result An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model  Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @PostMapping(&quot;/user/validate&quot;)
+    public String validate(@Valid User user, BindingResult result, Model model) {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!result.hasErrors()) {</span>
+<span class="fc" id="L69">            userService.addUser(user);</span>
+<span class="fc" id="L70">            model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L71">            log.info(&quot;Controller: redirection to user list&quot;);</span>
+<span class="fc" id="L72">            return &quot;redirect:/user/list&quot;;</span>
+        }
+<span class="fc" id="L74">        log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L75">        return &quot;user/add&quot;;</span>
+    }
+
+    /**
+     * Method GET which permit displaying the {@link User} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/user/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+        try {
+<span class="fc" id="L88">            User user = userService.getUserById(id);</span>
+<span class="fc" id="L89">            model.addAttribute(&quot;user&quot;, user);</span>
+<span class="fc" id="L90">            user.setPassword(&quot;&quot;);</span>
+<span class="fc" id="L91">            log.info(&quot;Controller: User found with id: &quot; + id);</span>
+<span class="fc" id="L92">        } catch (UserNotFoundException ex) {</span>
+<span class="fc" id="L93">            log.error(&quot;Controller: User NOT found with id: &quot; + id);</span>
+<span class="fc" id="L94">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L95">        }</span>
+<span class="fc" id="L96">        return &quot;user/update&quot;;</span>
+    }
+
+    /**
+     * Method POST that permit update a {@link User}
+     *
+     * @param id     An Integer containing the id of BidList to update
+     * @param user   An instance of {@link User}
+     * @param result An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model  Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @PostMapping(&quot;/user/update/{id}&quot;)
+    public String updateUser(@PathVariable(&quot;id&quot;) Integer id, @Valid User user,
+                             BindingResult result, Model model) {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L112">            return &quot;user/update&quot;;</span>
+        }
+<span class="fc" id="L114">        user.setId(id);</span>
+<span class="fc" id="L115">        userService.updateUser(user);</span>
+<span class="fc" id="L116">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L117">        log.info(&quot;Controller: User updated with: &quot; + id);</span>
+<span class="fc" id="L118">        return &quot;redirect:/user/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which delete a {@link User}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/user/delete/{id}&quot;)
+    public String deleteUser(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+<span class="fc" id="L130">        userService.deleteUser(id);</span>
+<span class="fc" id="L131">        model.addAttribute(&quot;users&quot;, userService.getUsers());</span>
+<span class="fc" id="L132">        log.info(&quot;Controller: User deleted&quot;);</span>
+<span class="fc" id="L133">        return &quot;redirect:/user/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

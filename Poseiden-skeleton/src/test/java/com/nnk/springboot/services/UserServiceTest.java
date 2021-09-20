@@ -1,8 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.exceptions.TradeNotFoundException;
 import com.nnk.springboot.exceptions.UserNotFoundException;
 import com.nnk.springboot.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,16 +17,33 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link UserService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+    /**
+     * An Instance of UserService
+     */
     private UserService userServiceTest;
 
+    /**
+     * A mock of UserRepository
+     */
     @Mock
     private UserRepository userRepositoryMock;
 
+    /**
+     * An attribute of User
+     */
     private User userTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         userServiceTest = new UserService(userRepositoryMock);
@@ -43,6 +56,10 @@ public class UserServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link User}
+     * then return a list with three elements
+     */
     @Test
     public void getUsersTest_whenListOfUserContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -51,7 +68,7 @@ public class UserServiceTest {
                         User.builder().id(1).fullname("Fullname").username("Username").role("Role").password("Password").build(),
                         User.builder().id(2).fullname("Fullname1").username("Username1").role("Role1").password("Password1").build(),
                         User.builder().id(3).fullname("Fullname1").username("Username1").role("Role1").password("Password1").build()
-                       ));
+                ));
         when(userRepositoryMock.findAll()).thenReturn(users);
         //WHEN
         List<User> usersResult = userServiceTest.getUsers();
@@ -61,22 +78,31 @@ public class UserServiceTest {
         assertTrue(usersResult.size() > 0);
     }
 
+    /**
+     * Method that test get user by id
+     * when user is found in database
+     */
     @Test
-    public void getUserByIdTest_whenUserFound_thenReturnOptionalOfUser() {
+    public void getUserByIdTest_whenUserIsFound_thenReturnOptionalOfUser() {
         //GIVEN
         when(userRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.of(userTest));
         //WHEN
-        Optional<User> userByIdResult = userServiceTest.getUserById(userTest.getId());
+        User userByIdResult = userServiceTest.getUserById(userTest.getId());
         //THEN
         verify(userRepositoryMock, times(1)).findById(isA(Integer.class));
-        assertTrue(userByIdResult.isPresent());
-        assertEquals(1, userByIdResult.get().getId());
-        assertEquals("Fullname", userByIdResult.get().getFullname());
-        assertEquals("Username", userByIdResult.get().getUsername());
-        assertEquals("Password", userByIdResult.get().getPassword());
-        assertEquals("Role", userByIdResult.get().getRole());
+        assertNotNull(userByIdResult);
+        assertEquals(1, userByIdResult.getId());
+        assertEquals("Fullname", userByIdResult.getFullname());
+        assertEquals("Username", userByIdResult.getUsername());
+        assertEquals("Password", userByIdResult.getPassword());
+        assertEquals("Role", userByIdResult.getRole());
     }
 
+    /**
+     * Method that test get user by id
+     * when user not found in database
+     * then return a {@link UserNotFoundException}
+     */
     @Test
     public void getUserByIdTest_whenUserNotFound_thenUserNotFoundException() {
         //GIVEN
@@ -87,6 +113,10 @@ public class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> userServiceTest.getUserById(userTest.getId()));
     }
 
+    /**
+     * Method that test add a user
+     * when user is not recorded in database
+     */
     @Test
     public void addUserTest_whenUserNotRecordedInDb_thenReturnUserAdded() {
         //GIVEN
@@ -101,10 +131,14 @@ public class UserServiceTest {
         assertEquals("Role", userResult.getRole());
     }
 
+    /**
+     * Method that test update a user
+     * when user exist in database
+     */
     @Test
     public void updateUserTest_whenUserExist_thenReturnUserUpdated() {
         //GIVEN
-       User  userTestUpdated = User.builder()
+        User userTestUpdated = User.builder()
                 .id(1)
                 .fullname("FullnameUpdated")
                 .username("UsernameUpdated")
@@ -123,6 +157,11 @@ public class UserServiceTest {
         assertEquals("Admin", userUpdatedResult.getRole());
     }
 
+    /**
+     * Method that test update a user
+     * when user not exist in database
+     * then throw {@link UserNotFoundException}
+     */
     @Test
     public void updateUserTest_whenUserNotExist_thenThrowUserNotFoundException() {
         //GIVEN
@@ -133,6 +172,9 @@ public class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> userServiceTest.updateUser(userTest));
     }
 
+    /**
+     * Method that test deletion by id of a user
+     */
     @Test
     public void deleteUserTest_whenUserExist_ThenReturnMessageUserDeleted() {
         //GIVEN
@@ -140,10 +182,7 @@ public class UserServiceTest {
         //WHEN
         String messageResult = userServiceTest.deleteUser(id);
         //THEN
-        verify(userRepositoryMock,times(1)).deleteById(anyInt());
+        verify(userRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("User deleted", messageResult);
     }
-
-
-
 }

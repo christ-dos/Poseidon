@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class of service that manage {@link BidList} entity
@@ -42,7 +43,6 @@ public class BidListService implements IBidListService {
     @Override
     public List<BidList> getBidLists() {
         log.info("Service: displaying BidLists");
-
         return bidListRepository.findAll();
     }
 
@@ -50,18 +50,17 @@ public class BidListService implements IBidListService {
      * Method that get a {@link BidList} by Id
      *
      * @param bidListId An Integer containing the id of the BidList
-     * @return An instance of {@link BidList}
+     * @return An Optional of {@link BidList}
      */
     @Override
     public BidList getBidListById(Integer bidListId) {
-        BidList bidList = bidListRepository.getById(bidListId);
-        if (bidList == null) {
+        Optional<BidList> bidList = bidListRepository.findById(bidListId);
+        if (!bidList.isPresent()) {
             log.error("Service: BidList NOT FOUND with ID: " + bidListId);
             throw new BidListNotFoundException("BidList not found");
         }
         log.info("Service: BidList found with ID: " + bidListId);
-
-        return bidList;
+        return bidList.get();
     }
 
     /**
@@ -95,12 +94,12 @@ public class BidListService implements IBidListService {
         bidListToUpdate.setBidQuantity(bidList.getBidQuantity());
         bidListToUpdate.setRevisionDate(Timestamp.from(Instant.now()));
         log.info("Service: BidList updated with ID: " + bidList.getBidListId());
-
         return bidListRepository.save(bidListToUpdate);
     }
 
     /**
      * Method that delete a {@link BidList}
+     *
      * @param bidListId An integer containing the id
      * @return A String containing "BidList deleted"
      */
@@ -108,7 +107,6 @@ public class BidListService implements IBidListService {
     public String deleteBidList(Integer bidListId) {
         bidListRepository.deleteById(bidListId);
         log.info("Service: BidList deleted with ID: " + bidListId);
-
         return "BidList deleted";
     }
 }

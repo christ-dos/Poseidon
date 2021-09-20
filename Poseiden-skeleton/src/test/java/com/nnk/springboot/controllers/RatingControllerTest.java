@@ -1,7 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.security.MyUserDetailsService;
 import com.nnk.springboot.services.RatingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Class that test {@link RatingController}
+ *
+ * @author Christine Duarte
+ */
 @WebMvcTest(RatingController.class)
 @AutoConfigureMockMvc
 public class RatingControllerTest {
@@ -29,12 +36,30 @@ public class RatingControllerTest {
     @Autowired
     private MockMvc mockMvcRating;
 
+    /**
+     * A mock of {@link RatingService}
+     */
     @MockBean
     private RatingService ratingServiceMock;
 
+    /**
+     * A mock of {@link RatingRepository}
+     */
     @MockBean
     private RatingRepository ratingRepositoryMock;
 
+    /**
+     * A mock of {@link MyUserDetailsService}
+     */
+    @MockBean
+    private MyUserDetailsService myUserDetailsServiceMock;
+
+    /**
+     * Method that test get view list for rating when uri is "/rating/list"
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getHomeTest() throws Exception {
         //GIVEN
@@ -47,6 +72,12 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the form for add a rating to list
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getAddRatingFormTest() throws Exception {
         //GIVEN
@@ -59,6 +90,12 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a rating
+     * when has no error in fields of form
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasNoError_thenRedirectToViewList() throws Exception {
@@ -78,6 +115,13 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for add a rating
+     * when has error in form, fields "moodysRating" , "sandPRating",
+     * "fitchRating",are blank and "orderNumber" is null
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postValidate_whenFieldsHasErrors_thenReturnToViewAdd() throws Exception {
@@ -101,6 +145,12 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the rating to update
+     * when rating exist in dataBase
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void getShowUpdateFormTest() throws Exception {
@@ -110,7 +160,7 @@ public class RatingControllerTest {
                 .fitchRating("fitchRating")
                 .sandPRating("sandPRating")
                 .orderNumber(10).build();
-        when(ratingRepositoryMock.getById(anyInt())).thenReturn(rating);
+        when(ratingRepositoryMock.findById((anyInt()))).thenReturn(java.util.Optional.of(rating));
         when(ratingServiceMock.getRatingById(anyInt())).thenReturn(rating);
         //WHEN
         //THEN
@@ -121,6 +171,38 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test get the view update that displayed the rating to update
+     * when rating not exist in dataBase
+     * then throw a {@link RatingNotFoundException}
+     *
+     * @throws Exception
+     */
+    @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
+    @Test
+    public void getShowUpdateFormTest_whenIs14AndNotExist_thenThrowBidListNotFoundException() throws Exception {
+        //GIVEN
+        when(ratingServiceMock.getRatingById(anyInt())).thenThrow(new RatingNotFoundException("Rating not found"));
+        //WHEN
+        //THEN
+        mockMvcRating.perform(MockMvcRequestBuilders.get("/rating/update/14").with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("moodysRating", "MoodysRating")
+                        .param("sandPRating", "SandPRating")
+                        .param("fitchRating", "FitchRating")
+                        .param("orderNumber", String.valueOf(10)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/app/404"))
+                .andExpect(model().attributeHasNoErrors())
+                .andDo(print());
+    }
+
+    /**
+     * Method that test the submission of the form for update a rating
+     * when has no error in form
+     * then redirect to view list with the rating updated
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRatingTest_whenFieldsHasNotErrors_thenRedirectViewList() throws Exception {
@@ -128,10 +210,10 @@ public class RatingControllerTest {
         //WHEN
         //THEN
         mockMvcRating.perform(MockMvcRequestBuilders.post("/rating/update/1")
-                .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("moodysRating","MoodysRating")
-                        .param("fitchRating","FitchRating")
-                        .param("sandPRating","MoodysRating")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .param("moodysRating", "MoodysRating")
+                        .param("fitchRating", "FitchRating")
+                        .param("sandPRating", "MoodysRating")
                         .param("orderNumber", String.valueOf(10)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/rating/list"))
@@ -140,6 +222,13 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the submission of the form for update a rating
+     * when has error in form, fields "moodysRating" , "sandPRating",
+     * "fitchRating", are blank and "orderNumber" is null
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void postUpdateRatingTest_whenFieldsHasErrors_thenReturnViewUpdate() throws Exception {
@@ -148,9 +237,9 @@ public class RatingControllerTest {
         //THEN
         mockMvcRating.perform(MockMvcRequestBuilders.post("/rating/update/1")
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .param("moodysRating","")
-                        .param("fitchRating","")
-                        .param("sandPRating","")
+                        .param("moodysRating", "")
+                        .param("fitchRating", "")
+                        .param("sandPRating", "")
                         .param("orderNumber", ""))
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/update"))
@@ -162,6 +251,11 @@ public class RatingControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * Method that test the deletion of a rating by id
+     *
+     * @throws Exception
+     */
     @WithMockUser(username = "admin", roles = "ADMIN", password = "3f7d314e-60f7-4843-804d-785b72c4e8fe")
     @Test
     public void deleteRatingTest() throws Exception {

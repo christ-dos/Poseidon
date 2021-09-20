@@ -1,8 +1,6 @@
 package com.nnk.springboot.services;
 
-import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.exceptions.RatingNotFoundException;
 import com.nnk.springboot.exceptions.RuleNameNotFoundException;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,20 +12,37 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Class that test {@link RuleNameService}
+ *
+ * @author Christine Duarte
+ */
 @ExtendWith(MockitoExtension.class)
 public class RuleNameServiceTest {
-
+    /**
+     * An Instance of RuleNameService
+     */
     private RuleNameService ruleNameServiceTest;
 
+    /**
+     * A mock of RuleNameRepository
+     */
     @Mock
     private RuleNameRepository ruleNameRepositoryMock;
 
+    /**
+     * An attribute of RuleName
+     */
     private RuleName ruleNameTest;
 
+    /**
+     * Method that initialize instances to perform each test
+     */
     @BeforeEach
     public void setPerTest() {
         ruleNameServiceTest = new RuleNameService(ruleNameRepositoryMock);
@@ -43,6 +58,10 @@ public class RuleNameServiceTest {
                 .build();
     }
 
+    /**
+     * Method that test get all {@link RuleName}
+     * then return a list with three elements
+     */
     @Test
     public void getRulesNamesTest_whenListOfRuleNameContainThreeElements_thenReturnSizeIsGreaterThanZero() {
         //GIVEN
@@ -63,14 +82,18 @@ public class RuleNameServiceTest {
         assertTrue(ruleNamesResult.size() > 0);
     }
 
+    /**
+     * Method that test get ruleName by id
+     * when ruleName is found in database
+     */
     @Test
-    public void getRulesNameByIdTest_whenRulesNameFound_thenReturnRulesName() {
+    public void getRulesNameByIdTest_whenRulesNameIsFound_thenReturnRulesName() {
         //GIVEN
-        when(ruleNameRepositoryMock.getById(isA(Integer.class))).thenReturn(ruleNameTest);
+        when(ruleNameRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.of(ruleNameTest));
         //WHEN
         RuleName ruleNameByIdResult = ruleNameServiceTest.getRuleNameById(ruleNameTest.getId());
         //THEN
-        verify(ruleNameRepositoryMock, times(1)).getById(isA(Integer.class));
+        verify(ruleNameRepositoryMock, times(1)).findById(isA(Integer.class));
         assertNotNull(ruleNameByIdResult);
         assertEquals("Name", ruleNameByIdResult.getName());
         assertEquals("Description", ruleNameByIdResult.getDescription());
@@ -80,16 +103,25 @@ public class RuleNameServiceTest {
         assertEquals("Sql part", ruleNameByIdResult.getSqlPart());
     }
 
+    /**
+     * Method that test get ruleName by id
+     * when ruleName not found in database
+     * then return a {@link RuleNameNotFoundException}
+     */
     @Test
     public void getRuleNameByIdTest_whenRuleNameNotFound_thenRuleNameNotFoundException() {
         //GIVEN
-        when(ruleNameRepositoryMock.getById(isA(Integer.class))).thenReturn(null);
+        when(ruleNameRepositoryMock.findById(isA(Integer.class))).thenReturn(Optional.empty());
         //WHEN
         //THEN
-        verify(ruleNameRepositoryMock, times(0)).getById(isA(Integer.class));
+        verify(ruleNameRepositoryMock, times(0)).findById(isA(Integer.class));
         assertThrows(RuleNameNotFoundException.class, () -> ruleNameServiceTest.getRuleNameById(ruleNameTest.getId()));
     }
 
+    /**
+     * Method that test add a ruleName
+     * when ruleName is not recorded in database
+     */
     @Test
     public void addRuleNameTest_whenRuleNameNotRecordedInDb_thenReturnRuleNameAdded() {
         //GIVEN
@@ -106,6 +138,10 @@ public class RuleNameServiceTest {
         assertEquals("Sql part", ruleNameResult.getSqlPart());
     }
 
+    /**
+     * Method that test update a ruleName
+     * when ruleName exist in database
+     */
     @Test
     public void updateRatingTest_whenRatingExist_thenReturnRatingUpdated() {
         //GIVEN
@@ -132,6 +168,12 @@ public class RuleNameServiceTest {
         assertEquals("Sql str updated", ruleNameUpdatedResult.getSqlStr());
         assertEquals("Sql part updated", ruleNameUpdatedResult.getSqlPart());
     }
+
+    /**
+     * Method that test update a ruleName
+     * when ruleName not exist in database
+     * then throw {@link RuleNameNotFoundException}
+     */
     @Test
     public void updateRuleNameTest_whenRuleNameNotExist_thenThrowRuleNameNotFoundException() {
         //GIVEN
@@ -142,6 +184,9 @@ public class RuleNameServiceTest {
         assertThrows(RuleNameNotFoundException.class, () -> ruleNameServiceTest.updateRuleName(ruleNameTest));
     }
 
+    /**
+     * Method that test deletion by id of a ruleName
+     */
     @Test
     public void deleteRuleNameTest_whenRuleNameExist_ThenReturnMessageRuleNameDeleted() {
         //GIVEN
@@ -149,8 +194,7 @@ public class RuleNameServiceTest {
         //WHEN
         String messageResult = ruleNameServiceTest.deleteRuleName(id);
         //THEN
-        verify(ruleNameRepositoryMock,times(1)).deleteById(anyInt());
+        verify(ruleNameRepositoryMock, times(1)).deleteById(anyInt());
         assertEquals("RuleName deleted", messageResult);
     }
-
 }
