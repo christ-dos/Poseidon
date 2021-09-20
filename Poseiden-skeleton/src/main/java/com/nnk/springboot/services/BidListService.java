@@ -43,7 +43,6 @@ public class BidListService implements IBidListService {
     @Override
     public List<BidList> getBidLists() {
         log.info("Service: displaying BidLists");
-
         return bidListRepository.findAll();
     }
 
@@ -95,7 +94,6 @@ public class BidListService implements IBidListService {
         bidListToUpdate.setBidQuantity(bidList.getBidQuantity());
         bidListToUpdate.setRevisionDate(Timestamp.from(Instant.now()));
         log.info("Service: BidList updated with ID: " + bidList.getBidListId());
-
         return bidListRepository.save(bidListToUpdate);
     }
 
@@ -109,7 +107,6 @@ public class BidListService implements IBidListService {
     public String deleteBidList(Integer bidListId) {
         bidListRepository.deleteById(bidListId);
         log.info("Service: BidList deleted with ID: " + bidListId);
-
         return "BidList deleted";
     }
 }

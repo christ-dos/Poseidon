@@ -93,7 +93,6 @@ public class RuleNameService implements IRuleNameService {
         ruleNameToUpdate.setSqlStr(ruleName.getSqlStr());
         ruleNameToUpdate.setSqlPart(ruleName.getSqlPart());
         log.info("Service: RuleName updated with ID: " + ruleName.getId());
-
         return ruleNameRepository.save(ruleNameToUpdate);
     }
 
@@ -107,7 +106,6 @@ public class RuleNameService implements IRuleNameService {
     public String deleteRuleName(Integer id) {
         ruleNameRepository.deleteById(id);
         log.info("Service: RuleName deleted with ID:" + id);
-
         return "RuleName deleted";
     }
 }

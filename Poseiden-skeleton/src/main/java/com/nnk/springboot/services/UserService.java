@@ -20,7 +20,6 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService implements IUserService {
-
     /**
      * An instance Of {@link UserRepository}
      */
@@ -41,7 +40,6 @@ public class UserService implements IUserService {
      *
      * @return A list of {@link User}
      */
-    @RolesAllowed("ROLE_ADMIN")
     @Override
     public List<User> getUsers() {
         log.info("Service: displaying Users");
@@ -49,7 +47,7 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Method that get a {@link User} by Id
+     * Method that get a {@link User} by id
      *
      * @param id An Integer containing the id of the User
      * @return An instance of {@link User}
@@ -96,7 +94,6 @@ public class UserService implements IUserService {
         userToUpdate.setPassword(encryptedPassword(user.getPassword()));
         userToUpdate.setRole(user.getRole());
         log.info("Service: User updated with ID: " + user.getId());
-
         return userRepository.save(userToUpdate);
     }
 
@@ -110,7 +107,6 @@ public class UserService implements IUserService {
     public String deleteUser(Integer id) {
         userRepository.deleteById(id);
         log.info("Service: User deleted with ID:" + id);
-
         return "User deleted";
     }
 

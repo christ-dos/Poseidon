@@ -99,6 +99,7 @@ public class CurvePointService implements ICurvePointService {
 
     /**
      * Method that delete a {@link CurvePoint }
+     *
      * @param id An Integer containing the id if the curvePoint
      * @return A String containing "CurvePoint  deleted"
      */
@@ -109,5 +110,4 @@ public class CurvePointService implements ICurvePointService {
 
         return "CurvePoint deleted";
     }
-
 }

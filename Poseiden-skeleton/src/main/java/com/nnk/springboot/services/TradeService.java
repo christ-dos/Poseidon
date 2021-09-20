@@ -90,7 +90,6 @@ public class TradeService implements ITradeService {
         tradeToUpdate.setType(trade.getType());
         tradeToUpdate.setBuyQuantity(trade.getBuyQuantity());
         log.info("Service: Trade updated with ID: " + trade.getTradeId());
-
         return tradeRepository.save(tradeToUpdate);
     }
 
@@ -104,9 +103,6 @@ public class TradeService implements ITradeService {
     public String deleteTrade(Integer tradeId) {
         tradeRepository.deleteById(tradeId);
         log.info("Service: Trade deleted with ID:" + tradeId);
-
         return "Trade deleted";
     }
-
-
 }
