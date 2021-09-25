@@ -60,7 +60,6 @@ public class RatingService implements IRatingService {
             throw new RatingNotFoundException("Rating not found");
         }
         log.info("Service: Rating found with ID: " + id);
-
         return rating.get();
     }
 
@@ -94,7 +93,6 @@ public class RatingService implements IRatingService {
         ratingToUpdate.setFitchRating(rating.getFitchRating());
         ratingToUpdate.setOrderNumber(rating.getOrderNumber());
         log.info("Service: Rating updated with ID: " + rating.getId());
-
         return ratingRepository.save(ratingToUpdate);
     }
 
@@ -108,7 +106,6 @@ public class RatingService implements IRatingService {
     public String deleteRating(Integer id) {
         ratingRepository.deleteById(id);
         log.info("Service: Rating deleted with ID:" + id);
-
         return "Rating deleted";
     }
 }
