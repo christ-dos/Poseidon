@@ -55,5 +55,4 @@ public class CurvePoint {
      */
     @Column(name = "creation_date")
     private  Timestamp creationDate;
-
 }

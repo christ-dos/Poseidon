@@ -52,5 +52,4 @@ public class Rating {
     @NotNull(message = "must not be null")
     @Column(name = "order_number")
     private Integer orderNumber;
-
 }
