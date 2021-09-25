@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BidList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">BidList.java</span></div><h1>BidList.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
+
+/**
+ * Class that manage the entity {@link BidList}
+ *
+ * @author Christine Duarte
+ */
+@Entity
+<span class="pc" id="L15">@Setter</span>
+@Getter
+<span class="fc" id="L17">@NoArgsConstructor</span>
+<span class="fc" id="L18">@AllArgsConstructor</span>
+<span class="pc" id="L19">@Builder</span>
+@Table(name = &quot;bid_list&quot;)
+public class BidList {
+    /**
+     * An Integer that contain the id of the {@link BidList}
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;bid_list_id&quot;)
+<span class="fc" id="L28">    private Integer bidListId;</span>
+
+    /**
+     * A String containing account of BisList
+     */
+    @NotBlank(message = &quot;Account is mandatory&quot;)
+<span class="fc" id="L34">    private String account;</span>
+
+    /**
+     * A String containing type of BisList
+     */
+    @NotBlank(message = &quot;Type is mandatory&quot;)
+<span class="fc" id="L40">    private String type;</span>
+
+    /**
+     * A Double containing the bid quantity
+     */
+    @Column(name = &quot;bid_quantity&quot;)
+<span class="fc" id="L46">    private Double bidQuantity;</span>
+
+    /**
+     * A Double containing the ask quantity
+     */
+    @Column(name = &quot;ask_quantity&quot;)
+<span class="nc" id="L52">    private Double askQuantity;</span>
+
+    /**
+     * A Double containing the bid q
+     */
+<span class="nc" id="L57">    private Double bid;</span>
+
+    /**
+     * A Double containing the ask quantity
+     */
+<span class="nc" id="L62">    private Double ask;</span>
+
+    /**
+     * A String containing the benchmark
+     */
+<span class="nc" id="L67">    private String benchmark;</span>
+
+    /**
+     * A Timestamp with the date of the bid list
+     */
+    @Column(name = &quot;bid_list_date&quot;)
+<span class="nc" id="L73">    private Timestamp bidListDate;</span>
+
+    /**
+     * A String containing the commentary
+     */
+<span class="nc" id="L78">    private String commentary;</span>
+
+    /**
+     * A String containing the security
+     */
+<span class="nc" id="L83">    private String security;</span>
+
+    /**
+     * A String containing the status
+     */
+<span class="nc" id="L88">    private String status;</span>
+
+    /**
+     * A String containing the trader
+     */
+<span class="nc" id="L93">    private String trader;</span>
+
+    /**
+     * A String containing the book
+     */
+<span class="nc" id="L98">    private String book;</span>
+
+    /**
+     * A String containing the creation name
+     */
+    @Column(name = &quot;creation_name&quot;)
+<span class="nc" id="L104">    private String creationName;</span>
+
+    /**
+     * A Timestamp with the creation date
+     */
+    @Column(name = &quot;creation_date&quot;)
+<span class="fc" id="L110">    private Timestamp creationDate;</span>
+
+    /**
+     * A String containing the revision name
+     */
+    @Column(name = &quot;revision_name&quot;)
+<span class="nc" id="L116">    private String revisionName;</span>
+
+    /**
+     * A Timestamp with the revision date
+     */
+    @Column(name = &quot;revision_date&quot;)
+<span class="fc" id="L122">    private Timestamp revisionDate;</span>
+
+    /**
+     * A String containing the deal name
+     */
+    @Column(name = &quot;deal_name&quot;)
+<span class="nc" id="L128">    private String dealName;</span>
+
+    /**
+     * A String containing the deal type
+     */
+    @Column(name = &quot;deal_type&quot;)
+<span class="nc" id="L134">    private String dealType;</span>
+
+    /**
+     * A String containing the source list id
+     */
+    @Column(name = &quot;source_list_id&quot;)
+<span class="nc" id="L140">    private String sourceListId;</span>
+
+    /**
+     * A String containing the side
+     */
+<span class="nc" id="L145">    private String side;</span>
+
+    /**
+     * Method toString
+     *
+     * @return a String of the object BidList
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L154">        return &quot;BidList{&quot; +</span>
+                &quot;bidListId=&quot; + bidListId +
+                &quot;, account='&quot; + account + '\'' +
+                &quot;, type='&quot; + type + '\'' +
+                &quot;, bidQuantity=&quot; + bidQuantity +
+                &quot;, askQuantity=&quot; + askQuantity +
+                &quot;, bid=&quot; + bid +
+                &quot;, ask=&quot; + ask +
+                &quot;, benchmark='&quot; + benchmark + '\'' +
+                &quot;, bidListDate=&quot; + bidListDate +
+                &quot;, commentary='&quot; + commentary + '\'' +
+                &quot;, security='&quot; + security + '\'' +
+                &quot;, status='&quot; + status + '\'' +
+                &quot;, trader='&quot; + trader + '\'' +
+                &quot;, book='&quot; + book + '\'' +
+                &quot;, creationName='&quot; + creationName + '\'' +
+                &quot;, creationDate=&quot; + creationDate +
+                &quot;, revisionName='&quot; + revisionName + '\'' +
+                &quot;, revisionDate=&quot; + revisionDate +
+                &quot;, dealName='&quot; + dealName + '\'' +
+                &quot;, dealType='&quot; + dealType + '\'' +
+                &quot;, sourceListId='&quot; + sourceListId + '\'' +
+                &quot;, side='&quot; + side + '\'' +
+                '}';
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

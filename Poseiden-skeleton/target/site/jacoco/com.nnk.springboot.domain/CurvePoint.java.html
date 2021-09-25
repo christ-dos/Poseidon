@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CurvePoint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">CurvePoint.java</span></div><h1>CurvePoint.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
+
+/**
+ * Class that manage the entity {@link CurvePoint}
+ *
+ * @author Christine Duarte
+ */
+@Entity
+@Table(name = &quot;curve_point&quot;)
+<span class="fc" id="L16">@NoArgsConstructor</span>
+<span class="fc" id="L17">@AllArgsConstructor</span>
+<span class="pc" id="L18">@Builder</span>
+@Getter
+<span class="pc" id="L20">@Setter</span>
+public class CurvePoint {
+
+    /**
+     * An Integer that contain the id of the {@link CurvePoint}
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="fc" id="L28">    private Integer id;</span>
+
+    /**
+     * A String containing curve id of CurvePoint
+     */
+    @NotNull(message = &quot;must not be null&quot;)
+    @Column(name = &quot;curve_id&quot;)
+<span class="fc" id="L35">    private  Integer curveId;</span>
+
+    /**
+     * A Timestamp with the as fo date
+     */
+    @Column(name = &quot;as_of_date&quot;)
+<span class="nc" id="L41">    private Timestamp asOfDate;</span>
+
+    /**
+     * A Double containing the term
+     */
+<span class="fc" id="L46">    private  Double term;</span>
+
+    /**
+     * A Double containing the value
+     */
+<span class="fc" id="L51">    private  Double value;</span>
+
+    /**
+     * A Timestamp with the creation date
+     */
+    @Column(name = &quot;creation_date&quot;)
+<span class="fc" id="L57">    private  Timestamp creationDate;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

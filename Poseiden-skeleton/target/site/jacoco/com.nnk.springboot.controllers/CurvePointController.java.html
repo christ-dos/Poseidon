@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CurvePointController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">CurvePointController.java</span></div><h1>CurvePointController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.exceptions.BidListNotFoundException;
+import com.nnk.springboot.exceptions.CurvePointNotFoundException;
+import com.nnk.springboot.services.IBidListService;
+import com.nnk.springboot.services.ICurvePointService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
+import java.util.Optional;
+
+/**
+ * Class Controller that manage CurvePoint's requests
+ *
+ * @author Christine Duarte
+ */
+@Controller
+<span class="fc" id="L28">@Slf4j</span>
+<span class="fc" id="L29">public class CurvePointController {</span>
+    /**
+     * Dependency  {@link ICurvePointService} injected
+     */
+    @Autowired
+    private ICurvePointService curvePointService;
+
+    /**
+     * Method GET which displayed the view with the list of all {@link CurvePoint}
+     *
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @RequestMapping(&quot;/curvePoint/list&quot;)
+    public String home(Model model) {
+<span class="fc" id="L44">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
+<span class="fc" id="L45">        log.info(&quot;Controller: displaying List of CurvePoint&quot;);</span>
+<span class="fc" id="L46">        return &quot;curvePoint/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which permit adding A {@link CurvePoint}
+     *
+     * @param curvePoint An instance fo {@link CurvePoint}
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/curvePoint/add&quot;)
+    public String addBidForm(CurvePoint curvePoint) {
+<span class="fc" id="L57">        log.info(&quot;Controller: request to add a CurvePoint&quot;);</span>
+<span class="fc" id="L58">        return &quot;curvePoint/add&quot;;</span>
+    }
+
+    /**
+     * Method POST which valid entry in the forms for CurvePoint
+     *
+     * @param curvePoint An instance fo {@link CurvePoint}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @PostMapping(&quot;/curvePoint/validate&quot;)
+    public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L72">            log.error(&quot;Controller: Has error in form&quot;);</span>
+<span class="fc" id="L73">            return &quot;curvePoint/add&quot;;</span>
+        }
+<span class="fc" id="L75">        curvePointService.addCurvePoint(curvePoint);</span>
+<span class="fc" id="L76">        log.info(&quot;Controller: redirection to curve point list&quot;);</span>
+<span class="fc" id="L77">        return &quot;redirect:/curvePoint/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which permit displaying the {@link CurvePoint} to update
+     *
+     * @param id    An Integer containing the id of BidList to update
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/curvePoint/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+        try {
+<span class="fc" id="L90">            CurvePoint curvePoint = curvePointService.getCurvePointById(id);</span>
+<span class="fc" id="L91">            model.addAttribute(&quot;curvePoint&quot;,curvePoint);</span>
+<span class="fc" id="L92">            log.info(&quot;Controller: CurvePoint found with id: &quot; + id);</span>
+<span class="fc" id="L93">        } catch (CurvePointNotFoundException ex) {</span>
+<span class="fc" id="L94">            model.addAttribute(&quot;errorMessage&quot;, ex.getMessage());</span>
+<span class="fc" id="L95">            log.error(&quot;Controller: CurvePoint NOT found with id: &quot; + id);</span>
+<span class="fc" id="L96">            return &quot;redirect:/app/404&quot;;</span>
+<span class="fc" id="L97">        }</span>
+<span class="fc" id="L98">        return &quot;curvePoint/update&quot;;</span>
+    }
+
+    /**
+     * Method POST that permit update a {@link CurvePoint}
+     *
+     * @param id      An Integer containing the id of BidList to update
+     * @param curvePoint An instance of {@link CurvePoint}
+     * @param result  An Interface that permit check validity of entries on fields with annotation @Valid
+     * @param model   Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @PostMapping(&quot;/curvePoint/update/{id}&quot;)
+    public String updateBid(@PathVariable(&quot;id&quot;) Integer id, @Valid CurvePoint curvePoint,
+                            BindingResult result, Model model) {
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        if (result.hasErrors()) {</span>
+<span class="fc" id="L114">            return &quot;curvePoint/update&quot;;</span>
+        }
+<span class="fc" id="L116">        curvePoint.setId(id);</span>
+<span class="fc" id="L117">        curvePointService.updateCurvePoint(curvePoint);</span>
+<span class="fc" id="L118">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
+<span class="fc" id="L119">        log.info(&quot;Controller: CurvePoint updated with: &quot; + id);</span>
+<span class="fc" id="L120">        return &quot;redirect:/curvePoint/list&quot;;</span>
+    }
+
+    /**
+     * Method GET which delete a {@link CurvePoint}
+     *
+     * @param id    An Integer containing the id of BidList to delete
+     * @param model Interface that defines a support for model attributes
+     * @return A String containing the name of the view
+     */
+    @GetMapping(&quot;/curvePoint/delete/{id}&quot;)
+    public String deleteBid(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+<span class="fc" id="L132">        curvePointService.deleteCurvePoint(id);</span>
+<span class="fc" id="L133">        model.addAttribute(&quot;curvePoints&quot;, curvePointService.getCurvePoints());</span>
+<span class="fc" id="L134">        log.info(&quot;Controller: CurvePoint deleted&quot;);</span>
+<span class="fc" id="L135">        return &quot;redirect:/curvePoint/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

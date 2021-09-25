@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TradeService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.services</a> &gt; <span class="el_source">TradeService.java</span></div><h1>TradeService.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.services;
+
+import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.exceptions.TradeNotFoundException;
+import com.nnk.springboot.repositories.TradeRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Class of service that manage {@link Trade} entity
+ *
+ * @author Christine Duarte
+ */
+@Service
+<span class="fc" id="L19">@Slf4j</span>
+public class TradeService implements ITradeService {
+    /**
+     * An instance Of {@link TradeRepository}
+     */
+    private TradeRepository tradeRepository;
+
+    /**
+     * Constructor
+     *
+     * @param tradeRepository An instance of {@link TradeRepository}
+     */
+    @Autowired
+<span class="fc" id="L32">    public TradeService(TradeRepository tradeRepository) {</span>
+<span class="fc" id="L33">        this.tradeRepository = tradeRepository;</span>
+<span class="fc" id="L34">    }</span>
+
+    /**
+     * Method that get all {@link Trade}
+     *
+     * @return A list of {@link Trade}
+     */
+    @Override
+    public List&lt;Trade&gt; getTrades() {
+<span class="fc" id="L43">        log.info(&quot;Service: displaying Trades&quot;);</span>
+<span class="fc" id="L44">        return tradeRepository.findAll();</span>
+    }
+
+    /**
+     * Method that get a {@link Trade} by Id
+     *
+     * @param tradeId An Integer containing the id of the Trade
+     * @return An instance of {@link Trade}
+     */
+    @Override
+    public Trade getTradeById(Integer tradeId) {
+<span class="fc" id="L55">        Optional&lt;Trade&gt; trade = tradeRepository.findById(tradeId);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!trade.isPresent()) {</span>
+<span class="fc" id="L57">            log.error(&quot;Service: Trade NOT FOUND with ID: &quot; + tradeId);</span>
+<span class="fc" id="L58">            throw new TradeNotFoundException(&quot;Trade not found&quot;);</span>
+        }
+<span class="fc" id="L60">        log.info(&quot;Service: Trade found with ID: &quot; + tradeId);</span>
+<span class="fc" id="L61">        return trade.get();</span>
+    }
+
+    /**
+     * Method which add a {@link Trade}
+     *
+     * @param trade An instance {@link Trade}
+     * @return The {@link Trade} saved
+     */
+    @Override
+    public Trade addTrade(Trade trade) {
+<span class="fc" id="L72">        log.info(&quot;Service: Trade saved&quot;);</span>
+<span class="fc" id="L73">        return tradeRepository.save(trade);</span>
+    }
+
+    /**
+     * Method which update a {@link Trade}
+     *
+     * @param trade An instance {@link Trade}
+     * @return the {@link Trade} updated
+     */
+    @Override
+    public Trade updateTrade(Trade trade) {
+<span class="fc" id="L84">        Trade tradeToUpdate = tradeRepository.getById(trade.getTradeId());</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (tradeToUpdate == null) {</span>
+<span class="fc" id="L86">            log.error(&quot;Service: Trade NOT FOUND with ID: &quot; + trade.getTradeId());</span>
+<span class="fc" id="L87">            throw new TradeNotFoundException(&quot;Trade not found&quot;);</span>
+        }
+<span class="fc" id="L89">        tradeToUpdate.setAccount(trade.getAccount());</span>
+<span class="fc" id="L90">        tradeToUpdate.setType(trade.getType());</span>
+<span class="fc" id="L91">        tradeToUpdate.setBuyQuantity(trade.getBuyQuantity());</span>
+<span class="fc" id="L92">        log.info(&quot;Service: Trade updated with ID: &quot; + trade.getTradeId());</span>
+<span class="fc" id="L93">        return tradeRepository.save(tradeToUpdate);</span>
+    }
+
+    /**
+     * Method that delete a {@link Trade}
+     *
+     * @param tradeId An integer containing the id
+     * @return A String containing &quot;Trade deleted&quot;
+     */
+    @Override
+    public String deleteTrade(Integer tradeId) {
+<span class="fc" id="L104">        tradeRepository.deleteById(tradeId);</span>
+<span class="fc" id="L105">        log.info(&quot;Service: Trade deleted with ID:&quot; + tradeId);</span>
+<span class="fc" id="L106">        return &quot;Trade deleted&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

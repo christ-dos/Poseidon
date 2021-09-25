@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RuleNameService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.services</a> &gt; <span class="el_source">RuleNameService.java</span></div><h1>RuleNameService.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.services;
+
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.exceptions.RuleNameNotFoundException;
+import com.nnk.springboot.repositories.RuleNameRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Class of service that manage {@link RuleName} entity
+ *
+ * @author Christine Duarte
+ */
+@Service
+<span class="fc" id="L19">@Slf4j</span>
+public class RuleNameService implements IRuleNameService {
+    /**
+     * An instance Of {@link RuleNameRepository}
+     */
+    private RuleNameRepository ruleNameRepository;
+
+    /**
+     * Constructor
+     *
+     * @param ruleNameRepository An instance of {@link RuleNameRepository}
+     */
+    @Autowired
+<span class="fc" id="L32">    public RuleNameService(RuleNameRepository ruleNameRepository) {</span>
+<span class="fc" id="L33">        this.ruleNameRepository = ruleNameRepository;</span>
+<span class="fc" id="L34">    }</span>
+
+    /**
+     * Method that get all {@link RuleName}
+     *
+     * @return A list of {@link RuleName}
+     */
+    @Override
+    public List&lt;RuleName&gt; getRulesNames() {
+<span class="fc" id="L43">        log.info(&quot;Service: displaying RuleName&quot;);</span>
+<span class="fc" id="L44">        return ruleNameRepository.findAll();</span>
+    }
+
+    /**
+     * Method that get a {@link RuleName} by Id
+     *
+     * @param id An Integer containing the id of the RuleName
+     * @return An instance of {@link RuleName}
+     */
+    @Override
+    public RuleName getRuleNameById(Integer id) {
+<span class="fc" id="L55">        Optional&lt;RuleName&gt; ruleName = ruleNameRepository.findById(id);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!ruleName.isPresent()) {</span>
+<span class="fc" id="L57">            log.error(&quot;Service: Rule name NOT FOUND with ID: &quot; + id);</span>
+<span class="fc" id="L58">            throw new RuleNameNotFoundException(&quot;Rule name not found&quot;);</span>
+        }
+<span class="fc" id="L60">        log.info(&quot;Service: Trade found with ID: &quot; + id);</span>
+<span class="fc" id="L61">        return ruleName.get();</span>
+    }
+
+    /**
+     * Method which add a {@link RuleName}
+     *
+     * @param ruleName An instance {@link RuleName}
+     * @return The {@link RuleName} saved
+     */
+    @Override
+    public RuleName addRuleName(RuleName ruleName) {
+<span class="fc" id="L72">        log.info(&quot;Service: Rule name saved&quot;);</span>
+<span class="fc" id="L73">        return ruleNameRepository.save(ruleName);</span>
+    }
+
+    /**
+     * Method which update a {@link RuleName}
+     *
+     * @param ruleName An instance {@link RuleName}
+     * @return the {@link RuleName} updated
+     */
+    @Override
+    public RuleName updateRuleName(RuleName ruleName) {
+<span class="fc" id="L84">        RuleName ruleNameToUpdate = ruleNameRepository.getById(ruleName.getId());</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (ruleNameToUpdate == null) {</span>
+<span class="fc" id="L86">            log.error(&quot;Service: RuleName NOT FOUND with ID: &quot; + ruleName.getId());</span>
+<span class="fc" id="L87">            throw new RuleNameNotFoundException(&quot;RuleName not found&quot;);</span>
+        }
+<span class="fc" id="L89">        ruleNameToUpdate.setName(ruleName.getName());</span>
+<span class="fc" id="L90">        ruleNameToUpdate.setDescription(ruleName.getDescription());</span>
+<span class="fc" id="L91">        ruleNameToUpdate.setJson(ruleName.getJson());</span>
+<span class="fc" id="L92">        ruleNameToUpdate.setTemplate(ruleName.getTemplate());</span>
+<span class="fc" id="L93">        ruleNameToUpdate.setSqlStr(ruleName.getSqlStr());</span>
+<span class="fc" id="L94">        ruleNameToUpdate.setSqlPart(ruleName.getSqlPart());</span>
+<span class="fc" id="L95">        log.info(&quot;Service: RuleName updated with ID: &quot; + ruleName.getId());</span>
+<span class="fc" id="L96">        return ruleNameRepository.save(ruleNameToUpdate);</span>
+    }
+
+    /**
+     * Method that delete a {@link RuleName}
+     *
+     * @param id An integer containing the id
+     * @return A String containing &quot;RuleName deleted&quot;
+     */
+    @Override
+    public String deleteRuleName(Integer id) {
+<span class="fc" id="L107">        ruleNameRepository.deleteById(id);</span>
+<span class="fc" id="L108">        log.info(&quot;Service: RuleName deleted with ID:&quot; + id);</span>
+<span class="fc" id="L109">        return &quot;RuleName deleted&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
